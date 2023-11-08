@@ -21,7 +21,7 @@ export default function TournamentCard() {
             </Text>
           </Flex>
           <Text  fontSize="xl" fontWeight="semibold" lineHeight="short">
-            Pojďte si zahrát fotbal blabla
+            Pojďte si zakopat
           </Text>
           <Text>Horní Měcholupy &bull; 5000kč &bull; 5na5 &bull; 9/16 teamů</Text>
           

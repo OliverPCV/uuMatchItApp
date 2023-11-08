@@ -15,6 +15,8 @@ function AppNavbar() {
             <Nav.Link href="/tournamentdetail">Tournament detail</Nav.Link>
           </Nav>
         </Navbar.Collapse>
+        <button class="btn btn-outline-success" type="button">login</button>
+        <button class="btn btn-outline-secondary" type="button">register</button>
       </Container>
     </Navbar>
   );

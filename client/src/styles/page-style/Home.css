@@ -55,7 +55,7 @@ body{
 .lefttext .textwrap p{
     margin: 0px 20px 0px 20px;
     font-size: 30px;
-    font-family: 'Oswald', cursive;
+    font-family: 'Oswald',;
     padding: 0;
     color: whitesmoke;
     justify-content: center;
@@ -70,7 +70,7 @@ body{
     border: 0;
     border-radius: 5px;
     background-color: rgb(42, 194, 15);
-    font-family: 'Oswald', cursive;
+    font-family: 'Oswald';
     justify-content: center;
     text-align: center;
 }
@@ -101,4 +101,8 @@ body{
         width: 100%;
         margin-top: 0;
     }
+}
+
+.container {
+    margin-bottom: 20px;
 }
