@@ -3,6 +3,7 @@ import { Container } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import tournaments from '../data/tournaments';
 import '../styles/page-style/TournamentDetail.css'; // Update the path to your CSS file
+import SingleElimination from '../components/SingleElimination'
 
 function TournamentDetail() {
   const { id } = useParams();
@@ -26,6 +27,7 @@ function TournamentDetail() {
       <p className="tournament-detail-text">Typ: {tournament.type}</p>
       <p className="tournament-detail-text">Počet týmů: {tournament.teams.length}</p>
       <p className="tournament-detail-text">Dokončeno: {tournament.isFinished ? 'Ano' : 'Ne'}</p>
+      <SingleElimination/>
     </Container>
   );
 }

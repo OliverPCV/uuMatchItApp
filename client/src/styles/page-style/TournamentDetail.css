@@ -20,3 +20,6 @@
   
   /* Add more styles as needed */
   
+  svg{
+    touch-action: manipulation !important;
+  }
