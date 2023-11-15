@@ -4,13 +4,19 @@ import TournamentCard from '../components/TournamentCard';
 import '../styles/page-style/Home.css';
 import img1 from "../images/IMG_1246.jpg";
 import tournaments from '../data/tournaments'; 
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
+  let navigate = useNavigate();
   const tournamentRef = useRef(null);
   const [filter, setFilter] = useState('all');
 
   const scrollToTournaments = () => {
     tournamentRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const goToOtherPage = () => {
+    navigate('/tournamentcreate');
   };
 
   const handleFilter = (newFilter) => {
@@ -31,7 +37,7 @@ function Home() {
           <div className="textwrap">
             <p>Pojďte si zahrát fotbalový turnaj! Přihlaste se a zúčastněte se s vaším týmem a ukažte své dovednosti na trávě.</p>
             <button onClick={scrollToTournaments}>Procházet</button>
-            <button>Vytvořit</button>
+            <button onClick={goToOtherPage}>Vytvořit</button>
           </div>
         </div>
         <div className="rightimage">

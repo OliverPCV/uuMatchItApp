@@ -6,6 +6,7 @@ import './App.css';
 import AppNavbar from './components/Navbar';
 import Appfooter from "./components/Footer"
 import NoPage from './pages/NoPage';
+import TournamentCreate from './pages/TournamentCreate';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="/tournamentdetail" element={<TournamentDetail />} />
           <Route path="/*" element={<NoPage />} />
+          <Route path="/tournamentcreate" element={<TournamentCreate />} />
         </Routes>
       </BrowserRouter>
     </><Appfooter></Appfooter></>

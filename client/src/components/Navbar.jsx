@@ -12,7 +12,6 @@ function AppNavbar() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto">
             <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/tournamentdetail">Tournament detail</Nav.Link>
           </Nav>
         </Navbar.Collapse>
         <button class="btn btn-outline-success" type="button">login</button>
