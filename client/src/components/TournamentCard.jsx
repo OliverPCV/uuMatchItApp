@@ -1,7 +1,16 @@
 import * as React from "react";
 import { Box, Center, Image, Flex, Text } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@chakra-ui/react";
 
 export default function TournamentCard({ data }) {
+  
+  const navigate = useNavigate();
+
+  const goToTournamentDetail = () => {
+    navigate(`/tournament/${data.id}`);
+  };
+
   return (
     <Center h="22vh" className="tournament-card">
       <Flex p="5" maxW="1000px" maxH="400px" borderWidth="1px">
@@ -17,6 +26,7 @@ export default function TournamentCard({ data }) {
             >
               {data.date} {data.time}
             </Text>
+            <Button onClick={goToTournamentDetail}>View Details</Button>
           </Flex>
           <Text fontSize="xl" fontWeight="semibold" lineHeight="short" className="tournament-card-description">
             {data.name}

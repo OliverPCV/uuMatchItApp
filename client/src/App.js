@@ -15,9 +15,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route index element={<Home />} />
-          <Route path="/tournamentdetail" element={<TournamentDetail />} />
           <Route path="/*" element={<NoPage />} />
           <Route path="/tournamentcreate" element={<TournamentCreate />} />
+          <Route path="/tournament/:id" component={<ournamentDetail />} />
+
         </Routes>
       </BrowserRouter>
     </><Appfooter></Appfooter></>
