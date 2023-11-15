@@ -1,0 +1,22 @@
+.tournament-detail-container {
+    background-color: #f8f9fa; /* Light background color */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+  }
+  
+  .tournament-detail-title {
+    font-size: 2rem;
+    color: #343a40; /* Dark color for the title */
+    margin-bottom: 15px;
+  }
+  
+  .tournament-detail-text {
+    font-size: 1.2rem;
+    color: #495057; /* Slightly lighter color for text */
+    margin-bottom: 10px;
+  }
+  
+  /* Add more styles as needed */
+  

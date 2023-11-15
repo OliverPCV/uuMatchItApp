@@ -2,15 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Container } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import tournaments from '../data/tournaments';
+import '../styles/page-style/TournamentDetail.css'; // Update the path to your CSS file
 
 function TournamentDetail() {
   const { id } = useParams();
-  console.log("Tournament ID:", id);
   const [tournament, setTournament] = useState(null);
 
   useEffect(() => {
     const foundTournament = tournaments.find(t => t.id.toString() === id);
-    console.log("Found Tournament:", foundTournament);
     setTournament(foundTournament);
   }, [id]);
 
@@ -19,14 +18,14 @@ function TournamentDetail() {
   }
 
   return (
-    <Container>
-      <h1>Detail turnaje: {tournament.name}</h1>
-      <p>Datum: {tournament.date}</p>
-      <p>Místo: {tournament.place}</p>
-      <p>Cena: {tournament.prize} Kč</p>
-      <p>Typ: {tournament.type}</p>
-      <p>Počet týmů: {tournament.teams.length}</p>
-      <p>Dokončeno: {tournament.isFinished ? 'Ano' : 'Ne'}</p>
+    <Container className="tournament-detail-container">
+      <h1 className="tournament-detail-title">Detail turnaje: {tournament.name}</h1>
+      <p className="tournament-detail-text">Datum: {tournament.date}</p>
+      <p className="tournament-detail-text">Místo: {tournament.place}</p>
+      <p className="tournament-detail-text">Cena: {tournament.prize} Kč</p>
+      <p className="tournament-detail-text">Typ: {tournament.type}</p>
+      <p className="tournament-detail-text">Počet týmů: {tournament.teams.length}</p>
+      <p className="tournament-detail-text">Dokončeno: {tournament.isFinished ? 'Ano' : 'Ne'}</p>
     </Container>
   );
 }
