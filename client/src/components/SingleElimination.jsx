@@ -93,7 +93,7 @@ export const simpleSmallBracket = [
         resultText: "Lost",
         isWinner: false,
         status: "PLAYED",
-        name: "Aids Team",
+        name: "Oliver je frajer :)",
         picture: "teamlogos/client_team_default_logo"
       }
     ]

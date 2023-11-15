@@ -1,0 +1,91 @@
+/* Tournament Cards Styling */
+.tournament-card {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+    width: 100%;
+    max-width: 1000px;
+  }
+.flex{
+    width: 100%;
+    padding: 0 !important;
+    border: 0;
+}
+
+
+  .tournament-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .tournament-card img {
+    border-radius: md;
+    width: 25%;
+    object-fit: cover;
+  }
+  
+  .tournament-card-content {
+    padding: 15px;
+    margin-left: 4;
+  }
+  
+  .tournament-card-title {
+    text-transform: uppercase;
+    font-size: sm;
+    font-weight: bold;
+    color: pink.800;
+  }
+  
+  .tournament-card-description {
+    font-size: xl;
+    font-weight: semibold;
+    line-height: short;
+    color: #333;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .tournament-card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .tournament-card img {
+      width: 100%;
+    }
+  
+    .tournament-card-content {
+      margin-left: 0;
+    }
+  }
+  .filter-buttons {
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  .filter-buttons button {
+    background-color: #4CAF50;
+    color: white; 
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .filter-buttons button:hover {
+    background-color: #367c39; 
+    transform: scale(1.05); 
+  }
+  
+  .filter-buttons button:active {
+    transform: scale(0.95);
+  }
+  
