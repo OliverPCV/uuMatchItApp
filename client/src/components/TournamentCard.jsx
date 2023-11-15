@@ -8,7 +8,7 @@ export default function TournamentCard({ data }) {
   const navigate = useNavigate();
 
   const goToTournamentDetail = () => {
-    navigate(`/tournament/${data.id}`);
+    navigate(`/tournamentdetail/${data.id}`);
   };
 
   return (

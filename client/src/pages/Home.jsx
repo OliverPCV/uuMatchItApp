@@ -23,6 +23,7 @@ function Home() {
     setFilter(newFilter);
   };
 
+
   if (!Array.isArray(tournaments)) {
     console.error('shoppingLists is not an array');
     return <div>Error: Data not loaded correctly</div>;

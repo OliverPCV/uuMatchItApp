@@ -17,8 +17,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="/*" element={<NoPage />} />
           <Route path="/tournamentcreate" element={<TournamentCreate />} />
-          <Route path="/tournament/:id" component={<ournamentDetail />} />
-
+          <Route path="/tournamentdetail/:id" component={TournamentDetail } />
         </Routes>
       </BrowserRouter>
     </><Appfooter></Appfooter></>

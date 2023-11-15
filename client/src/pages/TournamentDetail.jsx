@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Container } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-import mockTournaments from '../data/tournaments';
+import tournaments from '../data/tournaments';
 
 function TournamentDetail() {
   const { id } = useParams();
+  console.log("Tournament ID:", id);
   const [tournament, setTournament] = useState(null);
 
   useEffect(() => {
-    const foundTournament = mockTournaments.find(t => t.id === parseInt(id));
+    const foundTournament = tournaments.find(t => t.id.toString() === id);
+    console.log("Found Tournament:", foundTournament);
     setTournament(foundTournament);
   }, [id]);
 
