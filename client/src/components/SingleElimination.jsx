@@ -54,9 +54,11 @@ export const simpleSmallBracket = [
     tournamentRoundText: "3",
     startTime: "2021-05-30",
     state: "SCHEDULED",
-    participants: []
+    participants: [
+      
+    ]
   },
-  {
+  { // Semifanal zapasu 1
     id: 19754,
     nextMatchId: 19753,
     tournamentRoundText: "2",
@@ -73,7 +75,7 @@ export const simpleSmallBracket = [
       }
     ]
   },
-  {
+  { // zapas 1
     id: 19755,
     nextMatchId: 19754,
     tournamentRoundText: "1",
@@ -98,7 +100,7 @@ export const simpleSmallBracket = [
       }
     ]
   },
-  {
+  { // zapas 2
     id: 19756,
     nextMatchId: 19754,
     tournamentRoundText: "1",
@@ -112,6 +114,14 @@ export const simpleSmallBracket = [
         status: null,
         name: "Art of kill",
         picture: "teamlogos/client_team_default_logo"
+      },
+      {
+        id: "9397971f-4b2f-44eb-a094-722eb286c59b",
+        resultText: null,
+        isWinner: false,
+        status: null,
+        name: "Crazy Pepes",
+        picture: "teamlogos/client_team_default_logo"
       }
     ]
   },
@@ -123,7 +133,7 @@ export const simpleSmallBracket = [
     state: "SCHEDULED",
     participants: []
   },
-  {
+  { // zapas 3
     id: 19758,
     nextMatchId: 19757,
     tournamentRoundText: "1",
@@ -137,10 +147,19 @@ export const simpleSmallBracket = [
         status: null,
         name: "Crazy Pepes",
         picture: "teamlogos/client_team_default_logo"
+      },
+      {
+        id: "9397971f-4b2f-44eb-a094-722eb286c59b",
+        resultText: null,
+        isWinner: false,
+        status: null,
+        name: "Crazy Pepes",
+        picture: "teamlogos/client_team_default_logo"
       }
+
     ]
   },
-  {
+  { // zapas 4
     id: 19759,
     nextMatchId: 19757,
     tournamentRoundText: "1",
@@ -164,7 +183,9 @@ export const simpleSmallBracket = [
         picture: "teamlogos/r7zn4gr8eajivapvjyzd"
       }
     ]
-  }
+  },
+  
+  
 ];
 
 export default SingleElimination;
