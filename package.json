@@ -1,5 +1,11 @@
 {
   "devDependencies": {
     "turbo": "^1.10.15"
+  },
+  "dependencies": {
+    "@nestjs/cli": "^10.2.1",
+    "@nestjs/typeorm": "^10.0.1",
+    "mysql2": "^3.6.5",
+    "typeorm": "^0.3.17"
   }
 }
