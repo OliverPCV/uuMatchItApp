@@ -25,4 +25,9 @@ export class UsersService {
     getUsers(): User[] {
         return this.users;
     }
+
+    createUser(user: User): boolean {
+        throw new Error("Method not implemented.");
+    }
+
 }
