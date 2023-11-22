@@ -1,4 +1,4 @@
-export const shoppingLists = [
+export const tournaments = [
     {
         id: 1,
         name: "Sobotní fóčo",
@@ -45,4 +45,4 @@ export const shoppingLists = [
     },
 ]
 
-export default shoppingLists;
+export default tournaments;

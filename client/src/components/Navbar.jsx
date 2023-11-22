@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Navbar, Nav, Container, Modal, Button, Form } from 'react-bootstrap';
-import mockUser from '../data/user';
+import mockUser from '../data/user';  
+import MatchitLogo from '../images/MatchitLogo.png';
+import '../styles/component-style/Navbar.css';
 
 function AppNavbar() {
   const [showLogin, setShowLogin] = useState(false);
@@ -23,7 +25,7 @@ function AppNavbar() {
     <>
       <Navbar bg="dark" variant="dark" expand="lg">
         <Container>
-          <Navbar.Brand href="/">uuMatchit</Navbar.Brand>
+        <img className="navlogo" src={MatchitLogo} alt="Logo" />
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ml-auto">
