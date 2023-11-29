@@ -7,21 +7,28 @@ import { TournamentsController } from './tournaments/tournaments.controller';
 import { UsersService } from './users/users.service';
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {User} from "./entities/user.entity";
-
+import {AuthGuard} from "./auth/auth.guard";
+import {JwtModule} from "@nestjs/jwt";
+const jwtSecret = 'VerySecretKey';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: '127.0.0.1',
       port: 3306,
       username: 'root',
       password: 'root',
       database: 'uumatchit',
       entities: [User],
       synchronize: true,
+    }),
+    JwtModule.register({
+      global: true,
+      secret: jwtSecret,
+      signOptions: { expiresIn: '60m' },
     })
   ],
   controllers: [AppController, UsersController, TeamsController, TournamentsController],
-  providers: [AppService, UsersService],
+  providers: [AppService, UsersService, AuthGuard],
 })
 export class AppModule {}

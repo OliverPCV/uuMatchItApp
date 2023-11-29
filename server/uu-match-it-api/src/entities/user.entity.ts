@@ -3,11 +3,16 @@ import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
 @Entity()
 export class User {
 
+    constructor(name: string, password: string, birthdate: Date) {
+        this.username = name;
+        this.birthdate = birthdate;
+    }
+
     @PrimaryGeneratedColumn()
-    id: number;
+    id: string;
 
     @Column()
-    name: string;
+    username: string;
 
     @Column()
     hash: string;
