@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar, Nav, Container, Modal, Button, Form, Dropdown } from 'react-bootstrap';
 import mockUser from '../data/user';
 import MatchitLogo from '../images/MatchitLogo.png';
 import '../styles/component-style/Navbar.css';
+import { Link } from 'react-router-dom';
 
 function AppNavbar() {
   const [showLogin, setShowLogin] = useState(false);
@@ -10,15 +11,25 @@ function AppNavbar() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
 
+  useEffect(() => {
+    const savedUser = sessionStorage.getItem('user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+      setLoggedIn(true);
+    }
+  }, []);
+
   const handleLogin = () => {
     setUser(mockUser);
     setLoggedIn(true);
+    sessionStorage.setItem('user', JSON.stringify(mockUser));
     setShowLogin(false);
   };
 
   const handleLogout = () => {
     setLoggedIn(false);
     setUser(null);
+    sessionStorage.removeItem('user');
   };
 
  
@@ -65,7 +76,9 @@ function AppNavbar() {
             </>
           ) : (
             <>
+              <Link to={"/userprofile"}>
               <span style={{ color: 'white', marginRight: '10px' }}>{user?.name}</span>
+              </Link>
               <Button variant="outline-danger" onClick={handleLogout}>Logout</Button>
             </>
           )}
