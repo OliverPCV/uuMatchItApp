@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Navbar, Nav, Container, Modal, Button, Form } from 'react-bootstrap';
-import mockUser from '../data/user';  
+import { Navbar, Nav, Container, Modal, Button, Form, Dropdown } from 'react-bootstrap';
+import mockUser from '../data/user';
 import MatchitLogo from '../images/MatchitLogo.png';
 import '../styles/component-style/Navbar.css';
 
@@ -21,15 +21,41 @@ function AppNavbar() {
     setUser(null);
   };
 
+ 
+
   return (
     <>
       <Navbar bg="dark" variant="dark" expand="lg">
         <Container>
-        <img className="navlogo" src={MatchitLogo} alt="Logo" />
+          <img className="navlogo" src={MatchitLogo} alt="Logo" />
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ml-auto">
               <Nav.Link href="/">Home</Nav.Link>
+
+              {/* Dropdown pro Turnaj */}
+              <Dropdown>
+                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                  Turnaj
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item >Procházet Turnaje</Dropdown.Item>
+                  <Dropdown.Item >Vytvořit Turnaj</Dropdown.Item>
+                  <Dropdown.Item >Moje Turnaje</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+
+              {/* Dropdown pro Tým */}
+              <Dropdown>
+                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                  Tým
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item >Vytvořit Tým</Dropdown.Item>
+                  <Dropdown.Item >Moje Týmy</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+
             </Nav>
           </Navbar.Collapse>
           {!loggedIn ? (
@@ -46,6 +72,7 @@ function AppNavbar() {
         </Container>
       </Navbar>
 
+      {/* Modal pro přihlášení */}
       <Modal show={showLogin} onHide={() => setShowLogin(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Login</Modal.Title>
@@ -69,6 +96,7 @@ function AppNavbar() {
         </Modal.Footer>
       </Modal>
 
+      {/* Modal pro registraci */}
       <Modal show={showRegister} onHide={() => setShowRegister(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Register</Modal.Title>
