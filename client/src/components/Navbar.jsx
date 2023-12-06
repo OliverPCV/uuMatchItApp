@@ -50,9 +50,12 @@ function AppNavbar() {
                   Turnaj
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <Dropdown.Item >Procházet Turnaje</Dropdown.Item>
-                  <Dropdown.Item >Vytvořit Turnaj</Dropdown.Item>
-                  <Dropdown.Item >Moje Turnaje</Dropdown.Item>
+                  <Dropdown.Item ><Link to={"/"}>Procházet Turnaje</Link>  
+                </Dropdown.Item>
+                  <Dropdown.Item ><Link to={"/tournamentcreate"}>Vytvořit Turnaj</Link> 
+                </Dropdown.Item>
+                  <Dropdown.Item ><Link to={"/mytournaments"}> Moje Turnaje</Link>  
+                </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
 
@@ -62,8 +65,8 @@ function AppNavbar() {
                   Tým
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <Dropdown.Item >Vytvořit Tým</Dropdown.Item>
-                  <Dropdown.Item >Moje Týmy</Dropdown.Item>
+                  <Dropdown.Item ><Link to={"/teamcreate"}>Vytvořit Tým</Link></Dropdown.Item>
+                  <Dropdown.Item ><Link to={"/myteams"}>Moje Týmy</Link></Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
 

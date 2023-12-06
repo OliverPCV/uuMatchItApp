@@ -41,12 +41,12 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/tournamentcreate" element={<TournamentCreate />} />
-          <Route path="/teamCreate" element={<TeamCreate />} />
+          <Route path="/teamcreate" element={<TeamCreate />} />
           <Route path="/myteams" element={<MyTeams />} />
-          <Route path="/teamDetail" element={<TournamentDetail />} />
+          <Route path="/teamdetail" element={<TournamentDetail />} />
           <Route path="/tournamentdetail/:id" element={<TournamentDetail />} />
           <Route path="/userprofile" element={<UserProfile loggedIn={user !== null} />} />
-          <Route path="/myTournaments" element={<MyTournaments />} />
+          <Route path="/mytournaments" element={<MyTournaments />} />
           <Route path="/*" element={<NoPage />} />
         </Routes>
     </div>
