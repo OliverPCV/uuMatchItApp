@@ -6,46 +6,70 @@ import {
 } from "@g-loot/react-tournament-brackets";
 
 
- const SingleElimination = () => (
+const GlootTheme = createTheme({
+  textColor: {
+    main: "#000000", // Tmavě zelená
+    highlighted: "#000000", // Světle zelená
+    dark: "#000000" // Velmi tmavě zelená
+  },
+  matchBackground: {
+    lostColor: "#ffffff", // pozadí jednotlivýho boxu
+    wonColor: "#ffffff" // pozadí jednotlivýho boxu
+  },
+  score: {
+    background: {
+      wonColor: "#85d285", // tým co vyhrál pozadí, boxu WON
+      lostColor: "#c3c2c2" // tým co nevyhrál pozadí, boxu LOST
+    },
+    text: {
+      highlightedWonColor: "#000000", // barva WON
+      highlightedLostColor: "#000000" // barva LOST
+    }
+  },
+  border: {
+    color: "#7ad47a", 
+    highlightedColor: "#843535" 
+  },
+  roundHeader: {
+    backgroundColor: "#004d00", 
+    fontColor: "#ffffff" 
+  },
+  
+  connectorColor: "#080808", 
+  connectorColorHighlight: "#843535", 
+});
+
+const SingleElimination = () => (
   <SingleEliminationBracket
     theme={GlootTheme}
     matches={simpleSmallBracket}
     matchComponent={Match}
+    options={{
+      style:{
+        connectorColor: GlootTheme.connectorColor, // Předpokládáme, že chcete bílou barvu pro konektory
+        connectorColorHighlight: GlootTheme.connectorColorHighlight, // Jasně zelená
+        svgBackground: GlootTheme.svgBackground,
+      },
+      	
+    }}
     svgWrapper={({ children, ...props }) => (
       <SVGViewer
         width={10000}
         height={5000}
-        background="rgb(11, 13, 19)"
-        SVGBackground="rgb(11, 13, 19)"
+        background="#ffffff"  // Tady nastavíte bílé pozadí
+        SVGBackground="#ffffff"  // Tady také nastavíte bílé pozadí
         {...props}
       >
         {children}
       </SVGViewer>
+      
     )}
     onMatchClick={(match) => console.log(match)}
     onPartyClick={(match) => console.log(match)}
   />
 );
 
-const GlootTheme = createTheme({
-  textColor: { main: "#000000", highlighted: "#F4F2FE", dark: "#707582" },
-  matchBackground: { wonColor: "#2D2D59", lostColor: "#1B1D2D" },
-  score: {
-    background: {
-      wonColor: `#10131C`,
-      lostColor: "#10131C"
-    },
-    text: { highlightedWonColor: "#7BF59D", highlightedLostColor: "#FB7E94" }
-  },
-  border: {
-    color: "#292B43",
-    highlightedColor: "RGBA(152,82,242,0.4)"
-  },
-  roundHeader: { backgroundColor: "#3B3F73", fontColor: "#F4F2FE" },
-  connectorColor: "#3B3F73",
-  connectorColorHighlight: "RGBA(152,82,242,0.4)",
-  svgBackground: "#0F121C"
-});
+
 
 export const simpleSmallBracket = [
   {
@@ -55,7 +79,7 @@ export const simpleSmallBracket = [
     startTime: "2021-05-30",
     state: "SCHEDULED",
     participants: [
-      
+
     ]
   },
   { // Semifanal zapasu 1
@@ -95,7 +119,7 @@ export const simpleSmallBracket = [
         resultText: "Lost",
         isWinner: false,
         status: "PLAYED",
-        name: "Oliver je frajer :)",
+        name: "gggonext",
         picture: "teamlogos/client_team_default_logo"
       }
     ]
@@ -110,7 +134,7 @@ export const simpleSmallBracket = [
       {
         id: "d8b9f00a-0ffa-4527-8316-da701894768e",
         resultText: null,
-        isWinner: false,
+        isWinner: true,
         status: null,
         name: "Art of kill",
         picture: "teamlogos/client_team_default_logo"
@@ -184,8 +208,8 @@ export const simpleSmallBracket = [
       }
     ]
   },
-  
-  
+
+
 ];
 
 export default SingleElimination;

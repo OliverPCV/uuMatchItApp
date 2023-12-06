@@ -15,9 +15,14 @@ function Home() {
     tournamentRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const goToOtherPage = () => {
+  const goToTournamentCreate = () => {
     navigate('/tournamentcreate');
   };
+
+  const goToTeamCreate = () => {
+    navigate('/teamcreate');
+  };
+
 
   const handleFilter = (newFilter) => {
     setFilter(newFilter);
@@ -37,8 +42,9 @@ function Home() {
         <div className="lefttext">
           <div className="textwrap">
             <p>Pojďte si zahrát fotbalový turnaj! Přihlaste se a zúčastněte se s vaším týmem a ukažte své dovednosti na trávě.</p>
-            <button onClick={scrollToTournaments}>Procházet</button>
-            <button onClick={goToOtherPage}>Vytvořit</button>
+            <button onClick={scrollToTournaments}>Procházet Turnaje</button>
+            <button onClick={goToTournamentCreate}>Vytvořit Turnaj</button>
+            <button onClick={goToTeamCreate}>Vytvořit Tým</button>
           </div>
         </div>
         <div className="rightimage">
