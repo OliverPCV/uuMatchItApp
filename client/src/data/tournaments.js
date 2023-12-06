@@ -24,7 +24,7 @@ export const tournaments = [
     {
         id: 3,
         name: "4fun fóčo",
-        ownerId: 3,
+        ownerId: 1,
         type: "5V5",
         teams: [1, 2, 3, 4, 5],
         isFinished: true,
