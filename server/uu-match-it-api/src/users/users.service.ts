@@ -29,9 +29,11 @@ export class UsersService {
 
     createUser(user: User): boolean {
         let tempuser = this.findUser(user.username);
+
         if (tempuser) {
             return false;
         }
+
         user.password = bcrypt.hashSync(user.password, 10);
         this.users.push(user);
         return true;

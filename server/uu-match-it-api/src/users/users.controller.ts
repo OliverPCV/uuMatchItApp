@@ -13,7 +13,7 @@ export class UsersController {
 
 
     @Post("/register")
-    createUser(@Body() user: User): Response<User> {
+    createUser(@Body() user: User): Response<null> {
         if (!user) {
             return new Response<null>(400, "Bad Request", null);
         }
@@ -22,7 +22,7 @@ export class UsersController {
             return new Response<null>(400, "Bad Request", null);
         } else {
             if (this.userService.createUser(user)) {
-                return new Response<User>(200, "User created", user);
+                return new Response<null>(200, "User created", null);
             }
             else {
                 return new Response<null>(409, "User already exists", null);
