@@ -1,103 +1,99 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
-//import { useHistory } from 'react-router-dom';
+import $ from 'jquery'; // Make sure to install jQuery in your project
 import '../styles/page-style/TournamentCreate.css';
 
 function CreateTournament() {
-  const [tournamentData, setTournamentData] = useState({
-    name: '',
-    location: '',
-    teamSize: '',
-    prizePool: '',
-    format: '',
-  });
+  useEffect(() => {
+    function floatLabel(inputType) {
+      $(inputType).each(function () {
+        const $this = $(this);
 
-  //const history = useHistory();
+        // on focus add class active to label
+        $this.focus(function () {
+          $this.next().addClass('active');
+        });
 
-  const handleChange = (e) => {
-    setTournamentData({ ...tournamentData, [e.target.name]: e.target.value });
-  };
+        // on blur check field and remove class if needed
+        $this.blur(function () {
+          if ($this.val() === '' || $this.val() === 'blank') {
+            $this.next().removeClass();
+          }
+        });
+      });
+    }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(tournamentData);
-  };
+    // just add a class of "floatLabel" to the input field!
+    floatLabel('.floatLabel');
+  }, []);
 
   return (
-    <Container>
-      <h1>Create a Tournament</h1>
-      <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="tournamentName">
-          <Form.Label>Tournament Name</Form.Label>
-          <Form.Control 
-            type="text" 
-            placeholder="Enter tournament name" 
-            name="name" 
-            value={tournamentData.name} 
-            onChange={handleChange} 
-          />
-        </Form.Group>
 
-        <Form.Group controlId="tournamentLocation">
-          <Form.Label>Location</Form.Label>
-          <Form.Control 
-            type="text" 
-            placeholder="Enter location" 
-            name="location" 
-            value={tournamentData.location} 
-            onChange={handleChange} 
-          />
-        </Form.Group>
+    <form action="" className='createform'>
+      <div class="form-group">
+        <h2 class="heading">Create A Tournament</h2>
+        <div class="controls">
+          <input type="text" id="name" class="floatLabel" name="name" />
+          <label for="name">Name</label>
+        </div>
+        <div class="col-1-3 col-1-3-sm">
+          <div class="controls">
+            <i class="fa fa-sort"></i>
+            <select class="floatLabel">
+              <option value="blank"></option>
+              <option value="1">4</option>
+              <option value="2">8</option>
+              <option value="3">16</option>
+            </select>
+            <label for="slots"><i class="fa fa-male"></i>&nbsp;&nbsp;Slots</label>
+          </div>
+        </div>
+        <div class="col-1-3 col-1-3-sm">
+          <div class="controls">
+            <i class="fa fa-sort"></i>
+            <select class="floatLabel">
+              <option value="blank"></option>
+              <option value="1">1v1</option>
+              <option value="2">2v2</option>
+              <option value="3">3v3</option>
+              <option value="4">4v4</option>
+              <option value="5">5v5</option>
+              <option value="6">6v6</option>
+              <option value="7">7v7</option>
+              <option value="8">8v8</option>
+              <option value="9">9v9</option>
+              <option value="10">10v10</option>
+              <option value="11">11v11</option>
+            </select>
+            <label for="slots"><i class="fa fa-male"></i>&nbsp;&nbsp;Team Size</label>
+          </div>
+        </div>
+        <div class="controls">
+          <input type="tel" id="address" class="floatLabel" name="address" />
+          <label for="address">Address</label>
+        </div>
+        <div class="grid">
+          <div class="col-2-3">
+            <div class="controls">
+              <input type="text" id="prize" class="floatLabel" name="prize" />
+              <label for="prize">Prize</label>
+            </div>
+          </div>
 
-        <Form.Group controlId="tournamentTeamCount">
-          <Form.Label>Team Count</Form.Label>
-          <Form.Control 
-            type="text" 
-            placeholder="Enter team count" 
-            name="teamCount" 
-            value={tournamentData.teamCount} 
-            onChange={handleChange} 
-          />
-        </Form.Group>
+        </div>
+      </div>
 
-        <Form.Group controlId="tournamentTeamSize">
-          <Form.Label>Team Size</Form.Label>
-          <Form.Control 
-            type="text" 
-            placeholder="Enter team size" 
-            name="teamSize" 
-            value={tournamentData.teamSize} 
-            onChange={handleChange} 
-          />
-        </Form.Group>
-
-        <Form.Group controlId="tournamentPrizePool">
-          <Form.Label>Prize Pool</Form.Label>
-          <Form.Control 
-            type="text" 
-            placeholder="Enter prize pool" 
-            name="prizePool" 
-            value={tournamentData.prizePool} 
-            onChange={handleChange} 
-          />
-        </Form.Group>
-
-        <Form.Group controlId="tournamentFormat">
-          <Form.Label>Format</Form.Label>
-          <Form.Control 
-            type="text" 
-            placeholder="Enter format" 
-            name="format" 
-            value={tournamentData.format} 
-            onChange={handleChange} 
-          />
-        </Form.Group>
-
-        <Button variant="primary" type="submit">
-          Create Tournament
-        </Button>
-      </Form>
-    </Container>
+      <div class="form-group">
+        <h2 class="heading">Information</h2>
+        <div class="grid">
+          <div class="controls">
+            <textarea name="information" class="floatLabel" id="information"></textarea>
+            <label for="information">Information </label>
+          </div>
+          <button type="submit" value="Submit" class="col-1-4">Submit</button>
+        </div>
+      </div>
+    </form>
   );
 }
 
