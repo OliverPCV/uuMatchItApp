@@ -1,5 +1,6 @@
 import { Controller } from '@nestjs/common';
-import {Tournament} from "./tournament.interface";
+import { Tournament } from '../Interfaces/Tournament';
+
 
 @Controller('tournaments')
 export class TournamentsController {
