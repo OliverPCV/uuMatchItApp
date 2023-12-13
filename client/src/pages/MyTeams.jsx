@@ -7,12 +7,12 @@ function MyTeams({ loggedIn }) {
   const [id, setId] = useState('');
 
   useEffect(() => {
-    if (loggedIn.loggedIn) {
+    if (loggedIn) {
       setId(mockUser.id);
     }
   }, [loggedIn]);
 
-  if (!loggedIn.loggedIn) {
+  if (!loggedIn) {
     return (
       <div>
         <Button variant="primary">Přihlásit se</Button>
