@@ -16,6 +16,8 @@ export class TournamentEntity {
   @Column()
   ownerId: string;
 
+
+
   @ManyToMany(() => UserEntity)
   @JoinTable() players: UserEntity[];
 }

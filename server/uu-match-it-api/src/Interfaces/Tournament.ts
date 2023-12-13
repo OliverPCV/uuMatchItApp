@@ -7,5 +7,5 @@ export class Tournament {
   isFinished: boolean
   date: Date
   place: string
-  prize: number | null
+  prize: number | string | null
 }
