@@ -3,8 +3,9 @@ import mockUser from '../data/user';
 import tournaments from '../data/tournaments';
 import TournamentCard from '../components/TournamentCard'; // Předpokládám, že máte komponentu pro zobrazení turnaje
 import { Button } from 'react-bootstrap'; // Předpokládám, že používáte React-Bootstrap
+import "../styles/page-style/MyTournaments.css"
 
-function MyTournamentsPage( loggedIn ) { // Zde jsem přidal destrukturalizaci pro loggedIn
+function MyTournamentsPage(loggedIn) { // Zde jsem přidal destrukturalizaci pro loggedIn
   const [id, setId] = useState('');
 
   useEffect(() => {
@@ -15,7 +16,7 @@ function MyTournamentsPage( loggedIn ) { // Zde jsem přidal destrukturalizaci p
 
   if (!loggedIn) {
     return (
-      <div>
+      <div >
         <Button variant="primary">Přihlásit se</Button>
         <Button variant="secondary">Registrovat se</Button>
       </div>
@@ -25,7 +26,7 @@ function MyTournamentsPage( loggedIn ) { // Zde jsem přidal destrukturalizaci p
   const userTournaments = tournaments.filter(tournament => tournament.ownerId === id); // Použijte ID získané ze stavu
 
   return (
-    <div>
+    <div className='myt-main'>
       <h3>Moje turnaje:</h3>
       {userTournaments.length > 0 ? (
         userTournaments.map(tournament => (

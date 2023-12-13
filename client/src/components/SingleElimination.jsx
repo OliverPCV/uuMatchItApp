@@ -27,16 +27,16 @@ const GlootTheme = createTheme({
     }
   },
   border: {
-    color: "#7ad47a", 
-    highlightedColor: "#843535" 
+    color: "#7ad47a",
+    highlightedColor: "#843535"
   },
   roundHeader: {
-    backgroundColor: "#004d00", 
-    fontColor: "#ffffff" 
+    backgroundColor: "#004d00",
+    fontColor: "#ffffff"
   },
-  
-  connectorColor: "#080808", 
-  connectorColorHighlight: "#843535", 
+
+  connectorColor: "#080808",
+  connectorColorHighlight: "#843535",
 });
 
 const SingleElimination = () => (
@@ -45,12 +45,12 @@ const SingleElimination = () => (
     matches={simpleSmallBracket}
     matchComponent={Match}
     options={{
-      style:{
+      style: {
         connectorColor: GlootTheme.connectorColor, // Předpokládáme, že chcete bílou barvu pro konektory
         connectorColorHighlight: GlootTheme.connectorColorHighlight, // Jasně zelená
         svgBackground: GlootTheme.svgBackground,
       },
-      	
+
     }}
     svgWrapper={({ children, ...props }) => (
       <SVGViewer
@@ -62,7 +62,7 @@ const SingleElimination = () => (
       >
         {children}
       </SVGViewer>
-      
+
     )}
     onMatchClick={(match) => console.log(match)}
     onPartyClick={(match) => console.log(match)}
