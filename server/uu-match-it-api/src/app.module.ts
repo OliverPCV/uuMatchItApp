@@ -6,11 +6,12 @@ import { TeamsController } from './teams/teams.controller';
 import { TournamentsController } from './tournaments/tournaments.controller';
 import { UsersService } from './users/users.service';
 import {TypeOrmModule} from "@nestjs/typeorm";
-import {User} from "./entities/user.entity";
+import {UserEntity} from "./entities/user.entity";
 import {AuthGuard} from "./auth/auth.guard";
 import {JwtModule} from "@nestjs/jwt";
 import { AuthService } from './auth/auth.service';
 import { TournamentService } from './tournaments/tournament.service';
+import { TournamentEntity } from './entities/tournament.entity';
 const jwtSecret = 'VerySecretKey';
 @Module({
   imports: [
@@ -21,10 +22,9 @@ const jwtSecret = 'VerySecretKey';
       username: 'root',
       password: 'root',
       database: 'uumatchit',
-      entities: [User],
+      entities: [UserEntity, TournamentEntity],
       synchronize: true,
     }),
-
     JwtModule.register({
       global: true,
       secret: jwtSecret,
