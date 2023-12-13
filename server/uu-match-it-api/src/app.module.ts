@@ -9,6 +9,8 @@ import {TypeOrmModule} from "@nestjs/typeorm";
 import {User} from "./entities/user.entity";
 import {AuthGuard} from "./auth/auth.guard";
 import {JwtModule} from "@nestjs/jwt";
+import { AuthService } from './auth/auth.service';
+import { TournamentService } from './tournaments/tournament.service';
 const jwtSecret = 'VerySecretKey';
 @Module({
   imports: [
@@ -22,6 +24,7 @@ const jwtSecret = 'VerySecretKey';
       entities: [User],
       synchronize: true,
     }),
+
     JwtModule.register({
       global: true,
       secret: jwtSecret,
@@ -29,6 +32,6 @@ const jwtSecret = 'VerySecretKey';
     })
   ],
   controllers: [AppController, UsersController, TeamsController, TournamentsController],
-  providers: [AppService, UsersService, AuthGuard],
+  providers: [AppService, UsersService, AuthGuard, AuthService, TournamentService],
 })
 export class AppModule {}
