@@ -2,13 +2,14 @@ import {Body, Controller, Post} from '@nestjs/common';
 import {User} from "./user.interface";
 import {Response} from '../Interfaces/Response';
 import {UsersService} from "./users.service";
-import {AuthGuard} from "../auth/auth.guard";
+import { AuthService } from '../auth/auth.service';
 
 @Controller('users')
 export class UsersController {
 
-    constructor(private userService: UsersService, private authGuard: AuthGuard) {
+    constructor(private userService: UsersService, private auth: AuthService) {
         this.userService = userService;
+        this.auth = auth;
     }
 
 
@@ -38,7 +39,7 @@ export class UsersController {
         if (!user.username || !user.password) {
             return new Response<null>(400, "Bad Request", null);
         }
-        let token = await this.authGuard.signIn(user.username, user.password);
+        let token = await this.auth.signIn(user.username, user.password);
         if (token) {
             return new Response<{ token: string }>(200, "User logged in", token );
         } else {
