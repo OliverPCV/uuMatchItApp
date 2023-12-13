@@ -2,6 +2,11 @@
 /dist
 /node_modules
 
+./server/node_modules
+./server/dist
+./client/node_modules
+./client/dist
+
 # Logs
 logs
 *.log
