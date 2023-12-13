@@ -4,8 +4,6 @@ import { UserEntity } from './user.entity';
 
 @Entity()
 export class TournamentEntity {
-
-
   constructor() {
   }
 
