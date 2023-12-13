@@ -5,6 +5,7 @@ import { UsersController } from './users/users.controller';
 import { TeamsController } from './teams/teams.controller';
 import { TournamentsController } from './tournaments/tournaments.controller';
 import { UsersService } from './users/users.service';
+import { TeamsService } from './teams/teams.service';
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {UserEntity} from "./entities/user.entity";
 import {AuthGuard} from "./auth/auth.guard";
@@ -32,6 +33,6 @@ const jwtSecret = 'VerySecretKey';
     })
   ],
   controllers: [AppController, UsersController, TeamsController, TournamentsController],
-  providers: [AppService, UsersService, AuthGuard, AuthService, TournamentService],
+  providers: [AppService, UsersService, AuthGuard,TeamsService, AuthService, TournamentService],
 })
 export class AppModule {}
