@@ -1,1 +1,6 @@
-export interface Team {}
+export interface Team {
+  id: string;
+  name: string;
+  ownerId: string;
+  members: string[];
+}
