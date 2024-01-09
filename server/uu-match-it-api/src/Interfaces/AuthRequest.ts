@@ -1,6 +1,6 @@
 export interface AuthRequest extends Request {
     user: {
-        id: string;
+        id: number;
         email: string;
     };
 }

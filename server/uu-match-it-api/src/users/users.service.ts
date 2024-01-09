@@ -3,16 +3,13 @@ import { User } from '../Interfaces/User';
 import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Invite } from '../Interfaces/Invite';
-
 
 @Injectable()
 export class UsersService {
 
 
   constructor(
-    @InjectRepository(User) private userRep: Repository<User>,
-
+    @InjectRepository(User) private userRep: Repository<User>
   ) {
   }
 

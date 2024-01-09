@@ -4,7 +4,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 export class Invite {
 
 
-  constructor(teamId: string, userId: string) {
+  constructor(teamId: number, userId: number) {
     this.teamId = teamId;
     this.userId = userId;
     this.state = InviteState.PENDING;
@@ -12,8 +12,8 @@ export class Invite {
 
   @PrimaryGeneratedColumn() id: number;
 
-  @Column() teamId: string;
-  @Column() userId: string;
+  @Column() teamId: number;
+  @Column() userId: number;
   @Column() state: InviteState;
 }
 

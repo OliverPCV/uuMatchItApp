@@ -10,7 +10,7 @@ export class InviteService {
     @InjectRepository(Invite) private inviteRep: Repository<Invite>,
   ) {}
 
-  async inviteUserToTeam(teamId: string, userId: string) {
+  async inviteUserToTeam(teamId: number, userId: number) {
     let invite = new Invite(teamId, userId)
     await this.inviteRep.save(invite);
   }
@@ -21,7 +21,7 @@ export class InviteService {
     await this.inviteRep.update(invitationId, invite);
   }
 
-  async getInvitations(userId: string) {
+  async getInvitations(userId: number) {
     return await this.inviteRep.findBy({userId: userId});
   }
 

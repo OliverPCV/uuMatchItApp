@@ -21,9 +21,8 @@ import { UsersService } from '../users/users.service';
 export class TeamsController {
 
 
-    constructor(private worker: TeamsService, private userService: UsersService) {
+    constructor(private worker: TeamsService) {
         this.worker = worker;
-        this.userService = userService;
     }
 
     /**
@@ -45,8 +44,9 @@ export class TeamsController {
             throw new BadRequestException("Team name is too long");
         }
 
-        this.worker.createTeam(request.user.id, team.name);
-        return "Team created";
+        this.worker.createTeam(team).then(() => {
+            return "Team created";
+        } );
     }
 
     //FIXME: This is a temporary solution to get the teams of the user
@@ -56,31 +56,6 @@ export class TeamsController {
     getTeams() {
         return this.worker.getTeams();
     }
-
-
-    /**
-     * Invite a user to a team
-     * @param request
-     * @param teamId id of the team
-     * @param userId id of the user to be invited
-     * TODO add a person that is inviting
-     * */
-    @UseGuards(AuthGuard)
-    @Post("invite/:teamId/:userId")
-    inviteToTeam(@Req() request: AuthRequest, @Param("teamId") teamId: string, @Param("userId") userId: string) {
-        const teamOwner = this.worker.getTeam(teamId);
-        if (teamOwner.ownerId !== parseInt(request.user.id)) {
-            throw new BadRequestException("You are not the owner of the team");
-        }
-
-        if (userId === request.user.id) {
-            throw new BadRequestException("You cannot invite yourself");
-        }
-
-        this.userService.inviteUserToTeam(teamId, userId)
-        return "User invited";
-    }
-
 
     /**
      * TeamOwner can edit the parameters of the team like image or name

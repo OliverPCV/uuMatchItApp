@@ -21,7 +21,7 @@ export class AuthService {
    * said fckit async is on
    * */
   async signIn(username: string, pass: string) {
-    const user = this.usersService.findUser(username);
+    const user = await this.usersService.findUser(username);
     let hash = bcrypt.hashSync(pass, 10);
 
     if (user == null) {
