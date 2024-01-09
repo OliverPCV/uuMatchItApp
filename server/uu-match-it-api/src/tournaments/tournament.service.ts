@@ -6,7 +6,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 @Injectable()
 export class TournamentService {
 
-
   constructor(@InjectRepository(Tournament) private tournamentRep: Repository<Tournament>) {
   }
 

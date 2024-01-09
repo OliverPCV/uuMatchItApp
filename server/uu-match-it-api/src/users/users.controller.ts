@@ -14,15 +14,14 @@ export class UsersController {
 
 
     @Post("/register")
-    createUser(@Body() user: User): Response<null> {
+    async createUser(@Body() user: User): Promise<Response<null>> {
         if (!user) {
             return new Response<null>(400, "Bad Request", null);
         }
-
         if (user.username == null || user.password == null || user.email == null) {
             return new Response<null>(400, "Bad Request", null);
         } else {
-            if (this.userService.createUser(user)) {
+            if (await this.userService.createUser(user)) {
                 return new Response<null>(200, "User created", null);
             }
             else {
