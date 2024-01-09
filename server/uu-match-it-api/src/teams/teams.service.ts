@@ -49,8 +49,4 @@ export class TeamsService {
   getTeams() {
     return this.teams;
   }
-
-  inviteUserToTeam(id: string, teamId: string, userId: string) {
-
-  }
 }
