@@ -36,8 +36,6 @@ export class TeamsController {
     @UseGuards(AuthGuard)
     @Post()
     createTeam(@Req() request: AuthRequest, @Body() team: Team) {
-        console.log(team);
-
 
         if (team.name.length < 3) {
             throw new BadRequestException("Team name is too short");
