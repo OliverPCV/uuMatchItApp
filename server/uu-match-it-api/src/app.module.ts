@@ -16,9 +16,11 @@ import { Team } from './Interfaces/Team';
 import { Tournament } from './Interfaces/Tournament';
 import { Invite } from './Interfaces/Invite';
 import { InvitesController } from './invites/invites.controller';
+import { InviteService } from './invites/invite.service';
 const jwtSecret = 'VerySecretKey';
 @Module({
   imports: [
+    TypeOrmModule.forFeature([User, Team, Tournament, Invite]),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: '127.0.0.1',
@@ -36,6 +38,6 @@ const jwtSecret = 'VerySecretKey';
     })
   ],
   controllers: [AppController, UsersController, TeamsController, TournamentsController, InvitesController],
-  providers: [AppService, UsersService, AuthGuard,TeamsService, AuthService, TournamentService],
+  providers: [AppService, AuthGuard, TeamsService, UsersService, InviteService, AuthService, TournamentService],
 })
 export class AppModule {}
