@@ -8,7 +8,7 @@ export class Tournament {
   @Column() name: string;
 
   @ManyToOne( () => User, user => user.id)
-  ownerId: User;
+  owner: User;
 
   @Column() type: string;
 
@@ -19,5 +19,5 @@ export class Tournament {
   @Column() isFinished: boolean;
   @Column() date: Date;
   @Column() place: string;
-  @Column() prize: number | string | null;
+  @Column() prize: string;
 }
