@@ -1,6 +1,9 @@
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+
+@Entity()
 export class Team {
-  id: number;
-  name: string;
-  ownerId: number;
-  players: number[];
+  @PrimaryGeneratedColumn() id: number;
+  @Column() name: string;
+  @Column() ownerId: number;
+  @Column() players: number[];
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {User} from "./user.interface";
+import {User} from "../Interfaces/User";
 import * as bcrypt from "bcrypt";
 
 

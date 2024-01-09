@@ -7,12 +7,13 @@ import { TournamentsController } from './tournaments/tournaments.controller';
 import { UsersService } from './users/users.service';
 import { TeamsService } from './teams/teams.service';
 import {TypeOrmModule} from "@nestjs/typeorm";
-import {UserEntity} from "./entities/user.entity";
 import {AuthGuard} from "./auth/auth.guard";
 import {JwtModule} from "@nestjs/jwt";
 import { AuthService } from './auth/auth.service';
 import { TournamentService } from './tournaments/tournament.service';
-import { TournamentEntity } from './entities/tournament.entity';
+import { User } from './Interfaces/User';
+import { Team } from './Interfaces/Team';
+import { Tournament } from './Interfaces/Tournament';
 const jwtSecret = 'VerySecretKey';
 @Module({
   imports: [
@@ -23,7 +24,7 @@ const jwtSecret = 'VerySecretKey';
       username: 'root',
       password: 'root',
       database: 'uumatchit',
-      entities: [UserEntity, TournamentEntity],
+      entities: [User, Tournament, Team],
       synchronize: true,
     }),
     JwtModule.register({

@@ -1,11 +1,14 @@
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+
+@Entity()
 export class Tournament {
-  id: number
-  name:  string
-  ownerId: number
-  type: string
-  teams: number[]
-  isFinished: boolean
-  date: Date
-  place: string
-  prize: number | string | null
+  @PrimaryGeneratedColumn() id: number;
+  @Column() name: string;
+  @Column() ownerId: number;
+  @Column() type: string;
+  @Column() teams: number[];
+  @Column() isFinished: boolean;
+  @Column() date: Date;
+  @Column() place: string;
+  @Column() prize: number | string | null;
 }

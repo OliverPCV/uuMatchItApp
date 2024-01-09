@@ -1,5 +1,5 @@
 import {Body, Controller, Post} from '@nestjs/common';
-import {User} from "./user.interface";
+import {User} from "../Interfaces/User";
 import {Response} from '../Interfaces/Response';
 import {UsersService} from "./users.service";
 import { AuthService } from '../auth/auth.service';
