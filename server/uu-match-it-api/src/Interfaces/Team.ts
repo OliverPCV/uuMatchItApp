@@ -1,9 +1,15 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from './User';
 
 @Entity()
 export class Team {
   @PrimaryGeneratedColumn() id: number;
   @Column() name: string;
-  @Column() ownerId: number;
-  @Column() players: number[];
+
+  @ManyToOne( () => User, user => user.id)
+  owner: User;
+
+  @ManyToMany(() => User)
+  @JoinTable()
+  players: User[];
 }

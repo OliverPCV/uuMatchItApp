@@ -1,57 +1,45 @@
 import { Injectable } from '@nestjs/common';
-import {User} from "../Interfaces/User";
-import * as bcrypt from "bcrypt";
+import { User } from '../Interfaces/User';
+import * as bcrypt from 'bcrypt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Invite } from '../Interfaces/Invite';
 
-
-enum InviteState {
-  PENDING = "pending",
-  ACCEPTED = "accepted",
-  DECLINED = "declined",
-}
 
 @Injectable()
 export class UsersService {
-    private users: User[] = [
-      {id: "1", username: "jannovak", email: "jan.novak@example.com", password: "$2a$10$PitXFJ5T2SR2rRimhH7tHOge73YhBl9Okb9YF3HiHqLdvwgOgVq3y"}]; //strongpassword10
 
-    private invites: any[] = [
 
-    ]
+  constructor(
+    @InjectRepository(User) private userRep: Repository<User>,
+    @InjectRepository(Invite) private inviteRep: Repository<Invite>,
+  ) {
+  }
 
-    /**
-     * TODO will be reimplemented to allow for database access
-     * */
-    findUser(username: string): User {
-        for (let user of this.users) {
-            if (user.username === username) {
-                return user;
-            }
-        }
-        return null;
+  findUser(username: string): Promise<User | null> {
+    return this.userRep.findOneBy({ username: username });
+  }
+  getUsers(): Promise<User[]> {
+    return this.userRep.find();
+  }
+  async createUser(user: User): Promise<Boolean> {
+    try {
+      let value = await this.findUser(user.username);
+      let isUsernameTaken: boolean = !value;
+      if (isUsernameTaken) {
+        return false;
+      }
+      user.password = bcrypt.hashSync(user.password, 10);
+      await this.userRep.save(user);
+      return true;
+    } catch (e) {
+      return false;
     }
+  }
 
-    getUsers(): User[] {
-        return this.users;
-    }
-
-    createUser(user: User): boolean {
-        let tempuser = this.findUser(user.username);
-
-        if (tempuser) {
-            return false;
-        }
-
-        user.password = bcrypt.hashSync(user.password, 10);
-        this.users.push(user);
-        return true;
-    }
-
-    inviteUserToTeam(teamId: string, userId: string) {
-      this.invites.push({
-        teamId: teamId,
-        userId: userId,
-        state: InviteState.PENDING,
-      })
-    }
+  async inviteUserToTeam(teamId: string, userId: string) {
+    let invite = new Invite(teamId, userId)
+    await this.inviteRep.save(invite);
+  }
 
 }
