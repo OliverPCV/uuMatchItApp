@@ -54,22 +54,4 @@ export class UsersController {
         throw new Error("Method not implemented.");
     }
 
-    /**
-     * sets the invitation status, either accepted or declined
-     * @param invitationId
-     * @param status
-     *
-     * */
-    handleInvitation(invitationId: string, status: any) {
-        throw new Error("Method not implemented.");
-    }
-
-    /**
-     * Lists all active invitations for the user
-     *
-     * @header user token, to identify the user and his roles
-     * */
-    showInvitations() {
-        throw new Error("Method not implemented.");
-    }
 }

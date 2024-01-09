@@ -14,6 +14,8 @@ import { TournamentService } from './tournaments/tournament.service';
 import { User } from './Interfaces/User';
 import { Team } from './Interfaces/Team';
 import { Tournament } from './Interfaces/Tournament';
+import { Invite } from './Interfaces/Invite';
+import { InvitesController } from './invites/invites.controller';
 const jwtSecret = 'VerySecretKey';
 @Module({
   imports: [
@@ -24,7 +26,7 @@ const jwtSecret = 'VerySecretKey';
       username: 'root',
       password: 'root',
       database: 'uumatchit',
-      entities: [User, Tournament, Team],
+      entities: [User, Tournament, Team, Invite],
       synchronize: true,
     }),
     JwtModule.register({
@@ -33,7 +35,7 @@ const jwtSecret = 'VerySecretKey';
       signOptions: { expiresIn: '60m' },
     })
   ],
-  controllers: [AppController, UsersController, TeamsController, TournamentsController],
+  controllers: [AppController, UsersController, TeamsController, TournamentsController, InvitesController],
   providers: [AppService, UsersService, AuthGuard,TeamsService, AuthService, TournamentService],
 })
 export class AppModule {}
