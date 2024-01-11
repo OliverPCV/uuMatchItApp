@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Box, Center, Image, Flex, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import "../styles/component-style/TournamentCard.css";
+import "../styles/component-style/TeamCard.css";
 
 export default function TournamentCard({ data }) {
 
