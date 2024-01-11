@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Team } from '../Interfaces/Team';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -22,8 +22,11 @@ export class TeamsService {
     return this.teamRep.insert(team);
   }
 
-  getTeams() {
-    return this.teamRep.find();
+  getTeams(userId: number) {
+    //find all the teams the user is either in or is the owner of
+    return this.teamRep.find({
+      where: [{ owner: { id: userId } }, { players: { id: userId } }], relations: ['owner', 'players'],
+    });
   }
 
   async deleteTeam(teamId: number, userId: number) {
@@ -33,14 +36,12 @@ export class TeamsService {
       if (team) {
         this.teamRep.delete(team);
       } else {
-        throw new Error('User is not the owner of the team');
+        throw new BadRequestException('User is not the owner of the team');
       }
     });
   }
 
   async removePlayer(teamId: number, userId: number, callerId: number) {
-    //if the caller is the owner of the team he can remove any player
-    //if the caller is not the owner of the team he can only remove himself
     const team = await this.teamRep.findOne({
       where: { id: teamId }, relations: ['owner', 'players'],
     });
@@ -48,7 +49,7 @@ export class TeamsService {
       team.players = team.players.filter((player) => player.id != userId);
       await this.teamRep.save(team);
     } else {
-      throw new Error('User is not the owner of the team');
+      throw new BadRequestException('User is not the owner of the team');
     }
   }
 }
