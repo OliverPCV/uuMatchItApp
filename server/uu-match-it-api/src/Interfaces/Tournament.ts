@@ -12,11 +12,11 @@ export class Tournament {
 
   @Column() type: string;
 
-  @ManyToMany(() => Team)
+  @ManyToMany(() => Team, team => team.id, {cascade: true})
   @JoinTable()
   teams: Team[];
 
-  @Column() isFinished: boolean;
+  @Column({default: false}) isFinished: boolean;
   @Column() date: Date;
   @Column() place: string;
   @Column() prize: string;
