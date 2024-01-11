@@ -13,8 +13,12 @@ export class UsersService {
   ) {
   }
 
-  findUser(username: string): Promise<User | null> {
+  findUserByName(username: string): Promise<User | null> {
     return this.userRep.findOneBy({ username: username });
+  }
+
+  findUserById(id: number) {
+    return this.userRep.findOneBy({id: id});
   }
 
   //TODO delete this as it is used for testing
@@ -23,8 +27,8 @@ export class UsersService {
   }
   async createUser(user: User): Promise<Boolean> {
     try {
-      let value = await this.findUser(user.username);
-      let isUsernameTaken: boolean = !value;
+      let value = await this.findUserByName(user.username);
+      let isUsernameTaken: boolean = !!value;
       if (isUsernameTaken) {
         return false;
       }

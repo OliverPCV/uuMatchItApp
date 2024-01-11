@@ -2,13 +2,17 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { User } from '../Interfaces/User';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
 
   private invalidatedTokens: string[] = [];
-  constructor(private usersService: UsersService, private jwtService: JwtService) {
-    this.usersService = usersService;
+  constructor(
+    @InjectRepository(User) private readonly userRep: Repository<User>,
+    private jwtService: JwtService) {
     this.jwtService = jwtService;
   }
 
@@ -21,7 +25,10 @@ export class AuthService {
    * said fckit async is on
    * */
   async signIn(username: string, pass: string) {
-    const user = await this.usersService.findUser(username);
+    const user = await this.userRep.findOne({
+      where: { username: username },
+      select: ['id', 'username','password']
+    });
     let hash = bcrypt.hashSync(pass, 10);
 
     if (user == null) {
