@@ -48,12 +48,10 @@ export class TeamsController {
     });
   }
 
-  //FIXME: This is a temporary solution to get the teams of the user
-  //FIXME: Delete this when testing is finished
   @UseGuards(AuthGuard)
   @Get()
-  getTeams() {
-    return this.worker.getTeams();
+  getTeams(@Req() request: AuthRequest) {
+    return this.worker.getTeams(request.user.id);
   }
 
   @UseGuards(AuthGuard)
