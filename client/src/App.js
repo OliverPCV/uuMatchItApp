@@ -11,6 +11,7 @@ import UserProfile from './pages/UserProfile';
 import TeamCreate from './pages/TeamCreate';
 import MyTeams from './pages/MyTeams';
 import MyTournaments from './pages/MyTournaments';
+import TeamDetail from './pages/TeamDetail';
 import { user as mockUser } from '..//src/data/user'; // Import mockUser
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
           <Route path="/tournamentdetail/:id" element={<TournamentDetail />} />
           <Route path="/userprofile" element={<UserProfile loggedIn={user !== null} />} />
           <Route path="/mytournaments" element={<MyTournaments />} />
+          <Route path="/teamdetail/:id" element={<TeamDetail />} />
           <Route path="/*" element={<NoPage />} />
         </Routes>
     </div>

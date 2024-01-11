@@ -1,34 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { teams } from '../data/teams';
-import { Button } from 'react-bootstrap';
 import "../styles/page-style/MyTeams.css"
+import TeamCard from '../components/TeamCard';
+import { Button } from 'react-bootstrap';
+import mockUser from '../data/user';
 
-function MyTeams() {
+function MyTeams(loggedIn) { // Zde jsem přidal destrukturalizaci pro loggedIn
+  const [id, setId] = useState('');
+
+  useEffect(() => {
+    if (loggedIn) {
+      setId(mockUser.id); // Nastavte ID pouze pokud je uživatel přihlášen
+    }
+  }, [loggedIn]);
+
+  if (!loggedIn) {
+    return (
+      <div >
+        <Button variant="primary">Přihlásit se</Button>
+        <Button variant="secondary">Registrovat se</Button>
+      </div>
+    );
+  }
+
+  const userTeams = teams.filter(team => team.ownerId === id); // Použijte ID získané ze stavu
 
   return (
-    <div className='myteams-container'>
+    <div className='myt-main'>
       <h3>Moje týmy:</h3>
-      <div className="my-teams">
-        {teams.length > 0 ? (
-          teams.map(team => (
-
-            <div class="card-group">
-              <div class="card">
-                <img src="https://www.saturdayfootball.org/uploads/2/9/9/8/2998227/team-kh_orig.jpg" class="card-img-top" alt="..." />
-                <div class="card-body">
-                  <h5 class="card-title">{team.name}</h5>
-                  <Button variant="outline-success" >Detail</Button>
-
-                </div>
-              </div>
-
-            </div>
-          ))
-        ) : (
-          <p>Nemáte žádné týmy.</p>
-        )}
-      </div>
-
+      {userTeams.length > 0 ? (
+        userTeams.map(team => (
+          <TeamCard key={team.id} data={team} />
+        ))
+      ) : (
+        <p>Nemáte žádné turnaje.</p>
+      )}
     </div>
   );
 }
