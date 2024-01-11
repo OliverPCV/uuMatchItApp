@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, Nav, Container, Modal, Button, Form, Dropdown } from 'react-bootstrap';
-import mockUser from '../data/user';
+//import mockUser from '../data/user';
+import axiosInstance from '../services/axiosInstance';
 import MatchitLogo from '../images/MatchitLogo.png';
 import '../styles/component-style/Navbar.css';
 import { Link } from 'react-router-dom';
@@ -19,20 +20,49 @@ function AppNavbar() {
     }
   }, []);
 
-  const handleLogin = () => {
-    setUser(mockUser);
-    setLoggedIn(true);
-    sessionStorage.setItem('user', JSON.stringify(mockUser));
-    setShowLogin(false);
+  const handleLogin = async () => {
+    const username = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    try {
+      const response = await axiosInstance.post('/users/login', {
+        username: username,
+        password: password
+      });
+
+      sessionStorage.setItem('user', JSON.stringify(response.data));
+      setUser(response.data);
+      setLoggedIn(true);
+    } catch (error) {
+      console.error('Přihlášení selhalo:', error);
+    }
+  };
+
+  const handleRegister = async (username, email, password) => {
+    try {
+      const response = await axiosInstance.post('/users/register', {
+        username: username,
+        email: email,
+        password: password
+      });
+
+      sessionStorage.setItem('user', JSON.stringify(response.data));
+      setUser(response.data);
+      setLoggedIn(true);
+    } catch (error) {
+      // Ošetření chyb registrace
+      console.error('Registrace selhala:', error);
+    }
   };
 
   const handleLogout = () => {
-    setLoggedIn(false);
-    setUser(null);
+    // Odstranění uživatelských údajů z session storage
     sessionStorage.removeItem('user');
+
+    // Aktualizace stavu aplikace
+    setUser(null);
+    setLoggedIn(false);
   };
 
- 
 
   return (
     <>
@@ -50,12 +80,12 @@ function AppNavbar() {
                   Turnaj
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <Dropdown.Item ><Link to={"/"}>Procházet Turnaje</Link>  
-                </Dropdown.Item>
-                  <Dropdown.Item ><Link to={"/tournamentcreate"}>Vytvořit Turnaj</Link> 
-                </Dropdown.Item>
-                  <Dropdown.Item ><Link to={"/mytournaments"}> Moje Turnaje</Link>  
-                </Dropdown.Item>
+                  <Dropdown.Item ><Link to={"/"}>Procházet Turnaje</Link>
+                  </Dropdown.Item>
+                  <Dropdown.Item ><Link to={"/tournamentcreate"}>Vytvořit Turnaj</Link>
+                  </Dropdown.Item>
+                  <Dropdown.Item ><Link to={"/mytournaments"}> Moje Turnaje</Link>
+                  </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
 
@@ -80,7 +110,7 @@ function AppNavbar() {
           ) : (
             <>
               <Link to={"/userprofile"}>
-              <span style={{ color: 'white', marginRight: '10px' }}>{user?.name}</span>
+                <span style={{ color: 'white', marginRight: '10px' }}>{user?.name}</span>
               </Link>
               <Button variant="outline-danger" onClick={handleLogout}>Logout</Button>
             </>
@@ -137,7 +167,12 @@ function AppNavbar() {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowRegister(false)}>Close</Button>
-          <Button variant="primary">Register</Button>
+          <Button variant="primary" onClick={() => {
+            const username = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            handleRegister(username, email, password);
+          }}>Register</Button>
         </Modal.Footer>
       </Modal>
     </>
