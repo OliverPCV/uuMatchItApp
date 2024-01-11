@@ -1,4 +1,4 @@
-import { BadRequestException, Controller, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
+import { BadRequestException, Controller, Get, Param, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
 import { InviteService } from './invite.service';
 import { InviteState } from '../Interfaces/Invite';
 import { AuthGuard } from '../auth/auth.guard';
@@ -19,13 +19,13 @@ export class InvitesController {
    * sets the invitation status, either accepted or declined
    * @param request
    * @param inviteId
-   * @param status
+   * @param state
    *
    * */
-  @Put()
+  @Put(":inviteId")
   @UseGuards(AuthGuard)
-  async handleInvitation(@Req() request: AuthRequest,inviteId: number, status: InviteState) {
-    return this.inviteService.handleInvitation(inviteId, status);
+  async handleInvitation(@Req() request: AuthRequest, @Param('inviteId') inviteId: number, @Query('state') state: InviteState) {
+    return this.inviteService.handleInvitation(inviteId, state, request.user.id);
   }
 
 
@@ -33,25 +33,27 @@ export class InvitesController {
    * Invite a user to a team
    * @param request
    * @param teamId id of the team
-   * @param userId id of the user to be invited
+   * @param username username of the user to be invited
    * TODO add a person that is inviting
    * */
   @UseGuards(AuthGuard)
-  @Post("invite/:teamId/:userId")
-  async inviteToTeam(@Req() request: AuthRequest, @Param("teamId") teamId: number, @Param("userId") userId: number) {
+  @Post()
+  async inviteToTeam(@Req() request: AuthRequest, @Query("teamId") teamId: number, @Query("user") username: string) {
     const team = await this.teamService.getTeam(teamId);
-
+    if (!team) {
+      throw new BadRequestException("Team does not exist");
+    }
+    console.log(team);
     if (team.owner.id !== request.user.id) {
       throw new BadRequestException("You are not the owner of the team");
     }
 
-    if (userId === request.user.id) {
-      throw new BadRequestException("You cannot invite yourself");
-    }
-
-    this.inviteService.inviteUserToTeam(teamId, userId).then(() => {
+    await this.inviteService.inviteUserToTeam(teamId, username).then(() => {
       return "User invited";
-    })
+    }, (err: BadRequestException) => {
+      throw err;
+      }
+    )
   }
 
 
