@@ -20,7 +20,7 @@ import { InviteService } from './invites/invite.service';
 const jwtSecret = 'VerySecretKey';
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Team, Tournament, Invite]),
+    TypeOrmModule.forFeature([User, Tournament, Team, Invite]),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: '127.0.0.1',
