@@ -40,13 +40,11 @@ export class TournamentsController {
   }
 
   @Get()
-  @UseGuards(AuthGuard)
   getTournaments() {
     return this.worker.getTournaments();
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard)
   async getTournamentDetail(@Param('id', ParseIntPipe) id: number) {
     const tournament = await this.worker.getTournamentDetail(id);
     if (tournament) {
