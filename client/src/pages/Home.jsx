@@ -4,7 +4,7 @@ import TournamentCard from '../components/TournamentCard';
 import '../styles/page-style/Home.css';
 import img1 from "../images/IMG_1246.jpg";
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { fetchTournaments } from '../services/tourService';
 
 function Home() {
   let navigate = useNavigate();
@@ -12,23 +12,17 @@ function Home() {
   const [filter, setFilter] = useState('all');
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        axios.get('http://localhost:3000/tournaments', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        })
-        .then(response => {
-          setTournaments(response.data);
-          console.log(response.data);
-        })
-      } catch (error) {
-        console.error('Error fetching tournaments:', error);
-      }
-    } else {
-      console.error('No token found');
-    }
-  }, []);  
+    fetchTournaments()
+      .then(data => {
+        setTournaments(data); 
+        console.log(data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }, []);
+
+  console.log(tournaments);
 
   const scrollToTournaments = () => {
     tournaments.current?.scrollIntoView({ behavior: 'smooth' });
