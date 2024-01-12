@@ -27,10 +27,7 @@ function UserProfile() {
   if (!loggedIn) {
     // Zobrazí tlačítka pro přihlášení a registraci, pokud uživatel není přihlášen
     return (
-      <div className="container mt-5 mb-5 text-center">
-        <button className="btn btn-primary m-2">Log In</button>
-        <button className="btn btn-secondary m-2">Register</button>
-      </div>
+      <h4 Uživatel className="text-right">Uživatel není přihlášený</h4>
     );
   }
 
@@ -48,7 +45,7 @@ function UserProfile() {
         <div className="col-md-9">
           <div className="p-3 py-5">
             <div className="d-flex justify-content-between align-items-center mb-3">
-              <h4 className="text-right">Uživatelksý profil</h4>
+              <h4 className="text-right">Uživatelský profil</h4>
             </div>
           </div>
         </div>
