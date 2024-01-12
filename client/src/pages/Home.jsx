@@ -68,8 +68,8 @@ function Home() {
       <Container>
         <div className="filter-buttons">
           <button onClick={() => handleFilter('all')}>Vše</button>
-          <button onClick={() => handleFilter('4V4')}>4V4</button>
-          <button onClick={() => handleFilter('5V5')}>5v5</button>
+          <button onClick={() => handleFilter('4v4')}>4V4</button>
+          <button onClick={() => handleFilter('5v5')}>5v5</button>
           <button onClick={() => handleFilter('6V6')}>6V6</button>
           <button onClick={() => handleFilter('7V7')}>7V7</button>
           <button onClick={() => handleFilter('8V8')}>8V8</button>
