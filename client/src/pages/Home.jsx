@@ -1,18 +1,37 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
 import TournamentCard from '../components/TournamentCard';
 import '../styles/page-style/Home.css';
 import img1 from "../images/IMG_1246.jpg";
-import tournaments from '../data/tournaments'; 
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function Home() {
   let navigate = useNavigate();
-  const tournamentRef = useRef(null);
+  const [tournaments, setTournaments] = useState([]);
   const [filter, setFilter] = useState('all');
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        axios.get('http://localhost:3000/tournaments', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+        .then(response => {
+          setTournaments(response.data);
+          console.log(response.data);
+        })
+      } catch (error) {
+        console.error('Error fetching tournaments:', error);
+      }
+    } else {
+      console.error('No token found');
+    }
+  }, []);  
+
   const scrollToTournaments = () => {
-    tournamentRef.current?.scrollIntoView({ behavior: 'smooth' });
+    tournaments.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const goToTournamentCreate = () => {
@@ -55,10 +74,16 @@ function Home() {
       <Container>
         <div className="filter-buttons">
           <button onClick={() => handleFilter('all')}>Vše</button>
+          <button onClick={() => handleFilter('4V4')}>Vše</button>
           <button onClick={() => handleFilter('5V5')}>5v5</button>
+          <button onClick={() => handleFilter('6V6')}>Vše</button>
+          <button onClick={() => handleFilter('7V7')}>Vše</button>
+          <button onClick={() => handleFilter('8V8')}>Vše</button>
+          <button onClick={() => handleFilter('9V9')}>Vše</button>
+          <button onClick={() => handleFilter('10V10')}>Vše</button>
           <button onClick={() => handleFilter('11V11')}>11v11</button>
         </div>
-        <h3 ref={tournamentRef}>Všechny turnaje:</h3>
+        <h3 ref={tournaments}>Všechny turnaje:</h3>
         {Array.isArray(filteredTournaments) && filteredTournaments.map(tournament => (
           <TournamentCard key={tournament.id} data={tournament} />
         ))}
