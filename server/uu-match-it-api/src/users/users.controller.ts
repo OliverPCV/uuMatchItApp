@@ -1,8 +1,18 @@
-import { BadRequestException, Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
-import {Response} from '../Interfaces/Response';
+import {
+    BadRequestException,
+    Body,
+    Controller,
+    Get,
+    Post,
+    Req,
+    UnauthorizedException,
+    UseGuards,
+} from '@nestjs/common';
 import {UsersService} from "./users.service";
 import { AuthService } from '../auth/auth.service';
 import { User } from '../Interfaces/User';
+import { AuthGuard } from '../auth/auth.guard';
+import { AuthRequest } from '../Interfaces/AuthRequest';
 
 @Controller('users')
 export class UsersController {
@@ -29,6 +39,13 @@ export class UsersController {
         }
     }
 
+    @Get('/me')
+    @UseGuards(AuthGuard)
+    async getLoggedUser(@Req() request: AuthRequest) {
+        return this.userService.findUserById(request.user.id);
+    }
+
+
     @Post("/login")
     async login(@Body() user: {username: string, password: string}): Promise<{ token: string } | null> {
         if (!user) {
@@ -46,11 +63,5 @@ export class UsersController {
         }
     }
 
-    /**
-     * Logs the user out, destroying his token form the users service
-     * */
-    logout() {
-        throw new Error("Method not implemented.");
-    }
 
 }
