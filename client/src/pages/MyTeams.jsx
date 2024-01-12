@@ -1,29 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { teams } from '../data/teams';
 import "../styles/page-style/MyTeams.css"
 import TeamCard from '../components/TeamCard';
 import { Button } from 'react-bootstrap';
-import mockUser from '../data/user';
+import { fetchUserData, isLoggedIn } from '../services/authService';
+import { fetchTeamData } from '../services/teamService';
 
-function MyTeams(loggedIn) { // Zde jsem přidal destrukturalizaci pro loggedIn
+function MyTeams() {
   const [id, setId] = useState('');
+  const [teams, setTeams] = useState([]);
 
   useEffect(() => {
-    if (loggedIn) {
-      setId(mockUser.id); // Nastavte ID pouze pokud je uživatel přihlášen
+    fetchTeamData()
+      .then(data => {
+        setTeams(data);
+        console.log(data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    if (isLoggedIn) {
+      setId(sessionStorage.getItem('userId'));
+      fetchUserData().then(data => {
+        setId(data.Id);
+        console.log(id);
+      }).catch(error => {
+        console.error('Error fetching teams:', error);
+      });
     }
-  }, [loggedIn]);
+  }, [isLoggedIn]);
 
-  if (!loggedIn) {
+  if (!isLoggedIn) {
     return (
-      <div >
-        <Button variant="primary">Přihlásit se</Button>
-        <Button variant="secondary">Registrovat se</Button>
-      </div>
+      <h4 Uživatel className="text-right">Uživatel není přihlášený</h4>
     );
   }
 
-  const userTeams = teams.filter(team => team.ownerId === id); // Použijte ID získané ze stavu
+  const userTeams = teams.filter(team => team.owner.Id === id);
 
   return (
     <div className='myt-main'>
@@ -33,7 +45,7 @@ function MyTeams(loggedIn) { // Zde jsem přidal destrukturalizaci pro loggedIn
           <TeamCard key={team.id} data={team} />
         ))
       ) : (
-        <p>Nemáte žádné turnaje.</p>
+        <p>Nemáte žádné týmy nebo nejste přihlášený.</p>
       )}
     </div>
   );
