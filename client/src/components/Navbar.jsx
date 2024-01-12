@@ -52,6 +52,7 @@ function AppNavbar() {
       fetchUserData().then(userData => {
         setUser(userData);
         setLoggedIn(true);
+        console.log(userData);
       }).catch(error => {
         console.error('Chyba při načítání uživatelských dat:', error);
         setLoginError('Chyba při načítání uživatelských dat.');
@@ -87,7 +88,7 @@ function AppNavbar() {
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem('user');
+    sessionStorage.removeItem('token');
     setUser(null);
     setLoggedIn(false);
   };
@@ -139,7 +140,7 @@ function AppNavbar() {
             <>
               <Link to={"/userprofile"}>
                 <Button variant="outline-primary">
-                  {user?.name || 'Nepřihlášený uživatel'}
+                  {user.username || 'Nepřihlášený uživatel'}
                 </Button>
               </Link>
               <Button variant="outline-danger" onClick={handleLogout}>Logout</Button>
