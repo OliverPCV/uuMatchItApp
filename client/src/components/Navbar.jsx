@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, Nav, Container, Modal, Button, Form, Dropdown } from 'react-bootstrap';
-//import mockUser from '../data/user';
 import axiosInstance from '../services/axiosInstance';
 import MatchitLogo from '../images/MatchitLogo.png';
 import '../styles/component-style/Navbar.css';
+import { fetchUserData } from '../services/authService';
 import { Link } from 'react-router-dom';
 
 function AppNavbar() {
@@ -11,12 +11,29 @@ function AppNavbar() {
   const [showRegister, setShowRegister] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+  const [loginError, setLoginError] = useState('');
+  const [registerError, setRegisterError] = useState('');
+
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  const validateForm = () => {
+    const username = document.getElementById('registerName').value;
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
+
+    const isValid = username.trim() !== '' && email.trim() !== '' && password.trim() !== '' && /\S+@\S+\.\S+/.test(email);
+    setIsFormValid(isValid);
+  };
 
   useEffect(() => {
-    const savedUser = sessionStorage.getItem('user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-      setLoggedIn(true);
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      fetchUserData().then(userData => {
+        setUser(userData);
+        setLoggedIn(true);
+      }).catch(error => {
+        console.log('Chyba při načítání uživatelských dat:', error);
+      });
     }
   }, []);
 
@@ -29,40 +46,51 @@ function AppNavbar() {
         password: password
       });
 
-      sessionStorage.setItem('user', JSON.stringify(response.data));
-      setUser(response.data);
-      setLoggedIn(true);
+      const token = response.data.token;
+      sessionStorage.setItem('token', token);
+
+      fetchUserData().then(userData => {
+        setUser(userData);
+        setLoggedIn(true);
+      }).catch(error => {
+        console.error('Chyba při načítání uživatelských dat:', error);
+        setLoginError('Chyba při načítání uživatelských dat.');
+      });
+
+      setShowLogin(false);
     } catch (error) {
-      console.error('Přihlášení selhalo:', error);
+      console.error('Chyba při přihlášení:', error);
+      setLoginError('Přihlášení selhalo. Zkontrolujte své přihlašovací údaje.');
     }
   };
 
-  const handleRegister = async (username, email, password) => {
-    try {
-      const response = await axiosInstance.post('/users/register', {
-        username: username,
-        email: email,
-        password: password
-      });
+  const handleRegister = async () => {
+    if (isFormValid) {
+      const username = document.getElementById('registerName').value;
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+      try {
+        const response = await axiosInstance.post('/users/register', {
+          username: username,
+          email: email,
+          password: password
+        });
 
-      sessionStorage.setItem('user', JSON.stringify(response.data));
-      setUser(response.data);
-      setLoggedIn(true);
-    } catch (error) {
-      // Ošetření chyb registrace
-      console.error('Registrace selhala:', error);
+        sessionStorage.setItem('user', JSON.stringify(response.data));
+        setUser(response.data);
+        setLoggedIn(true);
+        setShowRegister(false);
+      } catch (error) {
+        setRegisterError('Registrace selhala. Zkontrolujte zadané údaje.');
+      }
     }
   };
 
   const handleLogout = () => {
-    // Odstranění uživatelských údajů z session storage
     sessionStorage.removeItem('user');
-
-    // Aktualizace stavu aplikace
     setUser(null);
     setLoggedIn(false);
   };
-
 
   return (
     <>
@@ -110,7 +138,9 @@ function AppNavbar() {
           ) : (
             <>
               <Link to={"/userprofile"}>
-                <span style={{ color: 'white', marginRight: '10px' }}>{user?.name}</span>
+                <Button variant="outline-primary">
+                  {user?.name || 'Nepřihlášený uživatel'}
+                </Button>
               </Link>
               <Button variant="outline-danger" onClick={handleLogout}>Logout</Button>
             </>
@@ -125,13 +155,13 @@ function AppNavbar() {
         </Modal.Header>
         <Modal.Body>
           <Form>
+            {loginError && <p className="text-danger">{loginError}</p>}
             <Form.Group controlId="loginEmail">
-              <Form.Label>Email address</Form.Label>
+              <Form.Label>Uživatelské jméno</Form.Label>
               <Form.Control type="email" placeholder="Enter email" />
             </Form.Group>
-
             <Form.Group controlId="loginPassword">
-              <Form.Label>Password</Form.Label>
+              <Form.Label>Heslo</Form.Label>
               <Form.Control type="password" placeholder="Password" />
             </Form.Group>
           </Form>
@@ -149,30 +179,24 @@ function AppNavbar() {
         </Modal.Header>
         <Modal.Body>
           <Form>
+            {registerError && <p className="text-danger">{registerError}</p>}
             <Form.Group controlId="registerName">
               <Form.Label>Name</Form.Label>
-              <Form.Control type="text" placeholder="Enter name" />
+              <Form.Control type="text" placeholder="Enter name" required onChange={validateForm} />
             </Form.Group>
-
             <Form.Group controlId="registerEmail">
               <Form.Label>Email address</Form.Label>
-              <Form.Control type="email" placeholder="Enter email" />
+              <Form.Control type="email" placeholder="Enter email" required onChange={validateForm} />
             </Form.Group>
-
             <Form.Group controlId="registerPassword">
               <Form.Label>Password</Form.Label>
-              <Form.Control type="password" placeholder="Password" />
+              <Form.Control type="password" placeholder="Password" required onChange={validateForm} />
             </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowRegister(false)}>Close</Button>
-          <Button variant="primary" onClick={() => {
-            const username = document.getElementById('registerName').value;
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            handleRegister(username, email, password);
-          }}>Register</Button>
+          <Button variant="primary" onClick={handleRegister} disabled={!isFormValid}>Register</Button>
         </Modal.Footer>
       </Modal>
     </>
