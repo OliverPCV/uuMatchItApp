@@ -68,13 +68,13 @@ function Home() {
       <Container>
         <div className="filter-buttons">
           <button onClick={() => handleFilter('all')}>Vše</button>
-          <button onClick={() => handleFilter('4V4')}>Vše</button>
+          <button onClick={() => handleFilter('4V4')}>4V4</button>
           <button onClick={() => handleFilter('5V5')}>5v5</button>
-          <button onClick={() => handleFilter('6V6')}>Vše</button>
-          <button onClick={() => handleFilter('7V7')}>Vše</button>
-          <button onClick={() => handleFilter('8V8')}>Vše</button>
-          <button onClick={() => handleFilter('9V9')}>Vše</button>
-          <button onClick={() => handleFilter('10V10')}>Vše</button>
+          <button onClick={() => handleFilter('6V6')}>6V6</button>
+          <button onClick={() => handleFilter('7V7')}>7V7</button>
+          <button onClick={() => handleFilter('8V8')}>8V8</button>
+          <button onClick={() => handleFilter('9V9')}>9V9</button>
+          <button onClick={() => handleFilter('10V10')}>10V10</button>
           <button onClick={() => handleFilter('11V11')}>11v11</button>
         </div>
         <h3 ref={tournaments}>Všechny turnaje:</h3>
