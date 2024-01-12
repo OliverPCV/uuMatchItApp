@@ -26,7 +26,7 @@ const jwtSecret = 'VerySecretKey';
       host: '127.0.0.1',
       port: 3306,
       username: 'root',
-      password: 'root',
+      password: 'root1234',
       database: 'uumatchit',
       entities: [User, Tournament, Team, Invite],
       synchronize: true,
