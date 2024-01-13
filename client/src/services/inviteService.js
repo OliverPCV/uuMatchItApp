@@ -59,3 +59,16 @@ export const fetchInvites = async () => {
         throw error;
     }
 };
+
+export const fetchInviteById = async (id) => {
+    try {
+        const token = sessionStorage.getItem('token');
+        const response = await axiosInstance.get(`/invites/${id}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        return response.data;
+    } catch (error) {
+        console.error(`Error fetching invite with id ${id}:`, error);
+        throw error;
+    }
+}

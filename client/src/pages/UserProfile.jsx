@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchUserData } from '../services/authService'; // Import funkce pro načtení uživatelských dat
 import '../styles/page-style/UserProfile.css'; // Cesta k vašemu CSS
+import IncomingInvites from '../components/IncomingInvites';
 
 function UserProfile() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -49,6 +50,9 @@ function UserProfile() {
             </div>
           </div>
         </div>
+      </div>
+      <div className="user-profile-content">
+        <IncomingInvites />
       </div>
     </div>
   );
