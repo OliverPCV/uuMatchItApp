@@ -21,8 +21,7 @@ function MyTeams() {
     if (isLoggedIn) {
       setId(sessionStorage.getItem('userId'));
       fetchUserData().then(data => {
-        setId(data.Id);
-        console.log(id);
+        setId(data.id);
       }).catch(error => {
         console.error('Error fetching teams:', error);
       });
@@ -35,7 +34,7 @@ function MyTeams() {
     );
   }
 
-  const userTeams = teams.filter(team => team.owner.Id === id);
+  const userTeams = teams.filter(team => team.owner.id === id);
 
   return (
     <div className='myt-main'>

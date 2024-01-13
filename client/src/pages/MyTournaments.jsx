@@ -1,26 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { fetchTournamentByOwner } from '../services/tourService';
-import { isLoggedIn, fetchUserData } from '../services/authService';
+import { isLoggedIn } from '../services/authService';
 import TournamentCard from '../components/TournamentCard';
-import { Button } from 'react-bootstrap';
 import "../styles/page-style/MyTournaments.css";
 
 function MyTournamentsPage() {
   const [userTournaments, setUserTournaments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [id, setId] = useState('');
 
   useEffect(() => {
     if (isLoggedIn()) {
-      setId(sessionStorage.getItem('userId'));
-      fetchUserData().then(data => {
-        setId(data.Id);
-        console.log(id);
-      }).catch(error => {
-        console.error('Error fetching teams:', error);
-      }
-      );
-      fetchTournamentByOwner(id).then(tournaments => {
+      const token = sessionStorage.getItem('token');
+      fetchTournamentByOwner(token).then(tournaments => {
         setUserTournaments(tournaments);
         setLoading(false);
       }).catch(error => {
@@ -32,10 +23,12 @@ function MyTournamentsPage() {
     }
   }, []);
 
-  if (!isLoggedIn) {
-    return (
-      <h4 Uživatel className="text-right">Uživatel není přihlášený</h4>
-    );
+  if (!isLoggedIn()) {
+    return <h4 className="text-right">Uživatel není přihlášený</h4>;
+  }
+
+  if (loading) {
+    return <p>Načítání...</p>;
   }
 
   return (
@@ -46,7 +39,7 @@ function MyTournamentsPage() {
           <TournamentCard key={tournament.id} data={tournament} />
         ))
       ) : (
-        <p>Nejste přihlášený.</p>
+        <p>Nemáte žádné turnaje.</p>
       )}
     </div>
   );

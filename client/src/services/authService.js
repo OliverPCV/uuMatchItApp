@@ -13,6 +13,7 @@ export const fetchUserData = async () => {
         const response = await axiosInstance.get('/users/me', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
+        console.log(response.data.id);
         return response.data;
     } catch (error) {
         console.error('Error fetching user data:', error);
