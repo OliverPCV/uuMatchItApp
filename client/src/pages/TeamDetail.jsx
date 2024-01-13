@@ -17,7 +17,7 @@ function TeamDetail() {
       try {
         const teamData = await fetchTeamById(id);
         setTeam(teamData);
-        if (teamData && teamData.teams) {
+        if (teamData && teamData.players) {
           setPlayersCount(teamData.players.length);
         } else {
           setPlayersCount(0);
@@ -66,9 +66,9 @@ function TeamDetail() {
                   <div className="teams-list">
                       {team.players.map(player => (
                         <div key={player.id} className="team">
-                          <img src={plogo} alt={player.name} />
+                          <img src={plogo} alt={player.username} />
                           <div className="team-info">
-                            <h4>{team.name}</h4>
+                            <h4>{player.username}</h4>
                           </div>
                         </div>
                       ))}
