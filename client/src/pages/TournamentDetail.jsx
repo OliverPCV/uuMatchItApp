@@ -6,17 +6,27 @@ import SingleElimination from '../components/SingleElimination'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock, faUsers, faTrophy, faListAlt, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import tlogo from '../images/1.png'
-import { fetchTournamentById } from '../services/tourService';
+import { fetchTournamentById, joinTournament } from '../services/tourService';
+import TeamSelectModal from '../components/TeamSelect';
+import { fetchUserTeams } from '../services/authService';
 
 function TournamentDetail() {
   const { id } = useParams();
   const [key, setKey] = useState('overview');
   const formatDate = (isoDate) => {
     const date = new Date(isoDate);
-    return date.toLocaleDateString('cs-CZ', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    return date.toLocaleString('cs-CZ', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
   const [tournament, setTournament] = useState(null);
   const [teamsCount, setTeamsCount] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const [userTeams, setUserTeams] = useState([]);
   
   useEffect(() => {
     const fetchTournamentData = async () => {
@@ -40,6 +50,26 @@ function TournamentDetail() {
     }
   }, [id]);
   
+    const handleRegisterClick = async () => {
+      try {
+        const teams = await fetchUserTeams();
+        setUserTeams(teams);
+        setShowModal(true);
+      } catch (error) {
+        console.error('Error fetching user teams:', error);
+      }
+    };
+  
+    const handleJoinTournament = async (tournamentId, teamId) => {
+      try {
+          const response = await joinTournament(tournamentId, teamId);
+          console.log('Joined tournament successfully:', response);
+          setShowModal(false);
+      } catch (error) {
+          console.error('Error while joining tournament:', error);
+      }
+  };
+  
   if (!tournament) {
     return <Container>Loading tournament details...</Container>;
   }
@@ -48,7 +78,7 @@ function TournamentDetail() {
     <><div className="header-image">
       <div className="header-text">
         <h1 className="tournament-detail-title text">{tournament.name}</h1>
-        <button className="register-button text">Register</button>
+        <button className="register-button text" onClick={handleRegisterClick}>Zapsat tým</button>
       </div>
     </div>
       <Container className="tournament-detail-container">
@@ -132,6 +162,13 @@ function TournamentDetail() {
           </Tab>
         </Tabs>
       </Container>
+      <TeamSelectModal 
+        show={showModal} 
+        onHide={() => setShowModal(false)} 
+        teams={userTeams} 
+        onJoinTournament={handleJoinTournament}
+        tournamentId={id}
+      />
     </>
   );
 }

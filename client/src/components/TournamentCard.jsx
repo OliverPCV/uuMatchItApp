@@ -6,6 +6,16 @@ import "../styles/component-style/TeamCard.css";
 export default function TournamentCard({ data }) {
 
   const navigate = useNavigate();
+  const formatDate = (isoDate) => {
+    const date = new Date(isoDate);
+    return date.toLocaleString('cs-CZ', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
 
   const goToTournamentDetail = () => {
     navigate(`/tournamentdetail/${data.id}`);
@@ -25,7 +35,7 @@ export default function TournamentCard({ data }) {
               className="tournament-card-title"
               textAlign="left"
             >
-              {data.date} {data.time}
+              {formatDate(data.date)}
             </Text>
           </Flex>
           <Text fontSize="xl" fontWeight="semibold" lineHeight="short" className="tournament-card-description" textAlign="left">

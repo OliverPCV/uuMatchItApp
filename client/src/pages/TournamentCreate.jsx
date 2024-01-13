@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Form, Button } from 'react-bootstrap';
+import { createTournament } from '../services/tourService';
 import $ from 'jquery'; // Make sure to install jQuery in your project
 import '../styles/page-style/TournamentCreate.css';
 
 function CreateTournament() {
+  const [tournamentData, setTournamentData] = useState({
+    name: '',
+    date: '',
+    place: '',
+    prize: '',
+    type: '',
+    sizeLimit: 0,
+  });
+
   useEffect(() => {
     function floatLabel(inputType) {
       $(inputType).each(function () {
         const $this = $(this);
-
-        // on focus add class active to label
         $this.focus(function () {
           $this.next().addClass('active');
         });
-
-        // on blur check field and remove class if needed
         $this.blur(function () {
           if ($this.val() === '' || $this.val() === 'blank') {
             $this.next().removeClass();
@@ -22,67 +27,68 @@ function CreateTournament() {
         });
       });
     }
-
-    // just add a class of "floatLabel" to the input field!
     floatLabel('.floatLabel');
   }, []);
 
+  const handleChange = (e) => {
+    const value = e.target.name === 'sizeLimit' ? parseInt(e.target.value) : e.target.value;
+    setTournamentData({ ...tournamentData, [e.target.name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const responseData = await createTournament(tournamentData);
+      console.log('Tournament created successfully:', responseData);
+    } catch (error) {
+      console.error('Error while creating tournament:', error);
+    }
+  };
+
   return (
-
-    <form action="" className='createform'>
-      <div class="form-group">
-        <h2 class="heading">Vytvořit turnaj</h2>
-        <div class="controls">
-          <input type="text" id="name" class="floatLabel" name="name" />
-          <label for="name">Jméno</label>
+    <form className='createform' onSubmit={handleSubmit}>
+      <div className="form-group">
+        <h2 className="heading">Vytvořit turnaj</h2>
+        <div className="controls">
+          <input type="text" id="name" className="floatLabel" name="name" onChange={handleChange} />
+          <label htmlFor="name">Jméno</label>
         </div>
-        <div class="col-1-3 col-1-3-sm">
-          <div class="controls">
-            <i class="fa fa-sort"></i>
-            <select class="floatLabel">
-              <option value="blank"></option>
-              <option value="1">4</option>
-              <option value="2">8</option>
-              <option value="3">16</option>
-            </select>
-            <label for="slots"><i class="fa fa-male"></i>&nbsp;&nbsp;Počet týmů</label>
-          </div>
+        <div className="controls">
+          <input type="text" id="place" className="floatLabel" name="place" onChange={handleChange} />
+          <label htmlFor="place">Místo</label>
         </div>
-        <div class="col-1-3 col-1-3-sm">
-          <div class="controls">
-            <i class="fa fa-sort"></i>
-            <select class="floatLabel">
-              <option value="blank"></option>
-              <option value="1">4v4</option>
-              <option value="2">5v5</option>
-              <option value="3">6v6</option>
-              <option value="4">7v7</option>
-              <option value="5">8v8</option>
-              <option value="6">9v9</option>
-              <option value="7">10v10</option>
-              <option value="8">11v11</option>
-            </select>
-            <label for="slots"><i class="fa fa-male"></i>&nbsp;&nbsp;Velikost týmů</label>
-          </div>
+        <div className="controls">
+          <input type="datetime-local" id="date" className="floatLabel" name="date" onChange={handleChange} />
+          <label htmlFor="date">Datum a čas</label>
         </div>
-        <div class="controls">
-          <input type="tel" id="address" class="floatLabel" name="address" />
-          <label for="address">Adresa</label>
+        <div className="controls">
+          <input type="text" id="prize" className="floatLabel" name="prize" onChange={handleChange} />
+          <label htmlFor="prize">Cena</label>
         </div>
-        <div class="grid">
-          <div class="col-2-3">
-            <div class="controls">
-              <input type="text" id="prize" class="floatLabel" name="prize" />
-              <label for="prize">Cena</label>
-            </div>
-          </div>
-
+        <div className="controls">
+          <select id="type" className="floatLabel" name="type" onChange={handleChange}>
+            <option value="">Vyberte typ</option>
+            <option value="4V4">4V4</option>
+            <option value="5V5">5V5</option>
+            <option value="6V6">6V6</option>
+            <option value="7V7">7V7</option>
+            <option value="8V8">8V8</option>
+            <option value="9V9">9V9</option>
+            <option value="10V10">10V10</option>
+            <option value="11V11">11V11</option>
+          </select>
+          <label htmlFor="type">Typ</label>
         </div>
+        <div className="controls">
+        <select id="sizeLimit" className="floatLabel" name="sizeLimit" onChange={handleChange}>
+          <option value="">Vyberte limit velikosti</option>
+          <option value="4">4</option>
+          <option value="8">8</option>
+        </select>
+        <label htmlFor="sizeLimit">Limit velikosti</label>
       </div>
-
-      <div class="form-group">
-        <div class="grid">
-          <button type="submit" value="Submit" class="col-1-4">Odeslat</button>
+        <div className="grid">
+          <button type="submit" value="Submit" className="col-1-4">Odeslat</button>
         </div>
       </div>
     </form>
