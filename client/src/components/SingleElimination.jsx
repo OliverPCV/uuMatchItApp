@@ -44,30 +44,33 @@ const SingleElimination = ({ tournamentData }) => {
   console.log(tournamentData);
   simpleSmallBracket.forEach(match => {
     if (match.tournamentRoundText === "1") {
-        // Získání indexu zápasu v prvním kole
-        const matchIndex = match.id - 19755;
-
-        // Získání indexu týmu pro každý zápas
-        const firstTeamIndex = matchIndex * 2;
-        const secondTeamIndex = firstTeamIndex + 1;
-
-        // Přiřazení prvního týmu k zápasu
-        if (tournamentData.teams[firstTeamIndex]) {
-            match.participants[0] = {
-                id: tournamentData.teams[firstTeamIndex].id.toString(),
-                name: tournamentData.teams[firstTeamIndex].name,
-            };
-        }
-
-        // Přiřazení druhého týmu k zápasu, pokud existuje
-        if (tournamentData.teams[secondTeamIndex]) {
-            match.participants[1] = {
-                id: tournamentData.teams[secondTeamIndex].id.toString(),
-                name: tournamentData.teams[secondTeamIndex].name,
-            };
-        }
+      // The match index is the difference between the match ID and the first match ID
+      const matchIndex = match.id - 19755;
+  
+      // The team indexes are twice the match index (since there are 2 teams per match)
+      const firstTeamIndex = matchIndex * 2;
+      const secondTeamIndex = firstTeamIndex + 1;
+  
+      // Assign the team names to the participants array for each match
+      // Check that the team exists in the tournamentData before assigning
+      match.participants[0] = tournamentData.teams[firstTeamIndex]
+        ? {
+            id: tournamentData.teams[firstTeamIndex].id.toString(),
+            name: tournamentData.teams[firstTeamIndex].name,
+            // ... other properties as required
+          }
+        : { name: "TBD" };
+  
+      match.participants[1] = tournamentData.teams[secondTeamIndex]
+        ? {
+            id: tournamentData.teams[secondTeamIndex].id.toString(),
+            name: tournamentData.teams[secondTeamIndex].name,
+            // ... other properties as required
+          }
+        : { name: "TBD" };
     }
-});
+  });
+  
 
   return (
     <SingleEliminationBracket
