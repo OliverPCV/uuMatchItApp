@@ -20,4 +20,5 @@ export class Tournament {
   @Column() date: Date;
   @Column() place: string;
   @Column() prize: string;
+  @Column() sizeLimit: number;
 }

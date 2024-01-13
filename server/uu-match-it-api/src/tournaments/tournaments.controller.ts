@@ -31,6 +31,9 @@ export class TournamentsController {
     if (!tournament.name || !tournament.prize || !tournament.date || !tournament.place || !tournament.type) {
       throw new BadRequestException('Missing parameters');
     }
+    if (tournament.sizeLimit !== 4 && tournament.sizeLimit !== 8) {
+      throw new BadRequestException('Wrong size limit');
+    }
 
     return this.worker.createTournament(tournament, request.user.id).then((result) => {
       return result.identifiers[0];
