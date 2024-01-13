@@ -23,7 +23,7 @@ function TournamentDetail() {
       try {
         const tournamentData = await fetchTournamentById(id);
         setTournament(tournamentData);
-        // Aktualizace teamsCount po načtení dat turnaje
+        console.log(tournament)
         if (tournamentData && tournamentData.teams) {
           setTeamsCount(tournamentData.teams.length);
         } else {
@@ -128,7 +128,7 @@ function TournamentDetail() {
             </div>
           </Tab>
           <Tab eventKey="brackets" title="Brackets">
-            <SingleElimination />
+            <SingleElimination tournamentData={tournament}/>
           </Tab>
         </Tabs>
       </Container>

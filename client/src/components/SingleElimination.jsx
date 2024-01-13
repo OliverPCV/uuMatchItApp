@@ -39,36 +39,67 @@ const GlootTheme = createTheme({
   connectorColorHighlight: "#843535",
 });
 
-const SingleElimination = () => (
-  <SingleEliminationBracket
-    theme={GlootTheme}
-    matches={simpleSmallBracket}
-    matchComponent={Match}
-    options={{
-      style: {
-        connectorColor: GlootTheme.connectorColor, // Předpokládáme, že chcete bílou barvu pro konektory
-        connectorColorHighlight: GlootTheme.connectorColorHighlight, // Jasně zelená
-        svgBackground: GlootTheme.svgBackground,
-      },
+const SingleElimination = ({ tournamentData }) => {
 
-    }}
-    svgWrapper={({ children, ...props }) => (
-      <SVGViewer
-        width={10000}
-        height={5000}
-        background="#ffffff"  // Tady nastavíte bílé pozadí
-        SVGBackground="#ffffff"  // Tady také nastavíte bílé pozadí
-        {...props}
-      >
-        {children}
-      </SVGViewer>
+  console.log(tournamentData);
+  simpleSmallBracket.forEach(match => {
+    if (match.tournamentRoundText === "1") {
+        // Získání indexu zápasu v prvním kole
+        const matchIndex = match.id - 19755;
 
-    )}
-    onMatchClick={(match) => console.log(match)}
-    onPartyClick={(match) => console.log(match)}
-  />
-);
+        // Získání indexu týmu pro každý zápas
+        const firstTeamIndex = matchIndex * 2;
+        const secondTeamIndex = firstTeamIndex + 1;
 
+        // Přiřazení prvního týmu k zápasu
+        if (tournamentData.teams[firstTeamIndex]) {
+            match.participants[0] = {
+                id: tournamentData.teams[firstTeamIndex].id.toString(),
+                name: tournamentData.teams[firstTeamIndex].name,
+            };
+        }
+
+        // Přiřazení druhého týmu k zápasu, pokud existuje
+        if (tournamentData.teams[secondTeamIndex]) {
+            match.participants[1] = {
+                id: tournamentData.teams[secondTeamIndex].id.toString(),
+                name: tournamentData.teams[secondTeamIndex].name,
+            };
+        }
+    }
+});
+
+  return (
+    <SingleEliminationBracket
+      theme={GlootTheme}
+      matches={simpleSmallBracket}
+      matchComponent={Match}
+      options={{
+        style: {
+          connectorColor: GlootTheme.connectorColor, // Předpokládáme, že chcete bílou barvu pro konektory
+          connectorColorHighlight: GlootTheme.connectorColorHighlight, // Jasně zelená
+          svgBackground: GlootTheme.svgBackground,
+        },
+
+      }}
+      svgWrapper={({ children, ...props }) => (
+        <SVGViewer
+          width={10000}
+          height={5000}
+          background="#ffffff"  // Tady nastavíte bílé pozadí
+          SVGBackground="#ffffff"  // Tady také nastavíte bílé pozadí
+          {...props}
+        >
+          {children}
+        </SVGViewer>
+
+      )}
+      onMatchClick={(match) => console.log(match)}
+      onPartyClick={(match) => console.log(match)}
+    />
+  )
+
+};
 
 
 export const simpleSmallBracket = [
