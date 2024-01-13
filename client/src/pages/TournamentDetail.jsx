@@ -4,8 +4,8 @@ import { useParams } from 'react-router-dom';
 import '../styles/page-style/TournamentDetail.css'; // Update the path to your CSS file
 import SingleElimination from '../components/SingleElimination'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faClock, faUsers, faTrophy, faListAlt, faLocationDot } from '@fortawesome/free-solid-svg-icons';
-import teamlogo from '../images/1.png'
+import { faClock, faUsers, faTrophy, faListAlt, faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import tlogo from '../images/1.png'
 import { fetchTournamentById } from '../services/tourService';
 
 function TournamentDetail() {
@@ -106,12 +106,16 @@ function TournamentDetail() {
                   </div>
                   <span className='line'></span>
                   <div className="registered-teams-list">
-                    <div><img src={teamlogo} alt="Team Name"/><span>Team Name</span></div>
-                    <div><img src={teamlogo} alt="Team Name"/><span>Team Name</span></div>
-                    <div><img src={teamlogo} alt="Team Name"/><span>Team Name</span></div>
-                    <div><img src={teamlogo} alt="Team Name"/><span>Team Name</span></div>
-                    <div><img src={teamlogo} alt="Team Name"/><span>Team Name</span></div>
-                    <div><img src={teamlogo} alt="Team Name"/><span>Team Name</span></div>
+                    <div className="teams-list">
+                      {tournament.teams.map(team => (
+                        <div key={team.id} className="team">
+                          <img src={tlogo} alt={team.name} />
+                          <div className="team-info">
+                            <h4>{team.name}</h4>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
 
                   </div>
                 </div>
