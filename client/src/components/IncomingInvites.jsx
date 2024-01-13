@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchInvites, fetchAcceptInvite, fetchDeclineInvite } from '../services/inviteService';
 import { fetchUserData } from '../services/authService';
+import '../styles/component-style/IncomingInvites.css';
 
 function IncomingInvites() {
     const [invites, setInvites] = useState([]);
@@ -9,40 +10,40 @@ function IncomingInvites() {
     const [currentUser, setCurrentUser] = useState(null);
 
     useEffect(() => {
-        const loadData = async () => {
-            setLoading(true);
-
-            try {
-                const userData = await fetchUserData();
-                setCurrentUser(userData);
-
-                const allInvites = await fetchInvites();
-                const userInvites = allInvites.filter(invite => invite.userId === userData.id);
-                console.log('Pozvánky uživatele:', userInvites);
-                setInvites(userInvites);
-            } catch (error) {
-                console.error('Chyba při načítání dat:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         loadData();
     }, []);
 
-    const handleAcceptInvite = async (inviteId) => {
+    const loadData = async () => {
+        setLoading(true);
         try {
-            await fetchAcceptInvite(inviteId);
+            const userData = await fetchUserData();
+            setCurrentUser(userData);
+
+            const allInvites = await fetchInvites();
+            // Filtrujeme pouze pozvánky se stavem 'PENDING' a pro aktuálního uživatele
+            const userInvites = allInvites.filter(invite => 
+                invite.userId === userData.id && invite.state === 'PENDING'
+            );
+            console.log('Pozvánky:', userInvites);
+            setInvites(userInvites);
         } catch (error) {
-            console.error('Chyba při přijímání pozvánky:', error);
+            console.error('Chyba při načítání dat:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
-    const handleDeclineInvite = async (inviteId) => {
+    const handleAction = async (inviteId, action) => {
         try {
-            await fetchDeclineInvite(inviteId);
+            if (action === 'accept') {
+                await fetchAcceptInvite(inviteId);
+            } else {
+                await fetchDeclineInvite(inviteId);
+            }
+            // Odebíráme pozvánku z lokálního stavu
+            setInvites(prevInvites => prevInvites.filter(invite => invite.id !== inviteId));
         } catch (error) {
-            console.error('Chyba při odmítání pozvánky:', error);
+            console.error(`Chyba při ${action === 'accept' ? 'přijímání' : 'odmítání'} pozvánky:`, error);
         }
     };
 
@@ -55,17 +56,17 @@ function IncomingInvites() {
     }
 
     return (
-        <div>
-            <h3>Příchozí pozvánky</h3>
+        <div className="incoming-invites-container">
+            <h3 className="incoming-invites-header">Příchozí pozvánky</h3>
             {invites.length > 0 ? (
                 <ul>
                     {invites.map(invite => (
                         <li key={invite.id}>
                             Máte pozvánku od týmu: {invite.team.name}
-                            <button onClick={() => handleAcceptInvite(invite.id)} style={{ marginLeft: '10px' }}>
+                            <button onClick={() => handleAction(invite.id, 'accept')} style={{ marginLeft: '10px' }}>
                                 Přijmout
                             </button>
-                            <button onClick={() => handleDeclineInvite(invite.id)} style={{ marginLeft: '10px' }}>
+                            <button onClick={() => handleAction(invite.id, 'decline')} style={{ marginLeft: '10px' }}>
                                 Odmítnout
                             </button>
                         </li>
