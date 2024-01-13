@@ -1,29 +1,44 @@
 import React, { useState, useEffect } from 'react';
-import mockUser from '../data/user';
-import tournaments from '../data/tournaments';
-import TournamentCard from '../components/TournamentCard'; // Předpokládám, že máte komponentu pro zobrazení turnaje
-import { Button } from 'react-bootstrap'; // Předpokládám, že používáte React-Bootstrap
-import "../styles/page-style/MyTournaments.css"
+import { fetchTournaments } from '../services/tourService';
+import { isLoggedIn } from '../services/authService';
+import TournamentCard from '../components/TournamentCard';
+import { Button } from 'react-bootstrap';
+import "../styles/page-style/MyTournaments.css";
 
-function MyTournamentsPage(loggedIn) { // Zde jsem přidal destrukturalizaci pro loggedIn
+function MyTournamentsPage() {
+  const [userTournaments, setUserTournaments] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [id, setId] = useState('');
 
   useEffect(() => {
-    if (loggedIn) {
-      setId(mockUser.id); // Nastavte ID pouze pokud je uživatel přihlášen
+    if (isLoggedIn()) {
+      fetchTournaments().then(tournaments => {
+        const userId = JSON.parse(sessionStorage.getItem('user')).id;
+        const filteredTournaments = tournaments.filter(tournament => tournament.ownerId === userId);
+        setUserTournaments(filteredTournaments);
+        setLoading(false);
+        console.log(filteredTournaments);
+      }).catch(error => {
+        console.error('Error fetching tournaments:', error);
+        setLoading(false);
+      });
+    } else {
+      setLoading(false);
     }
-  }, [loggedIn]);
+  }, []);
 
-  if (!loggedIn) {
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isLoggedIn()) {
     return (
-      <div >
+      <div>
         <Button variant="primary">Přihlásit se</Button>
         <Button variant="secondary">Registrovat se</Button>
       </div>
     );
   }
-
-  const userTournaments = tournaments.filter(tournament => tournament.ownerId === id); // Použijte ID získané ze stavu
 
   return (
     <div className='myt-main'>
