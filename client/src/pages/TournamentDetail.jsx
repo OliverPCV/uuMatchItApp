@@ -79,11 +79,11 @@ function TournamentDetail() {
                   {/* Další kartičky */}
                 </div>
                 <div className="cards-container">
-                  <div className="card">
-                    <FontAwesomeIcon icon={faUsers} className="icon" />
+                <div className="card">
+                    <FontAwesomeIcon icon={faListAlt} className="icon" />
                     <div>
-                      <h4>Team size</h4>
-                      <p>5v5</p>
+                      <h4>Datum</h4>
+                      <p>{formatDate(tournament.date)}</p>
                     </div>
                   </div>
                   <div className="card">
@@ -91,13 +91,6 @@ function TournamentDetail() {
                     <div>
                       <h4>Cena za výhru</h4>
                       <p>{tournament.prize}</p>
-                    </div>
-                  </div>
-                  <div className="card">
-                    <FontAwesomeIcon icon={faListAlt} className="icon" />
-                    <div>
-                      <h4>Datum</h4>
-                      <p>{formatDate(tournament.date)}</p>
                     </div>
                   </div>
                 </div>
@@ -112,8 +105,8 @@ function TournamentDetail() {
                       <span className="value">{teamsCount}</span>
                     </div>
                     <div className="tournament-slots">
-                      <span className="label">Slots</span>
-                      <span className="value">16</span>
+                      <span className="label">Celkem míst</span>
+                      <span className="value">{tournament.sizeLimit}</span>
                     </div>
                   </div>
                   <span className='line'></span>
