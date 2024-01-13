@@ -10,29 +10,36 @@ import { fetchTournamentById } from '../services/tourService';
 
 function TournamentDetail() {
   const { id } = useParams();
-  const [tournament, setTournament] = useState(null);
   const [key, setKey] = useState('overview');
   const formatDate = (isoDate) => {
     const date = new Date(isoDate);
     return date.toLocaleDateString('cs-CZ', { day: '2-digit', month: '2-digit', year: 'numeric' });
   };
-  const teamsCount = tournament.teams.length;
-
+  const [tournament, setTournament] = useState(null);
+  const [teamsCount, setTeamsCount] = useState(0);
+  
   useEffect(() => {
     const fetchTournamentData = async () => {
       try {
         const tournamentData = await fetchTournamentById(id);
         setTournament(tournamentData);
+        // Aktualizace teamsCount po načtení dat turnaje
+        if (tournamentData && tournamentData.teams) {
+          setTeamsCount(tournamentData.teams.length);
+        } else {
+          setTeamsCount(0);
+        }
       } catch (error) {
         console.error('Error fetching tournament details:', error);
+        setTeamsCount(0);
       }
     };
-
+  
     if (id) {
       fetchTournamentData();
     }
   }, [id]);
-
+  
   if (!tournament) {
     return <Container>Loading tournament details...</Container>;
   }
