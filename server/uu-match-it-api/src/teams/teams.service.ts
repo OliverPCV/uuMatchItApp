@@ -9,6 +9,7 @@ import { InviteService } from '../invites/invite.service';
 export class TeamsService {
   constructor(
     @InjectRepository(Team) private teamRep: Repository<Team>,
+    @InjectRepository(User) private userRep: Repository<User>,
     private inviteWorker: InviteService,
   ) {
   }
@@ -21,6 +22,17 @@ export class TeamsService {
 
   async createTeam(team: Team, ownerId: number) {
     team.owner = { id: ownerId } as User;
+    //TODO remove this after testing
+    let temp = team.players as unknown as number[];
+    team.players = [];
+    for (const id of temp) {
+      team.players.push(await this.userRep.findOne({where:{ id: id }}));
+    }
+
+    return this.teamRep.save(team);
+
+
+
     let players = team.players as unknown as string[];
     team.players = [];
     this.teamRep.insert(team).then((result) => {
