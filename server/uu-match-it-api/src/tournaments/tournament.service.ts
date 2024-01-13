@@ -10,7 +10,7 @@ export class TournamentService {
 
   constructor(
     @InjectRepository(Tournament) private tournamentRep: Repository<Tournament>,
-    @InjectRepository(Team) private teamRep: Repository<Team>
+    @InjectRepository(Team) private teamRep: Repository<Team>,
   ) {
   }
 
@@ -57,14 +57,14 @@ export class TournamentService {
 
   async joinTournament(tournamentId: number, teamId: number, callerId: number) {
     return this.tournamentRep.findOne({
-      where: {id: tournamentId}, relations: ['teams']
-    }).then( async (tournament) => {
+      where: { id: tournamentId }, relations: ['teams'],
+    }).then(async (tournament) => {
       if (!tournament) {
         throw new BadRequestException('Tournament does not exist');
       }
 
       let team = await this.teamRep.findOne({
-        where: { id: teamId }, relations: ['owner']
+        where: { id: teamId }, relations: ['owner'],
       });
 
       if (!team) {
@@ -83,13 +83,13 @@ export class TournamentService {
 
   async leaveTournament(tournamentId: number, teamId: number, callerId: number) {
     return this.tournamentRep.findOne({
-      where: {id: tournamentId}, relations: ['owner', 'teams']
+      where: { id: tournamentId }, relations: ['owner', 'teams'],
     }).then(async (tournament) => {
       if (!tournament) {
         throw new BadRequestException('Tournament does not exist');
       }
       let team = await this.teamRep.findOne({
-        where: { id: teamId }, relations: ['owner']
+        where: { id: teamId }, relations: ['owner'],
       });
       if (!team || !tournament.teams.find((team) => team.id === teamId)) {
         throw new BadRequestException('Team does not exist');
@@ -100,7 +100,14 @@ export class TournamentService {
       }
       tournament.teams = tournament.teams.filter((team) => team.id !== teamId);
       await this.tournamentRep.save(tournament);
-      return {message: 'Team removed from tournament'};
+      return { message: 'Team removed from tournament' };
+    });
+  }
+
+  getTournamentsByUser(id: number) {
+    return this.tournamentRep.find({
+      where: { owner: { id: id } },
+      relations: ['owner'],
     });
   }
 }

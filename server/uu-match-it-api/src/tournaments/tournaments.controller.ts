@@ -47,6 +47,12 @@ export class TournamentsController {
     return this.worker.getTournaments();
   }
 
+  @Get('mine')
+  @UseGuards(AuthGuard)
+  getTournamentsByUser(@Req() request: AuthRequest) {
+    return this.worker.getTournamentsByUser(request.user.id);
+  }
+
   @Get(':id')
   async getTournamentDetail(@Param('id', ParseIntPipe) id: number) {
     const tournament = await this.worker.getTournamentDetail(id);
