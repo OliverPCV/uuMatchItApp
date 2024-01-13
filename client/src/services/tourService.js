@@ -2,27 +2,41 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000'
+    baseURL: 'http://localhost:3000'
 });
 
 export const fetchTournaments = async () => {
-  try {
-    const response = await axiosInstance.get("/tournaments");
-    console.log(response.data);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching tournaments:', error);
-    throw error;
-  }
+    try {
+        const response = await axiosInstance.get("/tournaments");
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching tournaments:', error);
+        throw error;
+    }
 };
 
 export const fetchTournamentById = async (id) => {
     try {
-      const response = await axiosInstance.get(`/tournaments/${id}`);
-      console.log(response.data);
-      return response.data;
+        const response = await axiosInstance.get(`/tournaments/${id}`);
+        console.log(response.data);
+        return response.data;
     } catch (error) {
-      console.error(`Error fetching tournament with id ${id}:`, error);
-      throw error;
+        console.error(`Error fetching tournament with id ${id}:`, error);
+        throw error;
     }
-  };
+};
+
+export const fetchTournamentByOwner = async (id) => {
+    try {
+        const token = sessionStorage.getItem('token');
+        const response = await axiosInstance.get(`/tournaments/mine`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error fetching tournament with id ${id}:`, error);
+        throw error;
+    }
+};

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { fetchTournaments } from '../services/tourService';
-import { isLoggedIn } from '../services/authService';
+import { fetchTournamentByOwner } from '../services/tourService';
+import { isLoggedIn, fetchUserData } from '../services/authService';
 import TournamentCard from '../components/TournamentCard';
 import { Button } from 'react-bootstrap';
 import "../styles/page-style/MyTournaments.css";
@@ -12,12 +12,17 @@ function MyTournamentsPage() {
 
   useEffect(() => {
     if (isLoggedIn()) {
-      fetchTournaments().then(tournaments => {
-        const userId = JSON.parse(sessionStorage.getItem('user')).id;
-        const filteredTournaments = tournaments.filter(tournament => tournament.ownerId === userId);
-        setUserTournaments(filteredTournaments);
+      setId(sessionStorage.getItem('userId'));
+      fetchUserData().then(data => {
+        setId(data.Id);
+        console.log(id);
+      }).catch(error => {
+        console.error('Error fetching teams:', error);
+      }
+      );
+      fetchTournamentByOwner(id).then(tournaments => {
+        setUserTournaments(tournaments);
         setLoading(false);
-        console.log(filteredTournaments);
       }).catch(error => {
         console.error('Error fetching tournaments:', error);
         setLoading(false);
@@ -27,16 +32,9 @@ function MyTournamentsPage() {
     }
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!isLoggedIn()) {
+  if (!isLoggedIn) {
     return (
-      <div>
-        <Button variant="primary">Přihlásit se</Button>
-        <Button variant="secondary">Registrovat se</Button>
-      </div>
+      <h4 Uživatel className="text-right">Uživatel není přihlášený</h4>
     );
   }
 
@@ -48,7 +46,7 @@ function MyTournamentsPage() {
           <TournamentCard key={tournament.id} data={tournament} />
         ))
       ) : (
-        <p>Nemáte žádné turnaje.</p>
+        <p>Nejste přihlášený.</p>
       )}
     </div>
   );

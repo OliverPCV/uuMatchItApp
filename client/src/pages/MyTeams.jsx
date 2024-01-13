@@ -45,7 +45,7 @@ function MyTeams() {
           <TeamCard key={team.id} data={team} />
         ))
       ) : (
-        <p>Nemáte žádné týmy nebo nejste přihlášený.</p>
+        <p>Nejste přihlášený.</p>
       )}
     </div>
   );

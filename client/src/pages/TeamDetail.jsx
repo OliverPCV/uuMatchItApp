@@ -1,18 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Tab, Tabs } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-import teams from '../data/teams';
 import '../styles/page-style/TeamDetail.css'; // Update the path to your CSS file
-import teamlogo from '../images/1.png'
+import plogo from '../images/player.png';
+import { fetchTeamById } from '../services/teamService';
+
 
 function TeamDetail() {
   const { id } = useParams();
   const [team, setTeam] = useState(null);
-  const [key, setKey] = useState('overview'); // Přidání stavu pro záložky
+  const [key, setKey] = useState('overview');
+  const [playersCount, setPlayersCount] = useState(0);
 
   useEffect(() => {
-    const foundTeam = teams.find(t => t.id.toString() === id);
-    setTeam(foundTeam);
+    const fetchTeamData = async () => {
+      try {
+        const teamData = await fetchTeamById(id);
+        setTeam(teamData);
+        if (teamData && teamData.teams) {
+          setPlayersCount(teamData.players.length);
+        } else {
+          setPlayersCount(0);
+        }
+      } catch (error) {
+        console.error('Error fetching team details:', error);
+      }
+    };
+
+    if (id) {
+      fetchTeamData();
+    }
   }, [id]);
 
   if (!team) {
@@ -41,22 +58,21 @@ function TeamDetail() {
                   <div className="tournament-stats">
                     <div className="registered-teams">
                       <span className="label">Registrováno</span>
-                      <span className="value">8</span>
-                    </div>
-                    <div className="tournament-slots">
-                      <span className="label">Volná místa</span>
-                      <span className="value">12</span>
+                      <span className="value">{playersCount}</span>
                     </div>
                   </div>
                   <span className='line'></span>
                   <div className="registered-teams-list">
-                    <div><img src={teamlogo} alt="Team Name"/><span>Team Name</span></div>
-                    <div><img src={teamlogo} alt="Team Name"/><span>Team Name</span></div>
-                    <div><img src={teamlogo} alt="Team Name"/><span>Team Name</span></div>
-                    <div><img src={teamlogo} alt="Team Name"/><span>Team Name</span></div>
-                    <div><img src={teamlogo} alt="Team Name"/><span>Team Name</span></div>
-                    <div><img src={teamlogo} alt="Team Name"/><span>Team Name</span></div>
-
+                  <div className="teams-list">
+                      {team.players.map(player => (
+                        <div key={player.id} className="team">
+                          <img src={plogo} alt={player.name} />
+                          <div className="team-info">
+                            <h4>{team.name}</h4>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
