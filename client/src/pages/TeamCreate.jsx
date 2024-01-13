@@ -7,6 +7,7 @@ import '../styles/page-style/TeamCreate.css'; // Aktualizujte cestu k CSS podle 
 function CreateTeam() {
   const [teamData, setTeamData] = useState({
     name: '',
+    players: []
   });
 
   useEffect(() => {
