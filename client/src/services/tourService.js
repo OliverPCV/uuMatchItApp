@@ -15,3 +15,14 @@ export const fetchTournaments = async () => {
     throw error;
   }
 };
+
+export const fetchTournamentById = async (id) => {
+    try {
+      const response = await axiosInstance.get(`/tournaments/${id}`);
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching tournament with id ${id}:`, error);
+      throw error;
+    }
+  };

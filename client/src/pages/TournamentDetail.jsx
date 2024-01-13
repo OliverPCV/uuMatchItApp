@@ -1,21 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Tab, Tabs } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-import tournaments from '../data/tournaments';
 import '../styles/page-style/TournamentDetail.css'; // Update the path to your CSS file
 import SingleElimination from '../components/SingleElimination'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faClock, faUsers, faTrophy, faListAlt, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import teamlogo from '../images/1.png'
+import { fetchTournamentById } from '../services/tourService';
 
 function TournamentDetail() {
   const { id } = useParams();
   const [tournament, setTournament] = useState(null);
-  const [key, setKey] = useState('overview'); // Přidání stavu pro záložky
+  const [key, setKey] = useState('overview');
 
   useEffect(() => {
-    const foundTournament = tournaments.find(t => t.id.toString() === id);
-    setTournament(foundTournament);
+    const fetchTournamentData = async () => {
+      try {
+        const tournamentData = await fetchTournamentById(id);
+        setTournament(tournamentData);
+      } catch (error) {
+        console.error('Error fetching tournament details:', error);
+      }
+    };
+
+    if (id) {
+      fetchTournamentData();
+    }
   }, [id]);
 
   if (!tournament) {
@@ -39,27 +49,19 @@ function TournamentDetail() {
           <Tab eventKey="overview" title="Overview">
             <div className="overview-container">
               <div className="left-column">
-                {/* Sekce s informacemi */}
-                <div className="information-section">
-                  <h3>Information</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse voluptas impedit amet rerum. Voluptas praesentium modi, ad esse est ipsam ut provident, neque facilis dolorem eaque aliquid ullam nam doloremque!</p>
-                </div>
-
-                {/* Flex kontejner pro kartičky */}
-                <h3>Format</h3>
                 <div className="cards-container">
                   <div className="card">
                     <FontAwesomeIcon icon={faLocationDot} className="icon" />
                     <div>
-                      <h4>Address</h4>
-                      <p>Úvaly 10</p>
+                      <h4>Addresa</h4>
+                      <p>{tournament.place}</p>
                     </div>
                   </div>
                   <div className="card">
-                    <FontAwesomeIcon icon={faClock} className="icon" />
+                    <FontAwesomeIcon icon={faUsers} className="icon" />
                     <div>
-                      <h4>Check-in period</h4>
-                      <p>45 minutes before start</p>
+                      <h4>Velikost týmů</h4>
+                      <p>{tournament.type}</p>
                     </div>
                   </div>
                   {/* Další kartičky */}
@@ -75,15 +77,15 @@ function TournamentDetail() {
                   <div className="card">
                     <FontAwesomeIcon icon={faTrophy} className="icon" />
                     <div>
-                      <h4>Prize pool</h4>
-                      <p>1mil€</p>
+                      <h4>Cena za výhru</h4>
+                      <p>{tournament.prize}</p>
                     </div>
                   </div>
                   <div className="card">
                     <FontAwesomeIcon icon={faListAlt} className="icon" />
                     <div>
-                      <h4>Format</h4>
-                      <p>Single Elimination</p>
+                      <h4>Datum</h4>
+                      <p>{tournament.date}</p>
                     </div>
                   </div>
                 </div>
