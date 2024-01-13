@@ -58,3 +58,19 @@ export const createTournament = async (tournamentData) => {
         throw error;
     }
 };
+
+export const joinTournament = async (tournamentId, teamId) => {
+    try {
+        const token = sessionStorage.getItem('token');
+        if (!token) throw new Error('No token found');
+
+        const response = await axiosInstance.post(`/tournaments/${tournamentId}/join`, { teamId }, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error joining tournament with id ${tournamentId}:`, error);
+        throw error;
+    }
+};
