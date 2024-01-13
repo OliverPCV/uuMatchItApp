@@ -1,6 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../Interfaces/User';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -29,13 +28,13 @@ export class AuthService {
       where: { username: username },
       select: ['id', 'username','password']
     });
-    let hash = bcrypt.hashSync(pass, 10);
 
     if (user == null) {
       throw new UnauthorizedException();
     }
 
-    if (bcrypt.compareSync(hash, user.password)) {
+    const isValid = await bcrypt.compare(pass, user.password)
+    if (isValid == false) {
       throw new UnauthorizedException();
     }
 
