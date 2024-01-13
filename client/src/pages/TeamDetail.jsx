@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Tab, Tabs } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-import teams from '../data/teams';
 import '../styles/page-style/TeamDetail.css'; // Update the path to your CSS file
-import teamlogo from '../images/1.png'
+import teamlogo from '../images/1.png';
+import { fetchTeamById } from '../services/teamService';
+
 
 function TeamDetail() {
   const { id } = useParams();
@@ -11,8 +12,18 @@ function TeamDetail() {
   const [key, setKey] = useState('overview'); // Přidání stavu pro záložky
 
   useEffect(() => {
-    const foundTeam = teams.find(t => t.id.toString() === id);
-    setTeam(foundTeam);
+    const fetchTeamData = async () => {
+      try {
+        const teamData = await fetchTeamById(id);
+        setTeam(teamData);
+      } catch (error) {
+        console.error('Error fetching team details:', error);
+      }
+    };
+
+    if (id) {
+      fetchTeamData();
+    }
   }, [id]);
 
   if (!team) {
@@ -42,10 +53,6 @@ function TeamDetail() {
                     <div className="registered-teams">
                       <span className="label">Registrováno</span>
                       <span className="value">8</span>
-                    </div>
-                    <div className="tournament-slots">
-                      <span className="label">Volná místa</span>
-                      <span className="value">12</span>
                     </div>
                   </div>
                   <span className='line'></span>

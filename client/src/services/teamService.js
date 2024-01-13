@@ -19,3 +19,20 @@ export const fetchTeamData = async () => {
     throw error;
   }
 };
+
+export const fetchTeamById = async (id) => {
+    try {
+        const token = sessionStorage.getItem('token');
+        if (!token) throw new Error('No token found');
+    
+        const response = await axiosInstance.get(`/teams/${id}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+        });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error fetching team with id ${id}:`, error);
+        throw error;
+    }
+    }
+    
