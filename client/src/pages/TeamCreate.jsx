@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
+import { createTeam } from '../services/teamService';
 import $ from 'jquery'; // Nezapomeňte nainstalovat jQuery do vašeho projektu
 import '../styles/page-style/TeamCreate.css'; // Aktualizujte cestu k CSS podle potřeby
 
@@ -29,14 +30,18 @@ function CreateTeam() {
     setTeamData({ ...teamData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(teamData);
-    // Přidejte logiku odeslání formuláře
+    try {
+      const responseData = await createTeam(teamData);
+      console.log('Team created successfully:', responseData);
+    } catch (error) {
+      console.error('Error while creating team:', error);
+    }
   };
 
   return (
-    <form action="" className='createform'>
+    <form className='createform' onSubmit={handleSubmit}>
       <div className="form-group">
         <h2 className="heading">Vytvořit tým</h2>
         <div className="controls">
@@ -51,14 +56,15 @@ function CreateTeam() {
           <label htmlFor="name">Název</label>
         </div>
       </div>
-
+  
       <div className="form-group">
         <div className="grid">
-          <button type="submit" value="Submit" className="col-1-4">Odeslat</button>
+          <button type="submit" value="Submit" className="col-1-4">Odeslat</button> 
         </div>
       </div>
     </form>
   );
+  
 }
 
 export default CreateTeam;
