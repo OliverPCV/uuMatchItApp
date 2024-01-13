@@ -12,6 +12,10 @@ function TournamentDetail() {
   const { id } = useParams();
   const [tournament, setTournament] = useState(null);
   const [key, setKey] = useState('overview');
+  const formatDate = (isoDate) => {
+    const date = new Date(isoDate);
+    return date.toLocaleDateString('cs-CZ', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  };
 
   useEffect(() => {
     const fetchTournamentData = async () => {
@@ -85,7 +89,7 @@ function TournamentDetail() {
                     <FontAwesomeIcon icon={faListAlt} className="icon" />
                     <div>
                       <h4>Datum</h4>
-                      <p>{tournament.date}</p>
+                      <p>{formatDate(tournament.date)}</p>
                     </div>
                   </div>
                 </div>
