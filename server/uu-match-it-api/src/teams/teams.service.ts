@@ -3,13 +3,15 @@ import { Team } from '../Interfaces/Team';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../Interfaces/User';
+import { InviteService } from '../invites/invite.service';
 
 @Injectable()
 export class TeamsService {
   constructor(
     @InjectRepository(Team) private teamRep: Repository<Team>,
-    @InjectRepository(User) private userRep: Repository<Team>
-  ) {}
+    private inviteWorker: InviteService,
+  ) {
+  }
 
   getTeam(id: number) {
     return this.teamRep.findOne({
@@ -19,7 +21,23 @@ export class TeamsService {
 
   async createTeam(team: Team, ownerId: number) {
     team.owner = { id: ownerId } as User;
-    return this.teamRep.insert(team);
+    let players = team.players as unknown as string[];
+    team.players = [];
+    this.teamRep.insert(team).then((result) => {
+      if (result.identifiers.length == 0) {
+        throw new BadRequestException('Team could not be created');
+      }
+
+      const teamId = result.identifiers[0].id;
+      for (const username of players) {
+        try {
+          this.inviteWorker.inviteUserToTeam(teamId, username);
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    });
+    return;
   }
 
   getTeams(userId: number) {

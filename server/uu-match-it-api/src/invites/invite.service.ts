@@ -13,34 +13,37 @@ export class InviteService {
     @InjectRepository(Invite) private inviteRep: Repository<Invite>,
     @InjectRepository(Team) private teamRep: Repository<Team>,
     @InjectRepository(User) private userRep: Repository<User>,
-    private userService: UsersService
-  ) {}
+    private userService: UsersService,
+  ) {
+  }
 
   async inviteUserToTeam(teamId: number, username: string) {
-    return this.userRep.findOneBy({username: username}).then((user) => {
-        if (!user) {
-          throw new BadRequestException("User does not exist");
-        }
-        this.inviteRep.insert(new Invite(teamId, user.id));
-    })
+
+
+    return this.userRep.createQueryBuilder('user').where('LOWER(user.username) = LOWER(:username)', { username: username }).getOne().then((user) => {
+      if (!user) {
+        throw new BadRequestException('User does not exist');
+      }
+      this.inviteRep.insert(new Invite(teamId, user.id));
+    });
   }
 
   async handleInvitation(invitationId: number, state: InviteState, userId: number) {
 
     let invite = await this.inviteRep.findOne({
-      where: {id: invitationId},
-      relations: ['team']
+      where: { id: invitationId },
+      relations: ['team'],
     });
     if (!invite) {
-      throw new BadRequestException("Invite does not exist");
+      throw new BadRequestException('Invite does not exist');
     }
 
     if (invite.userId !== userId) {
-      throw new BadRequestException("You are not the invited user");
+      throw new BadRequestException('You are not the invited user');
     }
 
     if (invite.state !== InviteState.PENDING) {
-      throw new BadRequestException("Invite has already been handled");
+      throw new BadRequestException('Invite has already been handled');
     }
 
     invite.state = state;
@@ -53,14 +56,14 @@ export class InviteService {
         });
 
       let userPromise = this.userService.findUserById(invite.userId);
-      Promise.all([teamPromise, userPromise]).then( async ([team, user]) => {
+      Promise.all([teamPromise, userPromise]).then(async ([team, user]) => {
         team.players.push(user);
-        return this.teamRep.save(team).then(()  => {
+        return this.teamRep.save(team).then(() => {
           return this.inviteRep.update(invitationId, invite);
         });
       });
     } else if (state === InviteState.DECLINED) {
-       await this.inviteRep.update(invitationId, invite);
+      await this.inviteRep.update(invitationId, invite);
     }
   }
 
@@ -68,7 +71,7 @@ export class InviteService {
     //TODO get only PENDING ones, we dont need the rest.
     //keeping the rest for now for testing purposes
     return await this.inviteRep.find({
-      where: {userId: userId},
+      where: { userId: userId },
       relations: ['team'],
     });
   }
