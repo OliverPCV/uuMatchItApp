@@ -9,13 +9,19 @@ import { fetchTeamById } from '../services/teamService';
 function TeamDetail() {
   const { id } = useParams();
   const [team, setTeam] = useState(null);
-  const [key, setKey] = useState('overview'); // Přidání stavu pro záložky
+  const [key, setKey] = useState('overview');
+  const [playersCount, setPlayersCount] = useState(0);
 
   useEffect(() => {
     const fetchTeamData = async () => {
       try {
         const teamData = await fetchTeamById(id);
         setTeam(teamData);
+        if (teamData && teamData.teams) {
+          setPlayersCount(teamData.players.length);
+        } else {
+          setPlayersCount(0);
+        }
       } catch (error) {
         console.error('Error fetching team details:', error);
       }
@@ -52,7 +58,7 @@ function TeamDetail() {
                   <div className="tournament-stats">
                     <div className="registered-teams">
                       <span className="label">Registrováno</span>
-                      <span className="value">8</span>
+                      <span className="value">{playersCount}</span>
                     </div>
                   </div>
                   <span className='line'></span>
