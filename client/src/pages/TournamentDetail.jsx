@@ -16,6 +16,7 @@ function TournamentDetail() {
     const date = new Date(isoDate);
     return date.toLocaleDateString('cs-CZ', { day: '2-digit', month: '2-digit', year: 'numeric' });
   };
+  const teamsCount = tournament.teams.length;
 
   useEffect(() => {
     const fetchTournamentData = async () => {
@@ -101,7 +102,7 @@ function TournamentDetail() {
                   <div className="tournament-stats">
                     <div className="registered-teams">
                       <span className="label">Registrováno</span>
-                      <span className="value">8</span>
+                      <span className="value">{teamsCount}</span>
                     </div>
                     <div className="tournament-slots">
                       <span className="label">Slots</span>
