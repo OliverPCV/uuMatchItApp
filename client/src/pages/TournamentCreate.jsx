@@ -80,13 +80,13 @@ function CreateTournament() {
           <label htmlFor="type">Typ</label>
         </div>
         <div className="controls">
-        <select id="sizeLimit" className="floatLabel" name="sizeLimit" onChange={handleChange}>
-          <option value="">Vyberte limit velikosti</option>
-          <option value="4">4</option>
-          <option value="8">8</option>
-        </select>
-        <label htmlFor="sizeLimit">Limit velikosti</label>
-      </div>
+          <select id="sizeLimit" className="floatLabel" name="sizeLimit" onChange={handleChange}>
+            <option value="">Vyberte limit velikosti</option>
+            <option value="4">4</option>
+            <option value="8">8</option>
+          </select>
+          <label htmlFor="sizeLimit">Limit velikosti</label>
+        </div>
         <div className="grid">
           <button type="submit" value="Submit" className="col-1-4">Odeslat</button>
         </div>

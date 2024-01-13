@@ -69,6 +69,13 @@ function TournamentDetail() {
           console.error('Error while joining tournament:', error);
       }
   };
+
+  const getTeamOwnerThroughTournament = (tournament) => {
+    if (tournament && tournament.teams && tournament.teams.length > 0) {
+      return tournament.teams[0].owner;
+    }
+    return null;
+  };
   
   if (!tournament) {
     return <Container>Loading tournament details...</Container>;

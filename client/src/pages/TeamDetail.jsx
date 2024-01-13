@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Tab, Tabs } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-import '../styles/page-style/TeamDetail.css'; // Update the path to your CSS file
+import InviteModal from '../components/InviteModal'; 
+import '../styles/page-style/TeamDetail.css';
 import plogo from '../images/player.png';
 import { fetchTeamById } from '../services/teamService';
-
+import { fetchSendInvite } from '../services/inviteService';
 
 function TeamDetail() {
   const { id } = useParams();
   const [team, setTeam] = useState(null);
   const [key, setKey] = useState('overview');
   const [playersCount, setPlayersCount] = useState(0);
+  const [showInviteModal, setShowInviteModal] = useState(false);
 
   useEffect(() => {
     const fetchTeamData = async () => {
@@ -32,6 +34,18 @@ function TeamDetail() {
     }
   }, [id]);
 
+  const handleSendInvite = async (userName) => {
+    console.log('Odesílání pozvánky uživateli:', userName);
+    try {
+      const teamId = id; 
+      await fetchSendInvite(teamId, userName);
+      console.log('Pozvánka byla úspěšně odeslána.');
+      setShowInviteModal(false); 
+    } catch (error) {
+      console.error('Chyba při odesílání pozvánky:', error);
+    }
+  };
+
   if (!team) {
     return <Container>Loading team details...</Container>;
   }
@@ -40,7 +54,7 @@ function TeamDetail() {
     <><div className="header-image">
       <div className="header-text">
         <h1 className="tournament-detail-title text">{team.name}</h1>
-        <button className="register-button text">Register</button>
+        <button className="register-button text" onClick={() => setShowInviteModal(true)}>Pozvat uživatele</button>
       </div>
     </div>
       <Container className="tournament-detail-container">
@@ -80,6 +94,11 @@ function TeamDetail() {
           </Tab>
         </Tabs>
       </Container>
+      <InviteModal
+        show={showInviteModal}
+        onHide={() => setShowInviteModal(false)}
+        onSendInvite={handleSendInvite}
+      />
     </>
   );
 }
