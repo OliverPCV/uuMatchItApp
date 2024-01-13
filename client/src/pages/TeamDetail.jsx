@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Tab, Tabs } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import '../styles/page-style/TeamDetail.css'; // Update the path to your CSS file
-import teamlogo from '../images/1.png';
+import plogo from '../images/player.png';
 import { fetchTeamById } from '../services/teamService';
 
 
@@ -63,13 +63,16 @@ function TeamDetail() {
                   </div>
                   <span className='line'></span>
                   <div className="registered-teams-list">
-                    <div><img src={teamlogo} alt="Team Name"/><span>Team Name</span></div>
-                    <div><img src={teamlogo} alt="Team Name"/><span>Team Name</span></div>
-                    <div><img src={teamlogo} alt="Team Name"/><span>Team Name</span></div>
-                    <div><img src={teamlogo} alt="Team Name"/><span>Team Name</span></div>
-                    <div><img src={teamlogo} alt="Team Name"/><span>Team Name</span></div>
-                    <div><img src={teamlogo} alt="Team Name"/><span>Team Name</span></div>
-
+                  <div className="teams-list">
+                      {team.players.map(player => (
+                        <div key={player.id} className="team">
+                          <img src={plogo} alt={player.name} />
+                          <div className="team-info">
+                            <h4>{team.name}</h4>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
