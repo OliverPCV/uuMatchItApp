@@ -42,34 +42,41 @@ const GlootTheme = createTheme({
 const SingleElimination = ({ tournamentData }) => {
 
   console.log(tournamentData);
-  simpleSmallBracket.forEach(match => {
-    if (match.tournamentRoundText === "1") {
-      // The match index is the difference between the match ID and the first match ID
-      const matchIndex = match.id - 19755;
-  
-      // The team indexes are twice the match index (since there are 2 teams per match)
-      const firstTeamIndex = matchIndex * 2;
+  const fillTeamsInMatches = (tournamentData, bracket) => {
+    const firstRoundMatches = bracket.filter(match => match.tournamentRoundText === "1");
+    firstRoundMatches.forEach((match, index) => {
+      // Vypočítáme indexy pro týmy (0 & 1 pro první zápas, 2 & 3 pro druhý, atd.)
+      const firstTeamIndex = index * 2;
       const secondTeamIndex = firstTeamIndex + 1;
-  
-      // Assign the team names to the participants array for each match
-      // Check that the team exists in the tournamentData before assigning
+      
+      // Přiřadíme týmy k účastníkům
       match.participants[0] = tournamentData.teams[firstTeamIndex]
         ? {
-            id: tournamentData.teams[firstTeamIndex].id.toString(),
-            name: tournamentData.teams[firstTeamIndex].name,
-            // ... other properties as required
+            ...tournamentData.teams[firstTeamIndex], // Spread operator převezme všechny vlastnosti týmu
+            isWinner: false, // Toto by mělo být nastaveno podle výsledků, pokud jsou dostupné
+            status: null, // Toto by mělo být nastaveno podle stavu zápasu
           }
-        : { name: "TBD" };
+        : { name: "TBD" }; // Pokud tým není definován, nastavíme jako "To Be Decided"
   
-      match.participants[1] = tournamentData.teams[secondTeamIndex]
-        ? {
-            id: tournamentData.teams[secondTeamIndex].id.toString(),
-            name: tournamentData.teams[secondTeamIndex].name,
-            // ... other properties as required
-          }
-        : { name: "TBD" };
-    }
+  
+  match.participants[1] = tournamentData.teams[secondTeamIndex]
+    ? {
+        ...tournamentData.teams[secondTeamIndex], // Stejně jako u prvního týmu
+        isWinner: false, // Toto by mělo být nastaveno podle výsledků, pokud jsou dostupné
+        status: null, // Toto by mělo být nastaveno podle stavu zápasu
+      }
+    : { name: "TBD" }; // Pokud tým není definován, nastavíme jako "To Be Decided"
   });
+  
+  return bracket;
+  };
+  
+  // Pak můžete tuto funkci zavolat a předat ji vaše data týmů a bracket
+  // Předpokládá se, že 'tournamentData' je objekt, který obsahuje pole 'teams' s alespoň 8 týmy.
+  const updatedBracket = fillTeamsInMatches(tournamentData, simpleSmallBracket);
+  
+  // A tady můžete zkontrolovat výsledek
+  console.log(updatedBracket);
   
 
   return (
@@ -183,13 +190,28 @@ export const simpleSmallBracket = [
       }
     ]
   },
-  {
+  { // semifinale 2. zápas
     id: 19757,
     nextMatchId: 19753,
     tournamentRoundText: "2",
     startTime: "2021-05-30",
     state: "SCHEDULED",
-    participants: []
+    participants: [{
+      id: "9397971f-4b2f-44eb-a094-722eb286c59b",
+      resultText: null,
+      isWinner: false,
+      status: null,
+      name: "Crazy Pepes",
+      picture: "teamlogos/client_team_default_logo"
+    },
+    {
+      id: "9397976f-4b2f-44eb-a094-722eb286c59b",
+      resultText: null,
+      isWinner: false,
+      status: null,
+      name: "Ahoj",
+      picture: "teamlogos/client_team_default_logo"
+    }]
   },
   { // zapas 3
     id: 19758,
