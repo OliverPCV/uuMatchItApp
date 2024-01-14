@@ -48,36 +48,36 @@ const SingleElimination = ({ tournamentData }) => {
       // Vypočítáme indexy pro týmy (0 & 1 pro první zápas, 2 & 3 pro druhý, atd.)
       const firstTeamIndex = index * 2;
       const secondTeamIndex = firstTeamIndex + 1;
-      
+
       // Přiřadíme týmy k účastníkům
       match.participants[0] = tournamentData.teams[firstTeamIndex]
         ? {
-            ...tournamentData.teams[firstTeamIndex], // Spread operator převezme všechny vlastnosti týmu
-            isWinner: false, // Toto by mělo být nastaveno podle výsledků, pokud jsou dostupné
-            status: null, // Toto by mělo být nastaveno podle stavu zápasu
-          }
+          ...tournamentData.teams[firstTeamIndex], // Spread operator převezme všechny vlastnosti týmu
+          isWinner: false, // Toto by mělo být nastaveno podle výsledků, pokud jsou dostupné
+          status: null, // Toto by mělo být nastaveno podle stavu zápasu
+        }
         : { name: "TBD" }; // Pokud tým není definován, nastavíme jako "To Be Decided"
-  
-  
-  match.participants[1] = tournamentData.teams[secondTeamIndex]
-    ? {
-        ...tournamentData.teams[secondTeamIndex], // Stejně jako u prvního týmu
-        isWinner: false, // Toto by mělo být nastaveno podle výsledků, pokud jsou dostupné
-        status: null, // Toto by mělo být nastaveno podle stavu zápasu
-      }
-    : { name: "TBD" }; // Pokud tým není definován, nastavíme jako "To Be Decided"
-  });
-  
-  return bracket;
+
+
+      match.participants[1] = tournamentData.teams[secondTeamIndex]
+        ? {
+          ...tournamentData.teams[secondTeamIndex], // Stejně jako u prvního týmu
+          isWinner: false, // Toto by mělo být nastaveno podle výsledků, pokud jsou dostupné
+          status: null, // Toto by mělo být nastaveno podle stavu zápasu
+        }
+        : { name: "TBD" }; // Pokud tým není definován, nastavíme jako "To Be Decided"
+    });
+
+    return bracket;
   };
-  
+
   // Pak můžete tuto funkci zavolat a předat ji vaše data týmů a bracket
   // Předpokládá se, že 'tournamentData' je objekt, který obsahuje pole 'teams' s alespoň 8 týmy.
   const updatedBracket = fillTeamsInMatches(tournamentData, simpleSmallBracket);
-  
+
   // A tady můžete zkontrolovat výsledek
   console.log(updatedBracket);
-  
+
 
   return (
     <SingleEliminationBracket
@@ -119,9 +119,7 @@ export const simpleSmallBracket = [
     tournamentRoundText: "3",
     startTime: "2021-05-30",
     state: "SCHEDULED",
-    participants: [
-
-    ]
+    participants: []
   },
   { // Semifanal zapasu 1
     id: 19754,
@@ -129,16 +127,7 @@ export const simpleSmallBracket = [
     tournamentRoundText: "2",
     startTime: "2021-05-30",
     state: "SCHEDULED",
-    participants: [
-      {
-        id: "14754a1a-932c-4992-8dec-f7f94a339960",
-        resultText: null,
-        isWinner: false,
-        status: null,
-        name: "CoKe BoYz",
-        picture: "teamlogos/client_team_default_logo"
-      }
-    ]
+    participants: []
   },
   { // zapas 1
     id: 19755,
@@ -146,24 +135,7 @@ export const simpleSmallBracket = [
     tournamentRoundText: "1",
     startTime: "2021-05-30",
     state: "SCORE_DONE",
-    participants: [
-      {
-        id: "14754a1a-932c-4992-8dec-f7f94a339960",
-        resultText: "Won",
-        isWinner: true,
-        status: "PLAYED",
-        name: "CoKe BoYz",
-        picture: "teamlogos/client_team_default_logo"
-      },
-      {
-        id: "d16315d4-7f2d-427b-ae75-63a1ae82c0a8",
-        resultText: "Lost",
-        isWinner: false,
-        status: "PLAYED",
-        name: "gggonext",
-        picture: "teamlogos/client_team_default_logo"
-      }
-    ]
+    participants: []
   },
   { // zapas 2
     id: 19756,
@@ -171,24 +143,7 @@ export const simpleSmallBracket = [
     tournamentRoundText: "1",
     startTime: "2021-05-30",
     state: "RUNNING",
-    participants: [
-      {
-        id: "d8b9f00a-0ffa-4527-8316-da701894768e",
-        resultText: null,
-        isWinner: true,
-        status: null,
-        name: "Art of kill",
-        picture: "teamlogos/client_team_default_logo"
-      },
-      {
-        id: "9397971f-4b2f-44eb-a094-722eb286c59b",
-        resultText: null,
-        isWinner: false,
-        status: null,
-        name: "Crazy Pepes",
-        picture: "teamlogos/client_team_default_logo"
-      }
-    ]
+    participants: []
   },
   { // semifinale 2. zápas
     id: 19757,
@@ -196,22 +151,7 @@ export const simpleSmallBracket = [
     tournamentRoundText: "2",
     startTime: "2021-05-30",
     state: "SCHEDULED",
-    participants: [{
-      id: "9397971f-4b2f-44eb-a094-722eb286c59b",
-      resultText: null,
-      isWinner: false,
-      status: null,
-      name: "Crazy Pepes",
-      picture: "teamlogos/client_team_default_logo"
-    },
-    {
-      id: "9397976f-4b2f-44eb-a094-722eb286c59b",
-      resultText: null,
-      isWinner: false,
-      status: null,
-      name: "Ahoj",
-      picture: "teamlogos/client_team_default_logo"
-    }]
+    participants: []
   },
   { // zapas 3
     id: 19758,
@@ -219,25 +159,7 @@ export const simpleSmallBracket = [
     tournamentRoundText: "1",
     startTime: "2021-05-30",
     state: "SCHEDULED",
-    participants: [
-      {
-        id: "9397971f-4b2f-44eb-a094-722eb286c59b",
-        resultText: null,
-        isWinner: false,
-        status: null,
-        name: "Crazy Pepes",
-        picture: "teamlogos/client_team_default_logo"
-      },
-      {
-        id: "9397971f-4b2f-44eb-a094-722eb286c59b",
-        resultText: null,
-        isWinner: false,
-        status: null,
-        name: "Crazy Pepes",
-        picture: "teamlogos/client_team_default_logo"
-      }
-
-    ]
+    participants: []
   },
   { // zapas 4
     id: 19759,
@@ -245,24 +167,8 @@ export const simpleSmallBracket = [
     tournamentRoundText: "1",
     startTime: "2021-05-30",
     state: "SCHEDULED",
-    participants: [
-      {
-        id: "42fecd89-dc83-4821-80d3-718acb50a30c",
-        resultText: null,
-        isWinner: false,
-        status: null,
-        name: "BLUEJAYS",
-        picture: "teamlogos/client_team_default_logo"
-      },
-      {
-        id: "df01fe2c-18db-4190-9f9e-aa63364128fe",
-        resultText: null,
-        isWinner: false,
-        status: null,
-        name: "Bosphorus",
-        picture: "teamlogos/r7zn4gr8eajivapvjyzd"
-      }
-    ]
+    participants: []
+    
   },
 
 
