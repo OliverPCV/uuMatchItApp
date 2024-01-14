@@ -75,6 +75,10 @@ export class TournamentService {
         throw new BadRequestException('Insufficient permissions');
       }
 
+      if (tournament.teams.find((team) => team.id === teamId)) {
+        throw new BadRequestException('Team already in tournament');
+      }
+
       tournament.teams.push({ id: teamId } as Team);
       await this.tournamentRep.save(tournament);
       return { message: 'Team added to tournament' };

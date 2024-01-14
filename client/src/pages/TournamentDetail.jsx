@@ -43,13 +43,13 @@ function TournamentDetail() {
   }, [id]);
 
   const handleJoinTournament = async (tournamentId, teamId) => {
-    try {
-      const response = await joinTournament(tournamentId, teamId);
-      console.log('Joined tournament successfully:', response);
-      setShowModal(false);
-    } catch (error) {
-      console.error('Error while joining tournament:', error);
-    }
+      await joinTournament(tournamentId, teamId).then(async res => {
+        console.log('Joined tournament successfully:', res);
+        setShowModal(false);
+        setTournament(await fetchTournamentById(id));
+      }, (error) => {
+        console.error('Error while joining tournament:', error);
+      });
   };
 
   if (loading) {
@@ -152,7 +152,7 @@ function TournamentDetail() {
         onHide={() => setShowModal(false)}
         teams={userTeams}
         onJoinTournament={handleJoinTournament}
-        tournamentId={id}
+        tournament={tournament}
       />
     </>
   );
