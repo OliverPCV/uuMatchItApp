@@ -42,8 +42,7 @@ function TeamDetail() {
     }
     console.log('Odesílání pozvánky uživateli:', userName);
     try {
-      const teamId = id; 
-      await fetchSendInvite(teamId, userName);
+      await fetchSendInvite(id, userName);
       console.log('Pozvánka byla úspěšně odeslána.');
       setShowInviteModal(false); 
     } catch (error) {
@@ -70,7 +69,20 @@ function TeamDetail() {
           className="mb-3"
         >
           <Tab eventKey="overview" title="Overview">
+            <div className="column-container">
               <div className="left-column">
+                <h3>Vlastník</h3>
+                <div className="card players-box">
+                  <div className="teams-list">
+                    <div key={team.owner.id} className="team">
+                      <img src={plogo} alt={team.owner.username} />
+                      <div className="team-info">
+                        <h4>{team.owner.username}</h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div className="right-column">
                 <h3>Hráči</h3>
                 <div className="card players-box">
@@ -82,16 +94,14 @@ function TeamDetail() {
                   </div>
                   <span className='line'></span>
                   <div className="registered-teams-list">
-                  <div className="teams-list">
                       {team.players.map(player => (
                         <div key={player.id} className="team">
                           <img src={plogo} alt={player.username} />
                           <div className="team-info">
-                            <h4>{player.username}</h4>
+                            <h6>{player.username}</h6>
                           </div>
                         </div>
                       ))}
-                    </div>
                   </div>
                 </div>
               </div>
