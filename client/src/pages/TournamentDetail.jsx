@@ -46,7 +46,6 @@ function TournamentDetail() {
           const teamDetails = await Promise.all(teamDetailsPromises);
           const teamOwners = teamDetails.map(team => team.owner);
           setTeamOwners(teamOwners);
-          console.log('teamOwners', teamOwners);
           const actualUserToken = sessionStorage.getItem('token');
           const actualUserData = await fetchUserData(actualUserToken);
           const actualUserId = actualUserData.id;

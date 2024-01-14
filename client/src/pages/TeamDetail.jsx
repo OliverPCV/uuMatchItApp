@@ -35,6 +35,11 @@ function TeamDetail() {
   }, [id]);
 
   const handleSendInvite = async (userName) => {
+    const isUserAlreadyInTeam = team.players.some(player => player.username === userName);
+    if (isUserAlreadyInTeam) {
+      console.error('Uživatel již je v týmu.');
+      return;
+    }
     console.log('Odesílání pozvánky uživateli:', userName);
     try {
       const teamId = id; 
