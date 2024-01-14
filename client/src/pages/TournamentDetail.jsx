@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Tab, Tabs } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import '../styles/page-style/TournamentDetail.css'; // Update the path to your CSS file
-import SingleElimination from '../components/SingleElimination'
+import SingleElimination from '../components/SingleElimination';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClock, faUsers, faTrophy, faListAlt, faLocationDot } from '@fortawesome/free-solid-svg-icons';
-import tlogo from '../images/1.png'
+import { faListAlt, faLocationDot, faTrophy, faUsers } from '@fortawesome/free-solid-svg-icons';
+import tlogo from '../images/1.png';
 import { fetchTournamentById, joinTournament } from '../services/tourService';
 import TeamSelectModal from '../components/TeamSelect';
 import { fetchUserTeams } from '../services/authService';
-import { fetchTeamById } from '../services/teamService';
-import { fetchUserData } from '../services/authService';
 
 function TournamentDetail() {
   const { id } = useParams();
@@ -22,58 +20,27 @@ function TournamentDetail() {
       month: '2-digit',
       year: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
-  const [tournament, setTournament] = useState(null);
-  const [teamsCount, setTeamsCount] = useState(0);
+  const [tournament, setTournament] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [userTeams, setUserTeams] = useState([]);
-  const [teamsData, setTeamsData] = useState([{}]);
-  const [userId, setUserId] = useState('');
-  const [teamOwners, setTeamOwners] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchTournamentData = async () => {
+  useEffect( () => {
+
+    async function fetchData() {
       try {
-        const tournamentData = await fetchTournamentById(id);
-        setTournament(tournamentData);
-        setTeamsData(tournamentData.teams);
-        if (tournamentData && tournamentData.teams) {
-          setTeamsCount(tournamentData.teams.length);
-          const teams = tournamentData.teams;
-          const teamDetailsPromises = teams.map(team => fetchTeamById(team.id));
-          const teamDetails = await Promise.all(teamDetailsPromises);
-          const teamOwners = teamDetails.map(team => team.owner);
-          setTeamOwners(teamOwners);
-          const actualUserToken = sessionStorage.getItem('token');
-          const actualUserData = await fetchUserData(actualUserToken);
-          const actualUserId = actualUserData.id;
-          const ids = teamOwners.map(user => user.id);
-          setTeamOwners(ids);
-          setUserId(actualUserId);
-        } else {
-          setTeamsCount(0);
-        }
+      setTournament(await fetchTournamentById(id));
+      setUserTeams(await fetchUserTeams());
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching tournament details:', error);
-        setTeamsCount(0);
       }
-    };
-    if (id) {
-      fetchTournamentData();
     }
+    fetchData();
   }, [id]);
-
-  const handleRegisterClick = async () => {
-    try {
-      const teams = await fetchUserTeams();
-      setUserTeams(teams);
-      setShowModal(true);
-    } catch (error) {
-      console.error('Error fetching user teams:', error);
-    }
-  };
 
   const handleJoinTournament = async (tournamentId, teamId) => {
     try {
@@ -85,28 +52,20 @@ function TournamentDetail() {
     }
   };
 
-  const getTeamOwnerThroughTournament = (tournament) => {
-    if (tournament && tournament.teams && tournament.teams.length > 0) {
-      return tournament.teams[0].owner;
-    }
-    return null;
-  };
-
-  if (!tournament) {
+  if (loading) {
     return <Container>Loading tournament details...</Container>;
   }
 
-  const userIsTeamOwner = teamOwners.includes(userId);
-
   return (
-    <><div className="header-image">
-      <div className="header-text">
-        <h1 className="tournament-detail-title text">{tournament.name}</h1>
-        {!userIsTeamOwner && (
-          <button className="register-button text" onClick={handleRegisterClick}>Zapsat tým</button>
-        )}
+    <>
+      <div className="header-image">
+        <div className="header-text">
+          <h1 className="tournament-detail-title text">{tournament.name}</h1>
+          {userTeams.length > 0 && (
+            <button className="register-button text" onClick={() => setShowModal(true)}>Zapsat tým</button>
+          )}
+        </div>
       </div>
-    </div>
       <Container className="tournament-detail-container">
         <Tabs
           id="controlled-tab-example"
@@ -158,14 +117,14 @@ function TournamentDetail() {
                   <div className="tournament-stats">
                     <div className="registered-teams">
                       <span className="label">Registrováno</span>
-                      <span className="value">{teamsCount}</span>
+                      <span className="value">{tournament.teams.length}</span>
                     </div>
                     <div className="tournament-slots">
                       <span className="label">Celkem míst</span>
                       <span className="value">{tournament.sizeLimit}</span>
                     </div>
                   </div>
-                  <span className='line'></span>
+                  <span className="line"></span>
                   <div className="registered-teams-list">
                     <div className="teams-list">
                       {tournament.teams.map(team => (
