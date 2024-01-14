@@ -9,6 +9,8 @@ import tlogo from '../images/1.png'
 import { fetchTournamentById, joinTournament } from '../services/tourService';
 import TeamSelectModal from '../components/TeamSelect';
 import { fetchUserTeams } from '../services/authService';
+import { fetchTeamById } from '../services/teamService';
+import { fetchUserData } from '../services/authService';
 
 function TournamentDetail() {
   const { id } = useParams();
@@ -27,15 +29,30 @@ function TournamentDetail() {
   const [teamsCount, setTeamsCount] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [userTeams, setUserTeams] = useState([]);
-  
+  const [teamsData, setTeamsData] = useState([{}]);
+  const [userId, setUserId] = useState('');
+  const [teamOwners, setTeamOwners] = useState([]);
+
   useEffect(() => {
     const fetchTournamentData = async () => {
       try {
         const tournamentData = await fetchTournamentById(id);
         setTournament(tournamentData);
-        console.log(tournament)
+        setTeamsData(tournamentData.teams);
         if (tournamentData && tournamentData.teams) {
           setTeamsCount(tournamentData.teams.length);
+          const teams = tournamentData.teams;
+          const teamDetailsPromises = teams.map(team => fetchTeamById(team.id));
+          const teamDetails = await Promise.all(teamDetailsPromises);
+          const teamOwners = teamDetails.map(team => team.owner);
+          setTeamOwners(teamOwners);
+          console.log('teamOwners', teamOwners);
+          const actualUserToken = sessionStorage.getItem('token');
+          const actualUserData = await fetchUserData(actualUserToken);
+          const actualUserId = actualUserData.id;
+          const ids = teamOwners.map(user => user.id);
+          setTeamOwners(ids);
+          setUserId(actualUserId);
         } else {
           setTeamsCount(0);
         }
@@ -44,30 +61,29 @@ function TournamentDetail() {
         setTeamsCount(0);
       }
     };
-  
     if (id) {
       fetchTournamentData();
     }
   }, [id]);
-  
-    const handleRegisterClick = async () => {
-      try {
-        const teams = await fetchUserTeams();
-        setUserTeams(teams);
-        setShowModal(true);
-      } catch (error) {
-        console.error('Error fetching user teams:', error);
-      }
-    };
-  
-    const handleJoinTournament = async (tournamentId, teamId) => {
-      try {
-          const response = await joinTournament(tournamentId, teamId);
-          console.log('Joined tournament successfully:', response);
-          setShowModal(false);
-      } catch (error) {
-          console.error('Error while joining tournament:', error);
-      }
+
+  const handleRegisterClick = async () => {
+    try {
+      const teams = await fetchUserTeams();
+      setUserTeams(teams);
+      setShowModal(true);
+    } catch (error) {
+      console.error('Error fetching user teams:', error);
+    }
+  };
+
+  const handleJoinTournament = async (tournamentId, teamId) => {
+    try {
+      const response = await joinTournament(tournamentId, teamId);
+      console.log('Joined tournament successfully:', response);
+      setShowModal(false);
+    } catch (error) {
+      console.error('Error while joining tournament:', error);
+    }
   };
 
   const getTeamOwnerThroughTournament = (tournament) => {
@@ -76,16 +92,20 @@ function TournamentDetail() {
     }
     return null;
   };
-  
+
   if (!tournament) {
     return <Container>Loading tournament details...</Container>;
   }
+
+  const userIsTeamOwner = teamOwners.includes(userId);
 
   return (
     <><div className="header-image">
       <div className="header-text">
         <h1 className="tournament-detail-title text">{tournament.name}</h1>
-        <button className="register-button text" onClick={handleRegisterClick}>Zapsat tým</button>
+        {!userIsTeamOwner && (
+          <button className="register-button text" onClick={handleRegisterClick}>Zapsat tým</button>
+        )}
       </div>
     </div>
       <Container className="tournament-detail-container">
@@ -116,7 +136,7 @@ function TournamentDetail() {
                   {/* Další kartičky */}
                 </div>
                 <div className="cards-container">
-                <div className="card">
+                  <div className="card">
                     <FontAwesomeIcon icon={faListAlt} className="icon" />
                     <div>
                       <h4>Datum</h4>
@@ -165,14 +185,14 @@ function TournamentDetail() {
             </div>
           </Tab>
           <Tab eventKey="brackets" title="Brackets">
-            <SingleElimination tournamentData={tournament}/>
+            <SingleElimination tournamentData={tournament} />
           </Tab>
         </Tabs>
       </Container>
-      <TeamSelectModal 
-        show={showModal} 
-        onHide={() => setShowModal(false)} 
-        teams={userTeams} 
+      <TeamSelectModal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        teams={userTeams}
         onJoinTournament={handleJoinTournament}
         tournamentId={id}
       />
