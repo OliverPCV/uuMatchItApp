@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { createTournament } from '../services/tourService';
 import $ from 'jquery'; // Make sure to install jQuery in your project
 import '../styles/page-style/TournamentCreate.css';
+import { useNavigate } from 'react-router-dom';
 
 function CreateTournament() {
   const [tournamentData, setTournamentData] = useState({
@@ -12,6 +13,7 @@ function CreateTournament() {
     type: '',
     sizeLimit: 0,
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     function floatLabel(inputType) {
@@ -40,6 +42,7 @@ function CreateTournament() {
     try {
       const responseData = await createTournament(tournamentData);
       console.log('Tournament created successfully:', responseData);
+      navigate('/mytournaments');
     } catch (error) {
       console.error('Error while creating tournament:', error);
     }

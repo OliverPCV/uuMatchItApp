@@ -3,12 +3,14 @@ import { Container, Form, Button } from 'react-bootstrap';
 import { createTeam } from '../services/teamService';
 import $ from 'jquery'; // Nezapomeňte nainstalovat jQuery do vašeho projektu
 import '../styles/page-style/TeamCreate.css'; // Aktualizujte cestu k CSS podle potřeby
+import { useNavigate } from 'react-router-dom';
 
 function CreateTeam() {
   const [teamData, setTeamData] = useState({
     name: '',
     players: []
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     function floatLabel(inputType) {
@@ -36,6 +38,7 @@ function CreateTeam() {
     try {
       const responseData = await createTeam(teamData);
       console.log('Team created successfully:', responseData);
+      navigate('/myteams');
     } catch (error) {
       console.error('Error while creating team:', error);
     }
