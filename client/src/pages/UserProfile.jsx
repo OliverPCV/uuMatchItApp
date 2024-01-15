@@ -15,46 +15,30 @@ function UserProfile() {
     const token = sessionStorage.getItem('token');
     if (token) {
       setLoggedIn(true);
-      fetchUserData().then(userData => {
-        setUser({ id: userData.id, username: userData.username, email: userData.email });
-      }).catch(error => {
-        console.error('Chyba při načítání uživatelských dat:', error);
+      fetchTeamData()
+        .then(data => {
+          setUserTeams(data);
+          console.log(data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+      fetchUserData().then(data => {
+        setUser({ id: data.id, username: data.username, email: data.email });
+      }
+      ).catch(error => {
+        console.error('Error fetching user data:', error);
       });
 
     }
   }, [loggedIn]);
 
-  const handleSaveProfile = () => {
-    // Implementace logiky pro uložení profilu
-    alert('Profile Saved');
-  };
-
-  const handleTeamsWhereUserIsPlayer = () => {
-    const userTeams = [];
-    const teams =  fetchTeamData();
-
-    console.log(teams)
-
-    teams.forEach(team => {
-      const isUserInTeam = team.players.some(player => player.id === user.id);
-      console.log('User is in team:', team);
-
-      if (isUserInTeam) {
-        setUserTeams(userTeams.push(team));
-      }
-    });
-
-    return userTeams;
-  };
-
   if (!loggedIn) {
-    // Zobrazí tlačítka pro přihlášení a registraci, pokud uživatel není přihlášen
     return (
       <h4 Uživatel className="text-right">Uživatel není přihlášený</h4>
     );
   }
 
-  // Zobrazí uživatelský profil, pokud je uživatel přihlášen
   return (
     <div className="container rounded bg-white mt-5 mb-5">
       <div className="row">
