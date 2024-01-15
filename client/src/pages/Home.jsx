@@ -43,7 +43,7 @@ function Home() {
 
 
   if (!Array.isArray(tournaments)) {
-    console.error('shoppingLists is not an arra');
+    console.error('shoppingLists is not an array');
     return <div>Error: Data not loaded correctly</div>;
   }
 
