@@ -89,10 +89,6 @@ export class TournamentsController {
     });
   }
 
-  createMatches(id: string) {
-    throw new NotImplementedException('Method not implemented.');
-  }
-
   @Post(':id/join')
   @UseGuards(AuthGuard)
   async joinTournament(
@@ -120,4 +116,37 @@ export class TournamentsController {
       throw e;
     });
   }
+
+  @Post(':id/start')
+  @UseGuards(AuthGuard)
+  async startTournament(
+    @Req() request: AuthRequest,
+    @Param('id', ParseIntPipe) tournamentId: number,
+  ) {
+    return this.worker.startTournament(tournamentId, request.user.id).then(() => {
+      return { message: 'Tournament started' };
+    }, (e: BadRequestException) => {
+      throw e;
+    });
+  }
+
+  // we also need the score so it can be displayed in the tournament
+  @Post(':tournamentId/:matchId/win')
+  @UseGuards(AuthGuard)
+  async setMatchWinner(
+    @Req() request: AuthRequest,
+    @Param('tournamentId', ParseIntPipe) tournamentId: number,
+    @Param('matchId', ParseIntPipe) matchId: number,
+    @Query('teamId', ParseIntPipe) teamId: number,
+    @Body('score') score: number[],
+  ) {
+    return this.worker.setMatchWinner(tournamentId, matchId, teamId, score, request.user.id).then(() => {
+      return { message: 'Match winner set' };
+    }, (e: BadRequestException) => {
+      throw e;
+    });
+  }
+
+
+
 }

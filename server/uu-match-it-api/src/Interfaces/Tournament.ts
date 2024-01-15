@@ -1,6 +1,7 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from './User';
 import { Team } from './Team';
+import { Match } from './Match';
 
 @Entity()
 export class Tournament {
@@ -21,4 +22,8 @@ export class Tournament {
   @Column() place: string;
   @Column() prize: string;
   @Column() sizeLimit: number;
+
+  @OneToMany( () => Match, match => match.tournament, {cascade: true})
+  matches: Match[];
+
 }

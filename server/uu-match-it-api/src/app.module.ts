@@ -17,18 +17,19 @@ import { Tournament } from './Interfaces/Tournament';
 import { Invite } from './Interfaces/Invite';
 import { InvitesController } from './invites/invites.controller';
 import { InviteService } from './invites/invite.service';
+import { Match, MatchParticipant } from './Interfaces/Match';
 const jwtSecret = 'VerySecretKey';
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Tournament, Team, Invite]),
+    TypeOrmModule.forFeature([User, Tournament, Team, Invite, Match, MatchParticipant]),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: '127.0.0.1',
       port: 3306,
       username: 'root',
-      password: 'root1234',
+      password: 'root',
       database: 'uumatchit',
-      entities: [User, Tournament, Team, Invite],
+      entities: [User, Tournament, Team, Invite, Match, MatchParticipant],
       synchronize: true,
     }),
     JwtModule.register({

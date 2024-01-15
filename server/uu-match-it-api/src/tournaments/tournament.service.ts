@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotImplementedException } from '@nestjs/common';
 import { Tournament } from '../Interfaces/Tournament';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -26,7 +26,7 @@ export class TournamentService {
   async getTournamentDetail(id: number) {
     return this.tournamentRep.findOne({
       where: { id: id },
-      relations: ['owner', 'teams'],
+      relations: ['owner', 'teams', 'matches', 'matches.matchParticipants'],
     });
   }
 
@@ -114,4 +114,82 @@ export class TournamentService {
       relations: ['owner'],
     });
   }
+
+  async startTournament(tournamentId: number, id: number) {
+    return this.tournamentRep.findOne({
+        where: { id: tournamentId },
+        relations: ['owner', 'teams'],
+      },
+    ).then((tournament) => {
+      if (!tournament) {
+        throw new BadRequestException('Tournament does not exist');
+      }
+      if (tournament.owner.id !== id) {
+        throw new BadRequestException('User is not the owner of the tournament');
+      }
+      if (tournament.teams.length < 2) {
+        throw new BadRequestException('Not enough teams in tournament');
+      }
+      console.dir(tournament, { depth: null });
+      tournament = this.createMatches(tournament);
+      console.dir(tournament, { depth: null });
+
+      return this.tournamentRep.save(tournament);
+    });
+  }
+
+  async setMatchWinner(tournamentId: number, matchId: number, teamId: number, score: number[], id: number) {
+    throw new NotImplementedException('Method not implemented.');
+  }
+
+
+  createMatches(tournament: Tournament) {
+    console.log('create matches');
+    console.log(tournament);
+    let teams = tournament.teams;
+    let matches = [];
+    //scramble the teams array
+    teams = this.shuffle(teams);
+
+    //create the matches
+    //start time should be approx 14 days from now on
+    for (let i = 0; i < teams.length; i += 2) {
+      let match = {
+        tournament: {id: tournament.id} as Tournament,
+        tournamentRoundText: '1',
+        startTime: new Date(Date.now() + 12096e5),
+        state: 'SCHEDULED',
+        matchParticipants: [
+          {
+            team: teams[i],
+            resultText: '',
+            status: null,
+          },
+          {
+            team: teams[i + 1],
+            resultText: '',
+            status: null,
+          }
+        ]
+      };
+      matches.push(match);
+    }
+
+    tournament.matches = matches;
+    return tournament;
+  }
+
+  shuffle(array: any[]) {
+    let currentIndex: number = array.length, temporaryValue: number, randomIndex: number;
+    while (0 !== currentIndex) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+    return array;
+  }
+
+
 }
