@@ -69,7 +69,6 @@ function TeamDetail() {
     }
   };
 
-
   if (!team) {
     return <Container>Loading team details...</Container>;
   }

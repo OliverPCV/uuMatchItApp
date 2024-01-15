@@ -2,17 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { fetchUserData } from '../services/authService'; // Import funkce pro načtení uživatelských dat
 import '../styles/page-style/UserProfile.css'; // Cesta k vašemu CSS
 import IncomingInvites from '../components/IncomingInvites';
+import { fetchTeamData } from '../services/teamService';
+import TeamCard from '../components/TeamCard';
 
 function UserProfile() {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState({ username: '', email: '' });
+  const [user, setUser] = useState({ id: '', username: '', email: '' });
+  const [userTeams, setUserTeams] = useState([]);
+
 
   useEffect(() => {
     const token = sessionStorage.getItem('token');
     if (token) {
       setLoggedIn(true);
       fetchUserData().then(userData => {
-        setUser({ username: userData.username, email: userData.email });
+        setUser({ id: userData.id, username: userData.username, email: userData.email });
       }).catch(error => {
         console.error('Chyba při načítání uživatelských dat:', error);
         // Zde můžete zpracovat chybu, např. zobrazit uživateli zprávu
@@ -23,6 +27,22 @@ function UserProfile() {
   const handleSaveProfile = () => {
     // Implementace logiky pro uložení profilu
     alert('Profile Saved');
+  };
+
+  const handleTeamsWhereUserIsPlayer = () => {
+    const userTeams = [];
+    const teams =  fetchTeamData();
+
+    teams.forEach(team => {
+      const isUserInTeam = team.players.some(player => player.id === user.id);
+      console.log('User is in team:', team);
+
+      if (isUserInTeam) {
+        setUserTeams(userTeams.push(team));
+      }
+    });
+
+    return userTeams;
   };
 
   if (!loggedIn) {
@@ -54,6 +74,16 @@ function UserProfile() {
       <div className="user-profile-content">
         <IncomingInvites />
       </div>
+      <div className='myt-main'>
+      <h3>Moje týmy:</h3>
+      {userTeams.length > 0 ? (
+        userTeams.map(team => (
+          <TeamCard key={team.id} data={team} />
+        ))
+      ) : (
+        <p>Nejste přihlášený.</p>
+      )}
+    </div>
     </div>
   );
 }
