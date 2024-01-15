@@ -19,7 +19,6 @@ function UserProfile() {
         setUser({ id: userData.id, username: userData.username, email: userData.email });
       }).catch(error => {
         console.error('Chyba při načítání uživatelských dat:', error);
-        // Zde můžete zpracovat chybu, např. zobrazit uživateli zprávu
       });
     }
   }, [loggedIn]);
