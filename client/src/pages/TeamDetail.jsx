@@ -125,6 +125,10 @@ function TeamDetail() {
                             actualUser.id === team.owner.id &&
                             <button className="delete-button text" onClick={() => handleRemovePlayerFromTeam(player.id)}>Odebrat</button>
                           }
+                          {
+                            actualUser.id === player.id &&
+                            <button className="delete-button text" onClick={() => handleRemovePlayerFromTeam(player.id)}>Odejít</button>
+                          }
                         </div>
                       </div>
                     ))}
