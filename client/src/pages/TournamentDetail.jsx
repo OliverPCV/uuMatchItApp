@@ -99,9 +99,9 @@ function TournamentDetail() {
             <button className="register-button text" onClick={() => setShowModal(true)}>Zapsat tým</button>
           )}
           {
-            actualUser.id === tournament.owner.id &&
+            actualUser.id === tournament.owner.id && (
             <button className="delete-button text" onClick={() => handleDeleteTournament(tournament.id)}>Smazat turnaj</button>
-          }
+          )}
         </div>
       </div>
       <Container className="tournament-detail-container">
