@@ -163,6 +163,7 @@ svg {
     display: flex;
     align-items: center;
     margin-bottom: 5px;
+    flex-direction: column;
 }
 
 .right-column .registered-teams-list img {

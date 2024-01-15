@@ -34,11 +34,11 @@ function TournamentDetail() {
 
 
   useEffect(() => {
-
     async function fetchData() {
       try {
         setTournament(await fetchTournamentById(id));
         setUserTeams(await fetchUserTeams());
+
         fetchUserData().then(userData => {
           setActualUser({ id: userData.id });
         }).catch(error => {
@@ -90,18 +90,19 @@ function TournamentDetail() {
     }
   }
 
+  console.log(tournament.sizeLimit, tournament.teams.length);
   return (
     <>
       <div className="header-image">
         <div className="header-text">
           <h1 className="tournament-detail-title text">{tournament.name}</h1>
-          {userTeams.length > 0 && (
+          {userTeams.length > 0 && tournament.teams.length <= tournament.sizeLimit && (
             <button className="register-button text" onClick={() => setShowModal(true)}>Zapsat tým</button>
           )}
           {
             actualUser.id === tournament.owner.id && (
-            <button className="delete-button text" onClick={() => handleDeleteTournament(tournament.id)}>Smazat turnaj</button>
-          )}
+              <button className="delete-button text" onClick={() => handleDeleteTournament(tournament.id)}>Smazat turnaj</button>
+            )}
         </div>
       </div>
       <Container className="tournament-detail-container">
@@ -165,15 +166,22 @@ function TournamentDetail() {
                   <span className="line"></span>
                   <div className="registered-teams-list">
                     <div className="teams-list">
-                      {tournament.teams.map(team => (
-                        <div key={team.id} className="team">
+                      {tournament.teams.map((team) => {
+                        return (<div key={team.id} className="team">
                           <img src={tlogo} alt={team.name} />
                           <div className="team-info">
                             <h4>{team.name}</h4>
-                            <button className="leave-button" onClick={() => handeLeaveTournament(tournament.id, team.id)}>Odejít z turnaje</button>
+                            {!loading && (actualUser.id === tournament.owner.id || actualUser.id === team.owner.id) &&
+                              (
+                                <button className="leave-button"
+                                  onClick={() => handeLeaveTournament(tournament.id, team.id)}>
+                                  Odejít z turnaje
+                                </button>
+                              )
+                            }
                           </div>
-                        </div>
-                      ))}
+                        </div>);
+                      })}
                     </div>
                   </div>
                 </div>
