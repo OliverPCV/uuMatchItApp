@@ -7,6 +7,7 @@ import plogo from '../images/player.png';
 import { fetchTeamById, removeUserFromTeam } from '../services/teamService';
 import { fetchSendInvite } from '../services/inviteService';
 import { fetchUserData } from '../services/authService';
+import { useNavigate } from 'react-router-dom';
 
 function TeamDetail() {
   const { id } = useParams();
@@ -15,6 +16,7 @@ function TeamDetail() {
   const [playersCount, setPlayersCount] = useState(0);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [actualUser, setActualUser] = useState({ id: '' });
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -60,16 +62,40 @@ function TeamDetail() {
   };
 
   const handleRemovePlayerFromTeam = async (playerId) => {
+    const isConfirmed = window.confirm("Opravdu chcete odebrat tohoto hráče?");
+
+    if (isConfirmed) {
     console.log('Odebírání hráče z týmu:', playerId);
     try {
       await removeUserFromTeam(id, playerId);
       console.log('Hráč byl úspěšně odebrán z týmu.');
       setTeam(await fetchTeamById(id));
-      
+
     } catch (error) {
       console.error('Chyba při odebírání hráče z týmu:', error);
 
     }
+  } else {
+    console.log('Player deletion cancelled');
+  }
+  };
+
+  const handleRemoveMeFromTeam = async (playerId) => {
+    const isConfirmed = window.confirm("Opravdu chcete odejít z turnaje?");
+
+    if (isConfirmed) {
+    console.log('Odebírání hráče z týmu:', playerId);
+    try {
+      await removeUserFromTeam(id, playerId);
+      console.log('Hráč byl úspěšně odebrán z týmu.');
+      setTeam(await fetchTeamById(id));
+      navigate('/userprofile');
+    } catch (error) {
+      console.error('Chyba při odebírání hráče z týmu:', error);
+    }
+  } else {
+    console.log('Player deletion cancelled');
+  }
   };
 
   if (!team) {
@@ -81,8 +107,8 @@ function TeamDetail() {
       <div className="header-text">
         <h1 className="tournament-detail-title text">{team.name}</h1>
         {actualUser.id === team.owner.id && (
-        <button className="register-button text" onClick={() => setShowInviteModal(true)}>Pozvat uživatele</button>
-      )}
+          <button className="register-button text" onClick={() => setShowInviteModal(true)}>Pozvat uživatele</button>
+        )}
       </div>
     </div>
       <Container className="tournament-detail-container">
@@ -129,7 +155,7 @@ function TeamDetail() {
                           }
                           {
                             actualUser.id === player.id &&
-                            <button className="delete-button text" onClick={() => handleRemovePlayerFromTeam(player.id)}>Odejít</button>
+                            <button className="delete-button text" onClick={() => handleRemoveMeFromTeam(player.id)}>Odejít</button>
                           }
                         </div>
                       </div>
