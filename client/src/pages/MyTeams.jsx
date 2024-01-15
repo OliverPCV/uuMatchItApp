@@ -28,7 +28,9 @@ function MyTeams() {
     }
   }, [isLoggedIn]);
 
-  if (!isLoggedIn) {
+  console.log(isLoggedIn)
+
+  if (!isLoggedIn()) {
     return (
       <h4 Uživatel className="text-right">Uživatel není přihlášený</h4>
     );
@@ -44,8 +46,10 @@ function MyTeams() {
           <TeamCard key={team.id} data={team} />
         ))
       ) : (
-        <p>Nejste přihlášený.</p>
+        <p>Nemáte vytvořené žádné týmy</p>
       )}
+      
+      
     </div>
   );
 }

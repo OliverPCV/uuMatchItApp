@@ -79,7 +79,6 @@ function AppNavbar() {
 
         sessionStorage.setItem('user', JSON.stringify(response.data));
         setUser(response.data);
-        setLoggedIn(true);
         setShowRegister(false);
       } catch (error) {
         setRegisterError('Registrace selhala. Zkontrolujte zadané údaje.');

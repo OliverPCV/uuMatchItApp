@@ -24,6 +24,7 @@ function TeamDetail() {
         setTeam(teamData);
         fetchUserData().then(userData => {
           setActualUser({ id: userData.id });
+          console.log(userData.id);
         }).catch(error => {
           console.error('Chyba při načítání uživatelských dat:', error);
         });
@@ -64,11 +65,12 @@ function TeamDetail() {
       await removeUserFromTeam(id, playerId);
       console.log('Hráč byl úspěšně odebrán z týmu.');
       setTeam(await fetchTeamById(id));
+      
     } catch (error) {
       console.error('Chyba při odebírání hráče z týmu:', error);
+
     }
   };
-
 
   if (!team) {
     return <Container>Loading team details...</Container>;
