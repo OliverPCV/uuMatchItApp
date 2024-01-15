@@ -26,7 +26,7 @@ export class TournamentService {
   async getTournamentDetail(id: number) {
     return this.tournamentRep.findOne({
       where: { id: id },
-      relations: ['owner', 'teams', 'matches', 'matches.matchParticipants'],
+      relations: ['owner', 'teams', 'teams.owner', 'matches', 'matches.matchParticipants'],
     });
   }
 
@@ -102,6 +102,7 @@ export class TournamentService {
       if (tournament.owner.id !== callerId || team.owner.id !== callerId) {
         throw new BadRequestException('Insufficient permissions');
       }
+
       tournament.teams = tournament.teams.filter((team) => team.id !== teamId);
       await this.tournamentRep.save(tournament);
       return { message: 'Team removed from tournament' };
@@ -139,6 +140,12 @@ export class TournamentService {
   }
 
   async setMatchWinner(tournamentId: number, matchId: number, teamId: number, score: number[], id: number) {
+
+
+
+
+
+
     throw new NotImplementedException('Method not implemented.');
   }
 
