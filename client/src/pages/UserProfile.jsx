@@ -33,11 +33,6 @@ function UserProfile() {
     }
   }, [loggedIn]);
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> a2ce721 (services)
   if (!loggedIn) {
     return (
       <h4 Uživatel className="text-right">Uživatel není přihlášený</h4>
@@ -66,7 +61,6 @@ function UserProfile() {
         <IncomingInvites />
       </div>
       <div className='myt-main'>
-<<<<<<< HEAD
       <h3>Moje týmy:</h3>
       {userTeams.length > 0 ? (
         userTeams.map(team => (
@@ -76,17 +70,6 @@ function UserProfile() {
         <p>Nejste v žádném týmu</p>
       )}
     </div>
-=======
-        <h3>Moje týmy:</h3>
-        {userTeams.length > 0 ? (
-          userTeams.map(team => (
-            <TeamCard key={team.id} data={team} />
-          ))
-        ) : (
-          <p>Nejste přihlášený.</p>
-        )}
-      </div>
->>>>>>> a2ce721 (services)
     </div>
   );
 }

@@ -75,7 +75,7 @@ export const removeUserFromTeam = async (teamId, userId) => {
         const token = sessionStorage.getItem('token');
         if (!token) throw new Error('No token found');
 
-        const response = await axiosInstance.delete(`/teams/${teamId}`, null, {
+        const response = await axiosInstance.delete(`/teams/${teamId}/kick`, {
             params: { userId },
             headers: { 'Authorization': `Bearer ${token}` }
         });

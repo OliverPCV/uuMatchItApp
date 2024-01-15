@@ -63,7 +63,7 @@ function TournamentDetail() {
   };
 
   if (loading) {
-    return <Container>Loading tournament details...</Container>;
+    return <Container>Nejste přihlášený.</Container>;
   }
 
   const handeLeaveTournament = async (tournamentId, teamId) => {
@@ -170,12 +170,11 @@ function TournamentDetail() {
                           <img src={tlogo} alt={team.name} />
                           <div className="team-info">
                             <h4>{team.name}</h4>
-                              <button className="leave-button" onClick={() => handeLeaveTournament(tournament.id, team.id)}>Odejít z turnaje</button>
+                            <button className="leave-button" onClick={() => handeLeaveTournament(tournament.id, team.id)}>Odejít z turnaje</button>
                           </div>
                         </div>
                       ))}
                     </div>
-
                   </div>
                 </div>
               </div>
