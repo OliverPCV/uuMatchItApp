@@ -20,6 +20,7 @@ function UserProfile() {
       }).catch(error => {
         console.error('Chyba při načítání uživatelských dat:', error);
       });
+
     }
   }, [loggedIn]);
 
@@ -31,6 +32,8 @@ function UserProfile() {
   const handleTeamsWhereUserIsPlayer = () => {
     const userTeams = [];
     const teams =  fetchTeamData();
+
+    console.log(teams)
 
     teams.forEach(team => {
       const isUserInTeam = team.players.some(player => player.id === user.id);
@@ -80,7 +83,7 @@ function UserProfile() {
           <TeamCard key={team.id} data={team} />
         ))
       ) : (
-        <p>Nejste přihlášený.</p>
+        <p>Nejste v žádném týmu</p>
       )}
     </div>
     </div>
