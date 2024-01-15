@@ -80,7 +80,9 @@ function TeamDetail() {
     <><div className="header-image">
       <div className="header-text">
         <h1 className="tournament-detail-title text">{team.name}</h1>
+        {actualUser.id === team.owner.id && (
         <button className="register-button text" onClick={() => setShowInviteModal(true)}>Pozvat uživatele</button>
+      )}
       </div>
     </div>
       <Container className="tournament-detail-container">
