@@ -100,7 +100,8 @@ export class TournamentService {
       }
 
       if (tournament.owner.id !== callerId || team.owner.id !== callerId) {
-        throw new BadRequestException('Insufficient permissions');
+        throw new BadRequestException('Insufficient permissions, tournamentOwner:' + tournament.owner.id + ' teamOwner:' + team.owner.id + ' caller:' + callerId);
+
       }
 
       tournament.teams = tournament.teams.filter((team) => team.id !== teamId);
