@@ -54,3 +54,36 @@ export const createTeam = async (teamData) => {
     }
 };
 
+export const deleteTeam = async (id) => {
+    try {
+        const token = sessionStorage.getItem('token');
+        if (!token) throw new Error('No token found');
+
+        const response = await axiosInstance.delete(`/teams/${id}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error deleting team with id ${id}:`, error);
+        throw error;
+    }
+}
+
+export const removeUserFromTeam = async (teamId, userId) => {
+    try {
+        const token = sessionStorage.getItem('token');
+        if (!token) throw new Error('No token found');
+
+        const response = await axiosInstance.delete(`/teams/${teamId}`, null, {
+            params: { userId },
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error removing user with id ${userId} from team with id ${teamId}:`, error);
+        throw error;
+    }
+}
+

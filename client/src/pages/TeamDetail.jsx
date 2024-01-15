@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Tab, Tabs } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-import InviteModal from '../components/InviteModal'; 
+import InviteModal from '../components/InviteModal';
 import '../styles/page-style/TeamDetail.css';
 import plogo from '../images/player.png';
-import { fetchTeamById } from '../services/teamService';
+import { fetchTeamById, removeUserFromTeam } from '../services/teamService';
 import { fetchSendInvite } from '../services/inviteService';
+import { fetchUserData } from '../services/authService';
 
 function TeamDetail() {
   const { id } = useParams();
@@ -13,12 +14,19 @@ function TeamDetail() {
   const [key, setKey] = useState('overview');
   const [playersCount, setPlayersCount] = useState(0);
   const [showInviteModal, setShowInviteModal] = useState(false);
+  const [actualUser, setActualUser] = useState({ id: '' });
+
 
   useEffect(() => {
     const fetchTeamData = async () => {
       try {
         const teamData = await fetchTeamById(id);
         setTeam(teamData);
+        fetchUserData().then(userData => {
+          setActualUser({ id: userData.id });
+        }).catch(error => {
+          console.error('Chyba při načítání uživatelských dat:', error);
+        });
         if (teamData && teamData.players) {
           setPlayersCount(teamData.players.length);
         } else {
@@ -44,11 +52,23 @@ function TeamDetail() {
     try {
       await fetchSendInvite(id, userName);
       console.log('Pozvánka byla úspěšně odeslána.');
-      setShowInviteModal(false); 
+      setShowInviteModal(false);
     } catch (error) {
       console.error('Chyba při odesílání pozvánky:', error);
     }
   };
+
+  const handleRemovePlayerFromTeam = async (playerId) => {
+    console.log('Odebírání hráče z týmu:', playerId);
+    try {
+      await removeUserFromTeam(id, playerId);
+      console.log('Hráč byl úspěšně odebrán z týmu.');
+      setTeam(await fetchTeamById(id));
+    } catch (error) {
+      console.error('Chyba při odebírání hráče z týmu:', error);
+    }
+  };
+
 
   if (!team) {
     return <Container>Loading team details...</Container>;
@@ -94,14 +114,18 @@ function TeamDetail() {
                   </div>
                   <span className='line'></span>
                   <div className="registered-teams-list">
-                      {team.players.map(player => (
-                        <div key={player.id} className="team">
-                          <img src={plogo} alt={player.username} />
-                          <div className="team-info">
-                            <h6>{player.username}</h6>
-                          </div>
+                    {team.players.map(player => (
+                      <div key={player.id} className="team">
+                        <img src={plogo} alt={player.username} />
+                        <div className="team-info">
+                          <h6>{player.username}</h6>
+                          {
+                            actualUser.id === team.owner.id &&
+                            <buttin className="delete-button text" onClick={() => handleRemovePlayerFromTeam(player.id)}>Odebrat</buttin>
+                          }
                         </div>
-                      ))}
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>

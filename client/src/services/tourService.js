@@ -80,7 +80,7 @@ export const leaveTournament = async (tournamentId, teamId) => {
     try {
         const token = sessionStorage.getItem('token');
         if (!token) throw new Error('No token found');
-
+    
         const response = await axiosInstance.post(`/tournaments/${tournamentId}/leave`, null, {
             params: { teamId },
             headers: { 'Authorization': `Bearer ${token}` }
