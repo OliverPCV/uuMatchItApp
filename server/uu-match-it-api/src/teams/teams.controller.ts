@@ -95,7 +95,7 @@ export class TeamsController {
    * TODO add a person that is removing for permission check
    * */
   @UseGuards(AuthGuard)
-  @Delete(':teamId')
+  @Delete(':teamId/kick')
   kickFromTeam(
     @Req() request: AuthRequest,
     @Param('teamId', ParseIntPipe) teamId: number,

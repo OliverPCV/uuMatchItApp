@@ -26,7 +26,7 @@ export class Team {
   owner: User;
 
 
-  @ManyToMany(() => User)
+  @ManyToMany(() => User, { cascade: true })
   @JoinTable()
   players: User[];
 }
