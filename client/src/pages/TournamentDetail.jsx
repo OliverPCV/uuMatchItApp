@@ -96,13 +96,16 @@ function TournamentDetail() {
       <div className="header-image">
         <div className="header-text">
           <h1 className="tournament-detail-title text">{tournament.name}</h1>
-          {userTeams.length > 0 && tournament.teams.length < tournament.sizeLimit && (
-            <button className="register-button text" onClick={() => setShowModal(true)}>Zapsat tým</button>
-          )}
-          {
-            actualUser.id === tournament.owner.id && (
-              <button className="delete-button text" onClick={() => handleDeleteTournament(tournament.id)}>Smazat turnaj</button>
-          )}
+          <div className='buttons-tour'>
+            {userTeams.length > 0 && tournament.teams.length < tournament.sizeLimit && (
+              <button className="register-button text" onClick={() => setShowModal(true)}>Zapsat tým</button>
+            )}
+            {
+              actualUser.id === tournament.owner.id && (
+                <button className="delete-button text" onClick={() => handleDeleteTournament(tournament.id)}>Smazat turnaj</button>
+              )}
+          </div>
+
         </div>
       </div>
       <Container className="tournament-detail-container">
