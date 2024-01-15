@@ -6,11 +6,13 @@ import SingleElimination from '../components/SingleElimination';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faListAlt, faLocationDot, faTrophy, faUsers } from '@fortawesome/free-solid-svg-icons';
 import tlogo from '../images/1.png';
-import { fetchTournamentById, joinTournament } from '../services/tourService';
+import { fetchTournamentById, joinTournament, deleteTournament, leaveTournament } from '../services/tourService';
 import TeamSelectModal from '../components/TeamSelect';
-import { fetchUserTeams } from '../services/authService';
+import { fetchUserTeams, fetchUserData } from '../services/authService';
+import { useNavigate } from 'react-router-dom';
 
 function TournamentDetail() {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [key, setKey] = useState('overview');
   const formatDate = (isoDate) => {
@@ -27,13 +29,20 @@ function TournamentDetail() {
   const [showModal, setShowModal] = useState(false);
   const [userTeams, setUserTeams] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [actualUser, setActualUser] = useState({ id: '' });
 
-  useEffect( () => {
+
+  useEffect(() => {
 
     async function fetchData() {
       try {
-      setTournament(await fetchTournamentById(id));
-      setUserTeams(await fetchUserTeams());
+        setTournament(await fetchTournamentById(id));
+        setUserTeams(await fetchUserTeams());
+        fetchUserData().then(userData => {
+          setActualUser({ id: userData.id });
+        }).catch(error => {
+          console.error('Chyba při načítání uživatelských dat:', error);
+        });
         setLoading(false);
       } catch (error) {
         console.error('Error fetching tournament details:', error);
@@ -43,17 +52,41 @@ function TournamentDetail() {
   }, [id]);
 
   const handleJoinTournament = async (tournamentId, teamId) => {
-      await joinTournament(tournamentId, teamId).then(async res => {
-        console.log('Joined tournament successfully:', res);
-        setShowModal(false);
-        setTournament(await fetchTournamentById(id));
-      }, (error) => {
-        console.error('Error while joining tournament:', error);
-      });
+    await joinTournament(tournamentId, teamId).then(async res => {
+      console.log('Joined tournament successfully:', res);
+      setShowModal(false);
+      setTournament(await fetchTournamentById(id));
+    }, (error) => {
+      console.error('Error while joining tournament:', error);
+    });
   };
 
   if (loading) {
     return <Container>Loading tournament details...</Container>;
+  }
+
+  const handeLeaveTournament = async (tournamentId, teamId) => {
+    await leaveTournament(tournamentId, teamId).then(async res => {
+      console.log('Leaved tournament successfully:', res);
+      setTournament(await fetchTournamentById(id));
+    }, (error) => {
+      console.error('Error while leaving tournament:', error);
+    });
+  }
+
+  const handleDeleteTournament = async (tournamentId) => {
+    const isConfirmed = window.confirm("Opravdu chcete smazat tento turnaj?");
+  
+    if (isConfirmed) {
+      await deleteTournament(tournamentId).then(async res => {
+        console.log('Deleted tournament successfully:', res);
+        navigate('/mytournaments');
+      }, (error) => {
+        console.error('Error while deleting tournament:', error);
+      });
+    } else {
+      console.log('Tournament deletion cancelled');
+    }
   }
 
   return (
@@ -64,6 +97,10 @@ function TournamentDetail() {
           {userTeams.length > 0 && (
             <button className="register-button text" onClick={() => setShowModal(true)}>Zapsat tým</button>
           )}
+          {
+            actualUser.id === tournament.owner.id &&
+            <button className="delete-button text" onClick={() => handleDeleteTournament(tournament.id)}>Smazat turnaj</button>
+          }
         </div>
       </div>
       <Container className="tournament-detail-container">
@@ -132,6 +169,7 @@ function TournamentDetail() {
                           <img src={tlogo} alt={team.name} />
                           <div className="team-info">
                             <h4>{team.name}</h4>
+                            <button className="leave-button" onClick={() => handeLeaveTournament(tournament.id, team.id)}>Odejít z turnaje</button>
                           </div>
                         </div>
                       ))}

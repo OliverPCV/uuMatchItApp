@@ -32,7 +32,7 @@ export const fetchTournamentByOwner = async (id) => {
         const token = sessionStorage.getItem('token');
         const response = await axiosInstance.get(`/tournaments/mine`, {
             headers: { 'Authorization': `Bearer ${token}` }
-          });
+        });
         console.log(response.data);
         return response.data;
     } catch (error) {
@@ -75,3 +75,36 @@ export const joinTournament = async (tournamentId, teamId) => {
         throw error;
     }
 };
+
+export const leaveTournament = async (tournamentId, teamId) => {
+    try {
+        const token = sessionStorage.getItem('token');
+        if (!token) throw new Error('No token found');
+
+        const response = await axiosInstance.post(`/tournaments/${tournamentId}/leave`, null, {
+            params: { teamId },
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error leaving tournament with id ${tournamentId}:`, error);
+        throw error;
+    }
+}
+
+export const deleteTournament = async (tournamentId) => {
+    try {
+        const token = sessionStorage.getItem('token');
+        if (!token) throw new Error('No token found');
+
+        const response = await axiosInstance.delete(`/tournaments/${tournamentId}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error deleting tournament with id ${tournamentId}:`, error);
+        throw error;
+    }
+}

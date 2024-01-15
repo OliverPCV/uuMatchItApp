@@ -82,6 +82,16 @@ svg {
   border-radius: 5px;
 }
 
+.delete-button {
+  background-color: rgb(255, 0, 0);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  z-index: 2;
+  margin-left: 20px;
+  border-radius: 5px;
+}
+
 .header-image::after {
   content: '';
   position: absolute;
