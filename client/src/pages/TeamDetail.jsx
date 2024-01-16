@@ -99,7 +99,7 @@ function TeamDetail() {
   };
 
   if (!team) {
-    return <Container>Loading team details...</Container>;
+    return <Container>Nejste přihlášený.</Container>;
   }
 
   return (
