@@ -4,11 +4,12 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException, NotImplementedException,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Post,
-  Put, Query,
+  Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -82,7 +83,7 @@ export class TournamentsController {
     @Req() request: AuthRequest,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    return  this.worker.deleteTournament(id, request.user.id).then(() => {
+    return this.worker.deleteTournament(id, request.user.id).then(() => {
       return { message: 'Tournament deleted' };
     }, (e: BadRequestException) => {
       throw e;
@@ -123,15 +124,15 @@ export class TournamentsController {
     @Req() request: AuthRequest,
     @Param('id', ParseIntPipe) tournamentId: number,
   ) {
-    return this.worker.startTournament(tournamentId, request.user.id).then(() => {
-      return { message: 'Tournament started' };
+    return this.worker.startTournament(tournamentId, request.user.id).then((updateResult) => {
+      return { message: 'Tournament started', data: updateResult };
     }, (e: BadRequestException) => {
       throw e;
     });
   }
 
   // we also need the score so it can be displayed in the tournament
-  @Post(':tournamentId/:matchId/win')
+  @Post(':tournamentId/:matchId/winner')
   @UseGuards(AuthGuard)
   async setMatchWinner(
     @Req() request: AuthRequest,
@@ -146,7 +147,4 @@ export class TournamentsController {
       throw e;
     });
   }
-
-
-
 }

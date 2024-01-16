@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../Interfaces/User';
 import { Team } from '../Interfaces/Team';
+import { Match } from '../Interfaces/Match';
 
 @Injectable()
 export class TournamentService {
@@ -11,6 +12,7 @@ export class TournamentService {
   constructor(
     @InjectRepository(Tournament) private tournamentRep: Repository<Tournament>,
     @InjectRepository(Team) private teamRep: Repository<Team>,
+    @InjectRepository(Match) private matchRep: Repository<Match>,
   ) {
   }
 
@@ -117,75 +119,80 @@ export class TournamentService {
     });
   }
 
-  async startTournament(tournamentId: number, id: number) {
+  async startTournament(tournamentId: number, callerId: number) {
     return this.tournamentRep.findOne({
         where: { id: tournamentId },
-        relations: ['owner', 'teams'],
+        relations: ['owner', 'teams', 'matches'],
       },
-    ).then((tournament) => {
+    ).then(async (tournament) => {
       if (!tournament) {
         throw new BadRequestException('Tournament does not exist');
       }
-      if (tournament.owner.id !== id) {
+      if (tournament.owner.id !== callerId) {
         throw new BadRequestException('User is not the owner of the tournament');
+      }
+      if (tournament.matches.length > 0) {
+        throw new BadRequestException('Tournament already started');
       }
       if (tournament.teams.length < 2) {
         throw new BadRequestException('Not enough teams in tournament');
       }
-      console.dir(tournament, { depth: null });
-      tournament = this.createMatches(tournament);
-      console.dir(tournament, { depth: null });
 
-      return this.tournamentRep.save(tournament);
+
+      let teams = this.shuffle(tournament.teams);
+      let roundsNeeded = Math.ceil(Math.log2(teams.length));
+      await this.createMatches(tournament, teams, Math.pow(2, roundsNeeded), roundsNeeded, 1, null, new Date());
+      return this.tournamentRep.findOne({
+        where: { id: tournamentId },
+        relations: ['teams', 'matches', 'matches.matchParticipants', 'matches.matchParticipants.team'],
+      }).then((tournament) => {
+        tournament.matches.forEach((match) => {
+          match.matchParticipants = match.matchParticipants.map((mp) => ({
+            ...mp, name: mp.team.name,
+          }));
+        });
+        return tournament;
+      });
     });
   }
 
   async setMatchWinner(tournamentId: number, matchId: number, teamId: number, score: number[], id: number) {
-
-
-
-
-
-
     throw new NotImplementedException('Method not implemented.');
   }
 
 
-  createMatches(tournament: Tournament) {
-    console.log('create matches');
-    console.log(tournament);
-    let teams = tournament.teams;
-    let matches = [];
-    //scramble the teams array
-    teams = this.shuffle(teams);
-
-    //create the matches
-    //start time should be approx 14 days from now on
-    for (let i = 0; i < teams.length; i += 2) {
-      let match = {
-        tournament: {id: tournament.id} as Tournament,
-        tournamentRoundText: '1',
-        startTime: new Date(Date.now() + 12096e5),
-        state: 'SCHEDULED',
-        matchParticipants: [
-          {
-            team: teams[i],
-            resultText: '',
-            status: null,
-          },
-          {
-            team: teams[i + 1],
-            resultText: '',
-            status: null,
-          }
-        ]
-      };
-      matches.push(match);
+  //recursively create a reverse tree of matches, as the root is the final match. The leaves are the first round matches
+  //all matches have a reference to the next match, except the final match, where the next match is null
+  //the tree should be built upon the nextMatch attribute
+  async createMatches(tournament: Tournament, teams: Team[], totalTeams: number, round: number, matchOrder: number, refMatch: Match | null, startDate: Date | null) {
+    if (round > 1)
+      await this.matchRep.save(
+        new Match(
+          'Round ' + round + ', Match ' + matchOrder,
+          round.toString(),
+          startDate,
+          tournament,
+          [undefined, undefined],
+          refMatch),
+      ).then(async (match) => {
+        await this.createMatches(tournament, teams, totalTeams, round - 1, matchOrder, match, startDate);
+        await this.createMatches(tournament, teams, totalTeams, round - 1, matchOrder + 1, match, startDate);
+      });
+    else {
+      let canHoard = teams.length >= totalTeams / 2;
+      await this.matchRep.save(
+        new Match(
+          'Round ' + round + ', Match ' + matchOrder,
+          round.toString(),
+          startDate,
+          tournament,
+          [teams.pop(), canHoard ? teams.pop() : undefined],
+          refMatch),
+      );
     }
 
-    tournament.matches = matches;
-    return tournament;
   }
+
 
   shuffle(array: any[]) {
     let currentIndex: number = array.length, temporaryValue: number, randomIndex: number;
@@ -198,6 +205,4 @@ export class TournamentService {
     }
     return array;
   }
-
-
 }
