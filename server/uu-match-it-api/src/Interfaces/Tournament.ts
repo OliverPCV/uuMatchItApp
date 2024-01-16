@@ -13,7 +13,7 @@ export class Tournament {
 
   @Column() type: string;
 
-  @ManyToMany(() => Team, team => team.id, {cascade: true})
+  @ManyToMany(() => Team, team => team.id, {cascade: true, onDelete: 'CASCADE'})
   @JoinTable()
   teams: Team[];
 

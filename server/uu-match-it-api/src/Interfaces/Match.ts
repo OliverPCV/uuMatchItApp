@@ -15,8 +15,7 @@ export class Match {
   @ManyToOne(() => Match, match => match.id, { nullable: true, cascade: true, onDelete: 'SET NULL' })
   nextMatch: Match;
 
-
-  @ManyToOne(() => Tournament, (tournament) => tournament.matches)
+  @ManyToOne(() => Tournament, (tournament) => tournament.matches,{onDelete: 'CASCADE'})
   tournament: Tournament;
 
   @OneToMany(() => MatchParticipant, (matchParticipant) => matchParticipant.match, {cascade: true, onDelete: 'CASCADE'})
