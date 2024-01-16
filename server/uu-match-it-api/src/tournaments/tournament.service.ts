@@ -28,7 +28,14 @@ export class TournamentService {
   async getTournamentDetail(id: number) {
     return this.tournamentRep.findOne({
       where: { id: id },
-      relations: ['owner', 'teams', 'teams.owner', 'matches', 'matches.matchParticipants'],
+      relations: ['owner', 'teams', 'teams.owner', 'matches', 'matches.matchParticipants', 'matches.matchParticipants.team'],
+    }).then((tournament) => {
+      tournament.matches.forEach((match) => {
+        match.matchParticipants = match.matchParticipants.map((mp) => ({
+          ...mp, name: mp.team.name,
+        }));
+      });
+      return tournament;
     });
   }
 
