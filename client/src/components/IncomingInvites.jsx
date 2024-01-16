@@ -59,11 +59,11 @@ function IncomingInvites() {
                 <ul>
                     {invites.map(invite => (
                         <li key={invite.id}>
-                            Máte pozvánku od týmu: {invite.team.name}
-                            <button onClick={() => handleAction(invite.id, 'accept')} style={{ marginLeft: '10px' }}>
+                            Máte pozvánku od majitele týmu: <b>{invite.team.name}</b>
+                            <button className="register-button text" onClick={() => handleAction(invite.id, 'accept')} style={{ marginLeft: '10px' }}>
                                 Přijmout
                             </button>
-                            <button onClick={() => handleAction(invite.id, 'decline')} style={{ marginLeft: '10px' }}>
+                            <button className="delete-button text" onClick={() => handleAction(invite.id, 'decline')} style={{ marginLeft: '10px' }}>
                                 Odmítnout
                             </button>
                         </li>
