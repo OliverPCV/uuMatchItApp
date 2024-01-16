@@ -211,7 +211,7 @@ function TournamentDetail() {
             onSelect={(k) => setKey(k)}
             className="mb-3"
           >
-            <Tab eventKey="overview" title="Overview">
+            <Tab eventKey="overview" title="Přehled">
               <div className="overview-container">
                 <div className="left-column">
                   <div className="cards-container">
@@ -286,7 +286,7 @@ function TournamentDetail() {
                 </div>
               </div>
             </Tab>
-            <Tab eventKey="brackets" title="Brackets">
+            <Tab eventKey="brackets" title="Zápasy">
               <SingleElimination tournamentData={tournament} />
             </Tab>
           </Tabs>

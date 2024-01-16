@@ -118,7 +118,7 @@ function TeamDetail() {
           onSelect={(k) => setKey(k)}
           className="mb-3"
         >
-          <Tab eventKey="overview" title="Overview">
+          <Tab eventKey="overview" title="Přehled">
             <div className="column-container">
               <div className="left-column">
                 <h3>Vlastník</h3>
