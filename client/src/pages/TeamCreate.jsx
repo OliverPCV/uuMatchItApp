@@ -4,6 +4,8 @@ import { createTeam } from '../services/teamService';
 import $ from 'jquery'; // Nezapomeňte nainstalovat jQuery do vašeho projektu
 import '../styles/page-style/TeamCreate.css'; // Aktualizujte cestu k CSS podle potřeby
 import { useNavigate } from 'react-router-dom';
+import { isLoggedIn } from '../services/authService';
+
 
 function CreateTeam() {
   const [teamData, setTeamData] = useState({
@@ -43,6 +45,12 @@ function CreateTeam() {
       console.error('Error while creating team:', error);
     }
   };
+
+  if (!isLoggedIn()) {
+    return (
+      <h4 Uživatel className="text-right">Uživatel není přihlášený</h4>
+    );
+  }
 
   return (
     <form className='createform' onSubmit={handleSubmit}>

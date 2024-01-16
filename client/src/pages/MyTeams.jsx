@@ -28,7 +28,6 @@ function MyTeams() {
     }
   }, [isLoggedIn]);
 
-  console.log(isLoggedIn)
 
   if (!isLoggedIn()) {
     return (
