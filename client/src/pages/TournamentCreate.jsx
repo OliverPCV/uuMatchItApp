@@ -40,6 +40,7 @@ function CreateTournament() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      navigate('/mytournaments');
       const responseData = await createTournament(tournamentData);
       console.log('Tournament created successfully:', responseData);
       navigate('/mytournaments');
