@@ -134,17 +134,17 @@ function AppNavbar() {
           </Navbar.Collapse>
           {!loggedIn ? (
             <>
-              <Button variant="outline-success" onClick={() => setShowLogin(true)}>Přihlásit</Button>
-              <Button variant="outline-secondary" onClick={() => setShowRegister(true)}>Registrovat</Button>
+              <Button variant="btn btn-success" onClick={() => setShowLogin(true)}>Přihlásit</Button>
+              <Button variant="btn btn-dark" onClick={() => setShowRegister(true)}>Registrovat</Button>
             </>
           ) : (
             <>
               <Link to={"/userprofile"}>
-                <Button variant="outline-primary">
+                <Button variant="btn btn-success">
                   {user.username || 'Nepřihlášený uživatel'}
                 </Button>
               </Link>
-              <Button variant="outline-danger" onClick={handleLogout}>Odhlásit</Button>
+              <Button variant="btn btn-danger" onClick={handleLogout}>Odhlásit</Button>
             </>
           )}
         </Container>
