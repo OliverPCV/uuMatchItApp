@@ -53,7 +53,7 @@ function AppNavbar() {
       fetchUserData().then(userData => {
         setUser(userData);
         setLoggedIn(true);
-        console.log(userData);
+        window.location.reload()
       }).catch(error => {
         console.error('Chyba při načítání uživatelských dat:', error);
         setLoginError('Chyba při načítání uživatelských dat.');
@@ -91,6 +91,7 @@ function AppNavbar() {
     sessionStorage.removeItem('token');
     setUser(null);
     setLoggedIn(false);
+    window.location.reload()
   };
 
   const navigateToHome = () => {
