@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Tab, Tabs } from 'react-bootstrap';
+import { Container, Tab, Tabs, Modal, Form, Button } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import '../styles/page-style/TournamentDetail.css'; // Update the path to your CSS file
 import SingleElimination from '../components/SingleElimination';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faListAlt, faLocationDot, faTrophy, faUsers } from '@fortawesome/free-solid-svg-icons';
 import tlogo from '../images/1.png';
-import { fetchTournamentById, joinTournament, deleteTournament, leaveTournament } from '../services/tourService';
+import { fetchTournamentById, joinTournament, deleteTournament, leaveTournament, editTournament } from '../services/tourService';
 import TeamSelectModal from '../components/TeamSelect';
 import { fetchUserTeams, fetchUserData } from '../services/authService';
 import { useNavigate } from 'react-router-dom';
@@ -27,6 +27,14 @@ function TournamentDetail() {
   };
   const [tournament, setTournament] = useState({});
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editData, setEditData] = useState({
+    name: '',
+    date: '',
+    place: '',
+    prize: '',
+    type: ''
+  });
   const [userTeams, setUserTeams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [actualUser, setActualUser] = useState({ id: '' });
@@ -75,6 +83,29 @@ function TournamentDetail() {
     });
   }
 
+  const handleEditTournament = async (tournamentId, editedData) => {
+    try {
+      await editTournament(tournamentId, editedData);
+      // Aktualizace dat turnaje v komponentě
+      setTournament(await fetchTournamentById(id));
+      setShowEditModal(false); // Zavření modalu po úspěšné editaci
+      console.log('Turnaj úspěšně upraven');
+    } catch (error) {
+      console.error('Chyba při úpravě turnaje:', error);
+    }
+  };
+
+  const handleEditClick = () => {
+    setEditData({
+      name: tournament.name,
+      date: tournament.date,
+      place: tournament.place,
+      prize: tournament.prize,
+      type: tournament.type
+    });
+    setShowEditModal(true);
+  };
+
   const handleDeleteTournament = async (tournamentId) => {
     const isConfirmed = window.confirm("Opravdu chcete smazat tento turnaj?");
 
@@ -95,7 +126,67 @@ function TournamentDetail() {
     <>
       <div className="header-image">
         <div className="header-text">
-          <h1 className="tournament-detail-title text">{tournament.name}</h1>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <h1 className="tournament-detail-title text">{tournament.name}</h1>
+            {actualUser.id === tournament.owner.id && (
+              <button className='edit-btn text' onClick={handleEditClick}>Edit</button>
+            )}
+            <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
+              <Modal.Header closeButton>
+                <Modal.Title>Editovat Turnaj</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <form className='edit-tournament-form'>
+                  <div className="form-group">
+                    {/* Jméno */}
+                    <div className="controls">
+                      <input type="text" id="name" className="floatLabel" name="name" value={editData.name} onChange={(e) => setEditData({ ...editData, name: e.target.value })} />
+                      <label htmlFor="name">Jméno</label>
+                    </div>
+
+                    {/* Místo */}
+                    <div className="controls">
+                      <input type="text" id="place" className="floatLabel" name="place" value={editData.place} onChange={(e) => setEditData({ ...editData, place: e.target.value })} />
+                      <label htmlFor="place">Místo</label>
+                    </div>
+
+                    {/* Datum a čas */}
+                    <div className="controls">
+                      <input type="datetime-local" id="date" className="floatLabel" name="date" value={editData.date} onChange={(e) => setEditData({ ...editData, date: e.target.value })} />
+                      <label htmlFor="date">Datum a čas</label>
+                    </div>
+
+                    {/* Cena */}
+                    <div className="controls">
+                      <input type="text" id="prize" className="floatLabel" name="prize" value={editData.prize} onChange={(e) => setEditData({ ...editData, prize: e.target.value })} />
+                      <label htmlFor="prize">Cena</label>
+                    </div>
+
+                    <div className="controls">
+                      <select id="type" className="floatLabel" name="type" value={editData.type} onChange={(e) => setEditData({ ...editData, type: e.target.value })}>
+                        <option value="">Vyberte typ</option>
+                        <option value="4V4">4V4</option>
+                        <option value="5V5">5V5</option>
+                        <option value="6V6">6V6</option>
+                        <option value="7V7">7V7</option>
+                        <option value="8V8">8V8</option>
+                        <option value="9V9">9V9</option>
+                        <option value="10V10">10V10</option>
+                        <option value="11V11">11V11</option>
+                      </select>
+                      <label htmlFor="type">Typ</label>
+                    </div>
+
+                   
+                  </div>
+                </form>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={() => setShowEditModal(false)}>Zrušit</Button>
+                <Button variant="primary" onClick={() => handleEditTournament(id, editData)}>Uložit změny</Button>
+              </Modal.Footer>
+            </Modal>
+          </div>
           <div className='buttons-tour'>
             {userTeams.length > 0 && tournament.teams.length < tournament.sizeLimit && (
               <button className="register-button text" onClick={() => setShowModal(true)}>Zapsat tým</button>

@@ -10,6 +10,16 @@
   margin: 10px 0; 
 }
 
+.edit-btn {
+  background-color: rgb(187, 99, 10);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  z-index: 2;
+  margin-left: 20px;
+  border-radius: 5px;
+}
+
 .tournament-detail-container {
   background-color: #ffffff;
   min-height:  80vh;

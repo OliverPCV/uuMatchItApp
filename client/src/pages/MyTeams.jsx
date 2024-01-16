@@ -48,8 +48,6 @@ function MyTeams() {
       ) : (
         <p>Nemáte vytvořené žádné týmy</p>
       )}
-      
-      
     </div>
   );
 }
