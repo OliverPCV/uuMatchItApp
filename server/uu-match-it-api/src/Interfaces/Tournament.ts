@@ -23,7 +23,6 @@ export class Tournament {
   @Column() prize: string;
   @Column() sizeLimit: number;
 
-  @OneToMany( () => Match, match => match.tournament, {cascade: true})
+  @OneToMany( () => Match, match => match.tournament, {cascade: true, onDelete: 'CASCADE'})
   matches: Match[];
-
 }

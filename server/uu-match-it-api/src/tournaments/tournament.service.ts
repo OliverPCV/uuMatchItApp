@@ -9,11 +9,7 @@ import { Match } from '../Interfaces/Match';
 @Injectable()
 export class TournamentService {
 
-  constructor(
-    @InjectRepository(Tournament) private tournamentRep: Repository<Tournament>,
-    @InjectRepository(Team) private teamRep: Repository<Team>,
-    @InjectRepository(Match) private matchRep: Repository<Match>,
-  ) {
+  constructor(@InjectRepository(Tournament) private tournamentRep: Repository<Tournament>, @InjectRepository(Team) private teamRep: Repository<Team>, @InjectRepository(Match) private matchRep: Repository<Match>) {
   }
 
   async createTournament(tournament: Tournament, ownerId: number) {
@@ -121,17 +117,14 @@ export class TournamentService {
 
   getTournamentsByUser(id: number) {
     return this.tournamentRep.find({
-      where: { owner: { id: id } },
-      relations: ['owner'],
+      where: { owner: { id: id } }, relations: ['owner'],
     });
   }
 
   async startTournament(tournamentId: number, callerId: number) {
     return this.tournamentRep.findOne({
-        where: { id: tournamentId },
-        relations: ['owner', 'teams', 'matches'],
-      },
-    ).then(async (tournament) => {
+      where: { id: tournamentId }, relations: ['owner', 'teams', 'matches'],
+    }).then(async (tournament) => {
       if (!tournament) {
         throw new BadRequestException('Tournament does not exist');
       }
@@ -172,32 +165,13 @@ export class TournamentService {
   //all matches have a reference to the next match, except the final match, where the next match is null
   //the tree should be built upon the nextMatch attribute
   async createMatches(tournament: Tournament, teams: Team[], totalTeams: number, round: number, matchOrder: number, refMatch: Match | null, startDate: Date | null) {
-    if (round > 1)
-      await this.matchRep.save(
-        new Match(
-          'Round ' + round + ', Match ' + matchOrder,
-          round.toString(),
-          startDate,
-          tournament,
-          [undefined, undefined],
-          refMatch),
-      ).then(async (match) => {
-        await this.createMatches(tournament, teams, totalTeams, round - 1, matchOrder, match, startDate);
-        await this.createMatches(tournament, teams, totalTeams, round - 1, matchOrder + 1, match, startDate);
-      });
-    else {
+    if (round > 1) await this.matchRep.save(new Match('Round ' + round + ', Match ' + matchOrder, round.toString(), startDate, tournament, [undefined, undefined], refMatch)).then(async (match) => {
+      await this.createMatches(tournament, teams, totalTeams, round - 1, matchOrder, match, startDate);
+      await this.createMatches(tournament, teams, totalTeams, round - 1, matchOrder + 1, match, startDate);
+    }); else {
       let canHoard = teams.length >= totalTeams / 2;
-      await this.matchRep.save(
-        new Match(
-          'Round ' + round + ', Match ' + matchOrder,
-          round.toString(),
-          startDate,
-          tournament,
-          [teams.pop(), canHoard ? teams.pop() : undefined],
-          refMatch),
-      );
+      await this.matchRep.save(new Match('Round ' + round + ', Match ' + matchOrder, round.toString(), startDate, tournament, [teams.pop(), canHoard ? teams.pop() : undefined], refMatch));
     }
-
   }
 
 
