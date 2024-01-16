@@ -54,7 +54,7 @@ function Home() {
       <div className='main'>
         <div className="lefttext">
           <div className="textwrap">
-            <p>Pojďte si zahrát fotbalový turnaj! Přihlaste se a zúčastněte se s vaším týmem a ukažte své dovednosti na trávě.</p>
+            <p>Pojďte si zahrát fotbalový turnaj s vaším týmem a ukažte své dovednosti na trávě</p>
             <button onClick={scrollToTournaments}>Procházet Turnaje</button>
             <button onClick={goToTournamentCreate}>Vytvořit Turnaj</button>
             <button onClick={goToTeamCreate}>Vytvořit Tým</button>

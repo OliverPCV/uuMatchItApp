@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { createTournament } from '../services/tourService';
-import $ from 'jquery'; // Make sure to install jQuery in your project
+import $ from 'jquery';
 import '../styles/page-style/TournamentCreate.css';
 import { useNavigate } from 'react-router-dom';
+import { isLoggedIn } from '../services/authService';
 
 function CreateTournament() {
   const [tournamentData, setTournamentData] = useState({
@@ -40,6 +41,7 @@ function CreateTournament() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      navigate('/mytournaments');
       const responseData = await createTournament(tournamentData);
       console.log('Tournament created successfully:', responseData);
       navigate('/mytournaments');
@@ -47,6 +49,12 @@ function CreateTournament() {
       console.error('Error while creating tournament:', error);
     }
   };
+
+  if (!isLoggedIn()) {
+    return (
+      <h4 Uživatel className="text-right">Uživatel není přihlášený</h4>
+    );
+  }
 
   return (
     <form className='createform' onSubmit={handleSubmit}>

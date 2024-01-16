@@ -41,8 +41,8 @@ export default function TournamentCard({ data }) {
           <Text fontSize="xl" fontWeight="semibold" lineHeight="short" className="tournament-card-description" textAlign="left">
             {data.name}
           </Text>
-          <Text textAlign="left">{data.place} &bull; {data.prize} Kč &bull; {data.type}</Text>
-          <Text textAlign="left">Dokončeno: {data.isFinished ? 'Ano' : 'Ne'}</Text>
+          <Text textAlign="left">Místo: <b>{data.place}</b> &bull; Cena: <b>{data.prize}</b> Kč &bull; Typ: <b>{data.type}</b> &bull; Kapacita: <b>{data.sizeLimit}</b></Text>
+          <Text textAlign="left">Dokončeno: <b>{data.isFinished ? 'Ano' : 'Ne'}</b></Text>
         </Box>
       </Flex>
     </Center>

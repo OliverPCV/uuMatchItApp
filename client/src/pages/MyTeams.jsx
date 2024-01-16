@@ -28,7 +28,6 @@ function MyTeams() {
     }
   }, [isLoggedIn]);
 
-  console.log(isLoggedIn)
 
   if (!isLoggedIn()) {
     return (
@@ -48,8 +47,6 @@ function MyTeams() {
       ) : (
         <p>Nemáte vytvořené žádné týmy</p>
       )}
-      
-      
     </div>
   );
 }

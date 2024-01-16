@@ -59,6 +59,21 @@ export const createTournament = async (tournamentData) => {
     }
 };
 
+export const editTournament = async (tournamentId, tournamentData) => {
+    try {
+        const token = sessionStorage.getItem('token');
+        if (!token) throw new Error('Token not found');
+
+        const response = await axiosInstance.put(`/tournaments/${tournamentId}`, tournamentData, {
+            headers: {'Authorization': `Bearer ${token}`}
+        })
+        return response.data;
+    } catch (error) {
+        console.log('Error updating tournament:', error);
+        throw error;
+    }
+}
+
 export const joinTournament = async (tournamentId, teamId) => {
     try {
         const token = sessionStorage.getItem('token');
