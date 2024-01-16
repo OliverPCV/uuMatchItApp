@@ -129,11 +129,11 @@ function TournamentDetail() {
           <div style={{ display: "flex", alignItems: "center" }}>
             <h1 className="tournament-detail-title text">{tournament.name}</h1>
             {actualUser.id === tournament.owner.id && (
-              <button className='edit-btn text' onClick={handleEditClick}>Edit</button>
+              <button className='edit-btn text' onClick={handleEditClick}>Upravit</button>
             )}
             <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
               <Modal.Header closeButton>
-                <Modal.Title>Editovat Turnaj</Modal.Title>
+                <Modal.Title>Upravit turnaj</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <form className='edit-tournament-form'>
@@ -245,7 +245,7 @@ function TournamentDetail() {
               </div>
 
               <div className="right-column">
-                <h3>Teams</h3>
+                <h3>Týmy</h3>
                 <div className="card players-box">
                   <div className="tournament-stats">
                     <div className="registered-teams">
