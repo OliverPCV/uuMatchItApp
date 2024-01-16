@@ -99,7 +99,7 @@ function AppNavbar() {
 
   return (
     <>
-      <Navbar bg="dark" variant="dark" expand="lg">
+      <Navbar bg="light" variant="dark" expand="lg">
       <img className="navlogo" src={MatchitLogo} alt="Logo" />
         <Container className='container'>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
