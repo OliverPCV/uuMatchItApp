@@ -1,4 +1,3 @@
-// IncomingInvites.jsx
 import React, { useState, useEffect } from 'react';
 import { fetchInvites, fetchAcceptInvite, fetchDeclineInvite } from '../services/inviteService';
 import { fetchUserData } from '../services/authService';
@@ -20,7 +19,6 @@ function IncomingInvites() {
             setCurrentUser(userData);
 
             const allInvites = await fetchInvites();
-            // Filtrujeme pouze pozvánky se stavem 'PENDING' a pro aktuálního uživatele
             const userInvites = allInvites.filter(invite => 
                 invite.userId === userData.id && invite.state === 'PENDING'
             );
@@ -40,7 +38,6 @@ function IncomingInvites() {
             } else {
                 await fetchDeclineInvite(inviteId);
             }
-            // Odebíráme pozvánku z lokálního stavu
             setInvites(prevInvites => prevInvites.filter(invite => invite.id !== inviteId));
         } catch (error) {
             console.error(`Chyba při ${action === 'accept' ? 'přijímání' : 'odmítání'} pozvánky:`, error);

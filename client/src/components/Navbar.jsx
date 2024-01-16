@@ -102,7 +102,6 @@ function AppNavbar() {
             <Nav className="ml-auto">
               <Nav.Link href="/">Home</Nav.Link>
 
-              {/* Dropdown pro Turnaj */}
               <Dropdown>
                 <Dropdown.Toggle variant="success" id="dropdown-basic">
                   Turnaj
@@ -117,7 +116,6 @@ function AppNavbar() {
                 </Dropdown.Menu>
               </Dropdown>
 
-              {/* Dropdown pro Tým */}
               <Dropdown>
                 <Dropdown.Toggle variant="success" id="dropdown-basic">
                   Tým
@@ -148,7 +146,6 @@ function AppNavbar() {
         </Container>
       </Navbar>
 
-      {/* Modal pro přihlášení */}
       <Modal show={showLogin} onHide={() => setShowLogin(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Přihlášení</Modal.Title>
@@ -172,7 +169,6 @@ function AppNavbar() {
         </Modal.Footer>
       </Modal>
 
-      {/* Modal pro registraci */}
       <Modal show={showRegister} onHide={() => setShowRegister(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Registrace</Modal.Title>

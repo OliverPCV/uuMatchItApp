@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
 import { createTeam } from '../services/teamService';
-import $ from 'jquery'; // Nezapomeňte nainstalovat jQuery do vašeho projektu
-import '../styles/page-style/TeamCreate.css'; // Aktualizujte cestu k CSS podle potřeby
+import $ from 'jquery'; 
+import '../styles/page-style/TeamCreate.css'; 
 import { useNavigate } from 'react-router-dom';
 import { isLoggedIn } from '../services/authService';
 

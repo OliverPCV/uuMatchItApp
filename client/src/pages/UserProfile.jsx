@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { fetchUserData } from '../services/authService'; // Import funkce pro načtení uživatelských dat
-import '../styles/page-style/UserProfile.css'; // Cesta k vašemu CSS
+import { fetchUserData } from '../services/authService'; 
+import '../styles/page-style/UserProfile.css';
 import IncomingInvites from '../components/IncomingInvites';
 import { fetchTeamData } from '../services/teamService';
 import TeamCard from '../components/TeamCard';

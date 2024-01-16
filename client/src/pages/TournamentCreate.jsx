@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createTournament } from '../services/tourService';
-import $ from 'jquery'; // Make sure to install jQuery in your project
+import $ from 'jquery';
 import '../styles/page-style/TournamentCreate.css';
 import { useNavigate } from 'react-router-dom';
 import { isLoggedIn } from '../services/authService';

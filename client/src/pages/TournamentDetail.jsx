@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Tab, Tabs, Modal, Form, Button } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-import '../styles/page-style/TournamentDetail.css'; // Update the path to your CSS file
+import '../styles/page-style/TournamentDetail.css'; 
 import SingleElimination from '../components/SingleElimination';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faListAlt, faLocationDot, faTrophy, faUsers } from '@fortawesome/free-solid-svg-icons';
@@ -75,227 +75,231 @@ function TournamentDetail() {
   }
 
   const handeLeaveTournament = async (tournamentId, teamId) => {
-    await leaveTournament(tournamentId, teamId).then(async res => {
-      console.log('Leaved tournament successfully:', res);
-      setTournament(await fetchTournamentById(id));
-    }, (error) => {
-      console.error('Error while leaving tournament:', error);
-    });
-  }
-
-  const handleEditTournament = async (tournamentId, editedData) => {
-    try {
-      await editTournament(tournamentId, editedData);
-      // Aktualizace dat turnaje v komponentě
-      setTournament(await fetchTournamentById(id));
-      setShowEditModal(false); // Zavření modalu po úspěšné editaci
-      console.log('Turnaj úspěšně upraven');
-    } catch (error) {
-      console.error('Chyba při úpravě turnaje:', error);
-    }
-  };
-
-  const handleEditClick = () => {
-    setEditData({
-      name: tournament.name,
-      date: tournament.date,
-      place: tournament.place,
-      prize: tournament.prize,
-      type: tournament.type
-    });
-    setShowEditModal(true);
-  };
-
-  const handleDeleteTournament = async (tournamentId) => {
-    const isConfirmed = window.confirm("Opravdu chcete smazat tento turnaj?");
+    const isConfirmed = window.confirm("Opravdu chcete odejít z turnaje?");
 
     if (isConfirmed) {
-      await deleteTournament(tournamentId).then(async res => {
-        console.log('Deleted tournament successfully:', res);
-        navigate('/mytournaments');
+      await leaveTournament(tournamentId, teamId).then(async res => {
+        console.log('Leaved tournament successfully:', res);
+        setTournament(await fetchTournamentById(id));
       }, (error) => {
-        console.error('Error while deleting tournament:', error);
+        console.error('Error while leaving tournament:', error);
       });
     } else {
-      console.log('Tournament deletion cancelled');
+      console.log('Tournament leaving cancelled');
     }
   }
 
-  console.log(tournament.sizeLimit, tournament.teams.length);
-  return (
-    <>
-      <div className="header-image">
-        <div className="header-text">
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <h1 className="tournament-detail-title text">{tournament.name}</h1>
-            {actualUser.id === tournament.owner.id && (
-              <button className='edit-btn text' onClick={handleEditClick}>Upravit</button>
-            )}
-            <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
-              <Modal.Header closeButton>
-                <Modal.Title>Upravit turnaj</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <form className='edit-tournament-form'>
-                  <div className="form-group">
-                    {/* Jméno */}
-                    <div className="controls">
-                      <input type="text" id="name" className="floatLabel" name="name" value={editData.name} onChange={(e) => setEditData({ ...editData, name: e.target.value })} />
-                      <label htmlFor="name">Jméno</label>
-                    </div>
+    const handleEditTournament = async (tournamentId, editedData) => {
+      try {
+        await editTournament(tournamentId, editedData);
+        setTournament(await fetchTournamentById(id));
+        setShowEditModal(false);
+        console.log('Turnaj úspěšně upraven');
+      } catch (error) {
+        console.error('Chyba při úpravě turnaje:', error);
+      }
+    };
 
-                    {/* Místo */}
-                    <div className="controls">
-                      <input type="text" id="place" className="floatLabel" name="place" value={editData.place} onChange={(e) => setEditData({ ...editData, place: e.target.value })} />
-                      <label htmlFor="place">Místo</label>
-                    </div>
+    const handleEditClick = () => {
+      setEditData({
+        name: tournament.name,
+        date: tournament.date,
+        place: tournament.place,
+        prize: tournament.prize,
+        type: tournament.type
+      });
+      setShowEditModal(true);
+    };
 
-                    {/* Datum a čas */}
-                    <div className="controls">
-                      <input type="datetime-local" id="date" className="floatLabel" name="date" value={editData.date} onChange={(e) => setEditData({ ...editData, date: e.target.value })} />
-                      <label htmlFor="date">Datum a čas</label>
-                    </div>
+    const handleDeleteTournament = async (tournamentId) => {
+      const isConfirmed = window.confirm("Opravdu chcete smazat tento turnaj?");
 
-                    {/* Cena */}
-                    <div className="controls">
-                      <input type="text" id="prize" className="floatLabel" name="prize" value={editData.prize} onChange={(e) => setEditData({ ...editData, prize: e.target.value })} />
-                      <label htmlFor="prize">Cena</label>
-                    </div>
+      if (isConfirmed) {
+        await deleteTournament(tournamentId).then(async res => {
+          console.log('Deleted tournament successfully:', res);
+          navigate('/mytournaments');
+        }, (error) => {
+          console.error('Error while deleting tournament:', error);
+        });
+      } else {
+        console.log('Tournament deletion cancelled');
+      }
+    }
 
-                    <div className="controls">
-                      <select id="type" className="floatLabel" name="type" value={editData.type} onChange={(e) => setEditData({ ...editData, type: e.target.value })}>
-                        <option value="">Vyberte typ</option>
-                        <option value="4V4">4V4</option>
-                        <option value="5V5">5V5</option>
-                        <option value="6V6">6V6</option>
-                        <option value="7V7">7V7</option>
-                        <option value="8V8">8V8</option>
-                        <option value="9V9">9V9</option>
-                        <option value="10V10">10V10</option>
-                        <option value="11V11">11V11</option>
-                      </select>
-                      <label htmlFor="type">Typ</label>
-                    </div>
-
-                   
-                  </div>
-                </form>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="secondary" onClick={() => setShowEditModal(false)}>Zrušit</Button>
-                <Button variant="primary" onClick={() => handleEditTournament(id, editData)}>Uložit změny</Button>
-              </Modal.Footer>
-            </Modal>
-          </div>
-          <div className='buttons-tour'>
-            {userTeams.length > 0 && tournament.teams.length < tournament.sizeLimit && (
-              <button className="register-button text" onClick={() => setShowModal(true)}>Zapsat tým</button>
-            )}
-            {
-              actualUser.id === tournament.owner.id && (
-                <button className="delete-button text" onClick={() => handleDeleteTournament(tournament.id)}>Smazat turnaj</button>
+    console.log(tournament.sizeLimit, tournament.teams.length);
+    return (
+      <>
+        <div className="header-image">
+          <div className="header-text">
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <h1 className="tournament-detail-title text">{tournament.name}</h1>
+              {actualUser.id === tournament.owner.id && (
+                <button className='edit-btn text' onClick={handleEditClick}>Upravit</button>
               )}
-          </div>
+              <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Upravit turnaj</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <form className='edit-tournament-form'>
+                    <div className="form-group">
+                      {/* Jméno */}
+                      <div className="controls">
+                        <input type="text" id="name" className="floatLabel" name="name" value={editData.name} onChange={(e) => setEditData({ ...editData, name: e.target.value })} />
+                        <label htmlFor="name">Jméno</label>
+                      </div>
 
-        </div>
-      </div>
-      <Container className="tournament-detail-container">
-        <Tabs
-          id="controlled-tab-example"
-          activeKey={key}
-          onSelect={(k) => setKey(k)}
-          className="mb-3"
-        >
-          <Tab eventKey="overview" title="Overview">
-            <div className="overview-container">
-              <div className="left-column">
-                <div className="cards-container">
-                  <div className="card">
-                    <FontAwesomeIcon icon={faLocationDot} className="icon" />
-                    <div>
-                      <h4>Addresa</h4>
-                      <p>{tournament.place}</p>
-                    </div>
-                  </div>
-                  <div className="card">
-                    <FontAwesomeIcon icon={faUsers} className="icon" />
-                    <div>
-                      <h4>Velikost týmů</h4>
-                      <p>{tournament.type}</p>
-                    </div>
-                  </div>
-                  {/* Další kartičky */}
-                </div>
-                <div className="cards-container">
-                  <div className="card">
-                    <FontAwesomeIcon icon={faListAlt} className="icon" />
-                    <div>
-                      <h4>Datum</h4>
-                      <p>{formatDate(tournament.date)}</p>
-                    </div>
-                  </div>
-                  <div className="card">
-                    <FontAwesomeIcon icon={faTrophy} className="icon" />
-                    <div>
-                      <h4>Cena za výhru</h4>
-                      <p>{tournament.prize}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                      {/* Místo */}
+                      <div className="controls">
+                        <input type="text" id="place" className="floatLabel" name="place" value={editData.place} onChange={(e) => setEditData({ ...editData, place: e.target.value })} />
+                        <label htmlFor="place">Místo</label>
+                      </div>
 
-              <div className="right-column">
-                <h3>Týmy</h3>
-                <div className="card players-box">
-                  <div className="tournament-stats">
-                    <div className="registered-teams">
-                      <span className="label">Registrováno</span>
-                      <span className="value">{tournament.teams.length}</span>
+                      {/* Datum a čas */}
+                      <div className="controls">
+                        <input type="datetime-local" id="date" className="floatLabel" name="date" value={editData.date} onChange={(e) => setEditData({ ...editData, date: e.target.value })} />
+                        <label htmlFor="date">Datum a čas</label>
+                      </div>
+
+                      {/* Cena */}
+                      <div className="controls">
+                        <input type="text" id="prize" className="floatLabel" name="prize" value={editData.prize} onChange={(e) => setEditData({ ...editData, prize: e.target.value })} />
+                        <label htmlFor="prize">Cena</label>
+                      </div>
+
+                      <div className="controls">
+                        <select id="type" className="floatLabel" name="type" value={editData.type} onChange={(e) => setEditData({ ...editData, type: e.target.value })}>
+                          <option value="">Vyberte typ</option>
+                          <option value="4V4">4V4</option>
+                          <option value="5V5">5V5</option>
+                          <option value="6V6">6V6</option>
+                          <option value="7V7">7V7</option>
+                          <option value="8V8">8V8</option>
+                          <option value="9V9">9V9</option>
+                          <option value="10V10">10V10</option>
+                          <option value="11V11">11V11</option>
+                        </select>
+                        <label htmlFor="type">Typ</label>
+                      </div>
+
+
                     </div>
-                    <div className="tournament-slots">
-                      <span className="label">Celkem míst</span>
-                      <span className="value">{tournament.sizeLimit}</span>
-                    </div>
-                  </div>
-                  <span className="line"></span>
-                  <div className="registered-teams-list">
-                    <div className="teams-list">
-                      {tournament.teams.map((team) => {
-                        return (<div key={team.id} className="team">
-                          <img src={tlogo} alt={team.name} />
-                          <div className="team-info">
-                            <h4>{team.name}</h4>
-                            {!loading && (actualUser.id === tournament.owner.id || actualUser.id === team.owner.id) &&
-                              (
-                                <button className="leave-button"
-                                  onClick={() => handeLeaveTournament(tournament.id, team.id)}>
-                                  Odejít z turnaje
-                                </button>
-                              )
-                            }
-                          </div>
-                        </div>);
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </div>
+                  </form>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={() => setShowEditModal(false)}>Zrušit</Button>
+                  <Button variant="primary" onClick={() => handleEditTournament(id, editData)}>Uložit změny</Button>
+                </Modal.Footer>
+              </Modal>
             </div>
-          </Tab>
-          <Tab eventKey="brackets" title="Brackets">
-            <SingleElimination tournamentData={tournament} />
-          </Tab>
-        </Tabs>
-      </Container>
-      <TeamSelectModal
-        show={showModal}
-        onHide={() => setShowModal(false)}
-        teams={userTeams}
-        onJoinTournament={handleJoinTournament}
-        tournament={tournament}
-      />
-    </>
-  );
-}
+            <div className='buttons-tour'>
+              {userTeams.length > 0 && tournament.teams.length < tournament.sizeLimit && (
+                <button className="register-button text" onClick={() => setShowModal(true)}>Zapsat tým</button>
+              )}
+              {
+                actualUser.id === tournament.owner.id && (
+                  <button className="delete-button text" onClick={() => handleDeleteTournament(tournament.id)}>Smazat turnaj</button>
+                )}
+            </div>
 
-export default TournamentDetail;
+          </div>
+        </div>
+        <Container className="tournament-detail-container">
+          <Tabs
+            id="controlled-tab-example"
+            activeKey={key}
+            onSelect={(k) => setKey(k)}
+            className="mb-3"
+          >
+            <Tab eventKey="overview" title="Overview">
+              <div className="overview-container">
+                <div className="left-column">
+                  <div className="cards-container">
+                    <div className="card">
+                      <FontAwesomeIcon icon={faLocationDot} className="icon" />
+                      <div>
+                        <h4>Addresa</h4>
+                        <p>{tournament.place}</p>
+                      </div>
+                    </div>
+                    <div className="card">
+                      <FontAwesomeIcon icon={faUsers} className="icon" />
+                      <div>
+                        <h4>Velikost týmů</h4>
+                        <p>{tournament.type}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="cards-container">
+                    <div className="card">
+                      <FontAwesomeIcon icon={faListAlt} className="icon" />
+                      <div>
+                        <h4>Datum</h4>
+                        <p>{formatDate(tournament.date)}</p>
+                      </div>
+                    </div>
+                    <div className="card">
+                      <FontAwesomeIcon icon={faTrophy} className="icon" />
+                      <div>
+                        <h4>Cena za výhru</h4>
+                        <p>{tournament.prize}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="right-column">
+                  <h3>Týmy</h3>
+                  <div className="card players-box">
+                    <div className="tournament-stats">
+                      <div className="registered-teams">
+                        <span className="label">Registrováno</span>
+                        <span className="value">{tournament.teams.length}</span>
+                      </div>
+                      <div className="tournament-slots">
+                        <span className="label">Celkem míst</span>
+                        <span className="value">{tournament.sizeLimit}</span>
+                      </div>
+                    </div>
+                    <span className="line"></span>
+                    <div className="registered-teams-list">
+                      <div className="teams-list">
+                        {tournament.teams.map((team) => {
+                          return (<div key={team.id} className="team">
+                            <img src={tlogo} alt={team.name} />
+                            <div className="team-info">
+                              <h4>{team.name}</h4>
+                              {!loading && (actualUser.id === tournament.owner.id || actualUser.id === team.owner.id) &&
+                                (
+                                  <button className="leave-button"
+                                    onClick={() => handeLeaveTournament(tournament.id, team.id)}>
+                                    Odejít z turnaje
+                                  </button>
+                                )
+                              }
+                            </div>
+                          </div>);
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Tab>
+            <Tab eventKey="brackets" title="Brackets">
+              <SingleElimination tournamentData={tournament} />
+            </Tab>
+          </Tabs>
+        </Container>
+        <TeamSelectModal
+          show={showModal}
+          onHide={() => setShowModal(false)}
+          teams={userTeams}
+          onJoinTournament={handleJoinTournament}
+          tournament={tournament}
+        />
+      </>
+    );
+  }
+
+  export default TournamentDetail;
