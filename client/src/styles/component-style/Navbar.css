@@ -4,6 +4,15 @@
 
 .navlogo {
     width: 10%;
+    margin-left: 5%;
+}
+
+.container {
+    margin-right: 5%;
+}
+
+.btn {
+    margin-left: 2%;
 }
 
 #dropdown-basic {   

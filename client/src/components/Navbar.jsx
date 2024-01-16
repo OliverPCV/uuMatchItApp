@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Navbar, Nav, Container, Modal, Button, Form, Dropdown } from 'react-bootstrap';
 import axiosInstance from '../services/axiosInstance';
 import MatchitLogo from '../images/MatchitLogo.png';
+import HomeIcon from '../images/home.png';
 import '../styles/component-style/Navbar.css';
 import { fetchUserData } from '../services/authService';
 import { Link } from 'react-router-dom';
@@ -92,16 +93,19 @@ function AppNavbar() {
     setLoggedIn(false);
   };
 
+  const navigateToHome = () => {
+    window.location.href = '/';
+  }
+
   return (
     <>
       <Navbar bg="dark" variant="dark" expand="lg">
-        <Container>
-          <img className="navlogo" src={MatchitLogo} alt="Logo" />
+      <img className="navlogo" src={MatchitLogo} alt="Logo" />
+        <Container className='container'>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ml-auto">
-              <Nav.Link href="/">Home</Nav.Link>
-
+            <button type="button" class="btn btn-success" onClick={navigateToHome}>Domů</button>
               <Dropdown>
                 <Dropdown.Toggle variant="success" id="dropdown-basic">
                   Turnaj
