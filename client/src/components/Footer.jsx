@@ -10,7 +10,7 @@ function AppFooter() {
             &copy; {new Date().getFullYear()} Matchit
           </Col>
           <Col md={6} className="text-md-end">
-            Contact: matchit@oliveroscavallos.it
+            Contact: matchit@OliverZeZemlasoftu.it
           </Col>
         </Row>
       </Container>
