@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import { Tournament } from './Tournament';
 import { Team } from './Team';
 
@@ -12,8 +12,12 @@ export class Match {
   @Column({ nullable: true })
   state: MatchState | null;
 
-  @ManyToOne(() => Match, match => match.id, { nullable: true, cascade: true, onDelete: 'SET NULL' })
-  nextMatch: Match;
+  @ManyToOne(() => Match, { nullable: true, cascade: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'nextMatchId' })
+  nextMatch: Match | null;
+
+  @Column({ nullable: true })
+  nextMatchId: number | null;
 
   @ManyToOne(() => Tournament, (tournament) => tournament.matches,{onDelete: 'CASCADE'})
   tournament: Tournament;
@@ -27,7 +31,7 @@ export class Match {
     this.tournamentRoundText = tournamentRoundText;
     this.startTime = startTime;
     this.tournament = tournament;
-    this.nextMatch = nextMatch;
+    this.nextMatchId = nextMatch ? nextMatch.id : null;
     if (teams) {
       teams = teams.filter(team => team);
       if (teams.length === 1) {
@@ -42,6 +46,7 @@ export class Match {
 @Entity()
 export class MatchParticipant {
   id: number;
+
   @ManyToOne(() => Match, (match) => match.participants, { onDelete: 'CASCADE'})
   match: Match;
 

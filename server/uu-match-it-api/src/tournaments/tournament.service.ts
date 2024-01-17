@@ -147,7 +147,7 @@ export class TournamentService {
       });
       tournamentResult.matches.forEach((match) => {
         match.participants = match.participants.map((mp) => ({
-          ...mp, name: mp.team.name,
+          ...mp, name: mp.team.name
         }));
       });
       return tournamentResult;
