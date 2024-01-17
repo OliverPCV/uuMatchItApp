@@ -1,15 +1,20 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Tournament } from '../Interfaces/Tournament';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../Interfaces/User';
 import { Team } from '../Interfaces/Team';
-import { Match } from '../Interfaces/Match';
+import { Match, MatchParticipant, MatchState } from '../Interfaces/Match';
 
 @Injectable()
 export class TournamentService {
 
-  constructor(@InjectRepository(Tournament) private tournamentRep: Repository<Tournament>, @InjectRepository(Team) private teamRep: Repository<Team>, @InjectRepository(Match) private matchRep: Repository<Match>) {
+  constructor(
+    @InjectRepository(Tournament) private tournamentRep: Repository<Tournament>,
+    @InjectRepository(Team) private teamRep: Repository<Team>,
+    @InjectRepository(Match) private matchRep: Repository<Match>,
+    @InjectRepository(MatchParticipant) private participantRep: Repository<MatchParticipant>
+  ) {
   }
 
   async createTournament(tournament: Tournament, ownerId: number) {
@@ -154,14 +159,34 @@ export class TournamentService {
     });
   }
 
-  async editMatch(tournamentId: number, match: Match, callerId: number) {
+  async editMatch(tournamentId: number, matchId: number, results: { teamId: number, score: number}[], callerId: number) {
     let tounament = await this.tournamentRep.findOne({ where: { id: tournamentId }, relations: ['owner'] });
     if (!tounament) throw new BadRequestException('Tournament does not exist');
     if (tounament.owner.id !== callerId) throw new BadRequestException('User is not the owner of the tournament');
-    let matchResult = await this.matchRep.save(match);
-    if (matchResult) {
-      return { message: 'Match updated', data: matchResult };
-    } else throw new InternalServerErrorException('Match could not be updated');
+    //find the two matchParticipants, determine who is the winner based on the score (higher better)
+    //update the matchParticipants with their scores and if they won or not
+    //then update the match with the state of the match (enum MatchState)
+    //then add the winner to the next match using the nextMatchId attribute if there is one
+    console.log(results);
+
+    let matchParticipant1 = await this.participantRep.findOne({ where: { teamId: results[0].teamId }, relations: ['match', 'team'] });
+    let matchParticipant2 = await this.participantRep.findOne({ where: { teamId: results[1].teamId }, relations: ['match', 'team'] });
+    console.log(matchParticipant1, matchParticipant2);
+    if (!matchParticipant1 || !matchParticipant2) throw new BadRequestException('MatchParticipant does not exist');
+    let winner = results[0].score > results[1].score ? matchParticipant1 : matchParticipant2;
+    await this.participantRep.save({...matchParticipant1, resultText: results[0].score.toString(), goals: results[0].score});
+    await this.participantRep.save({...matchParticipant2, resultText: results[1].score.toString(), goals: results[1].score});
+    let match = await this.matchRep.findOne({ where: { id: matchId }, relations: ['nextMatch'] });
+    if (!match) throw new BadRequestException('Match does not exist');
+    await this.matchRep.update(match, { state: MatchState.SCORE_DONE });
+    if (match.nextMatch) {
+      await this.participantRep.insert(new MatchParticipant(match.nextMatch, winner.team));
+    } else {
+      await this.tournamentRep.update(tounament, { isFinished: true });
+    }
+    return { message: 'Match updated' };
+
+
   }
 
 
