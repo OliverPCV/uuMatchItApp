@@ -145,7 +145,7 @@ export class TournamentService {
 
       let teams = this.shuffle(tournament.teams);
       let roundsNeeded = Math.ceil(Math.log2(teams.length));
-      await this.createMatches(tournament, teams, Math.pow(2, roundsNeeded), roundsNeeded, 1, null, new Date());
+      await this.createMatches(tournament, teams, teams.length, roundsNeeded, 1, null, new Date());
       let tournamentResult = await this.tournamentRep.findOne({
         where: { id: tournamentId },
         relations: ['teams', 'owner', 'matches', 'matches.participants', 'matches.participants.team'],
@@ -167,7 +167,6 @@ export class TournamentService {
     //update the matchParticipants with their scores and if they won or not
     //then update the match with the state of the match (enum MatchState)
     //then add the winner to the next match using the nextMatchId attribute if there is one
-    console.log(results);
 
     let matchParticipant1 = await this.participantRep.findOne({ where: { teamId: results[0].teamId }, relations: ['match', 'team'] });
     let matchParticipant2 = await this.participantRep.findOne({ where: { teamId: results[1].teamId }, relations: ['match', 'team'] });
@@ -198,7 +197,8 @@ export class TournamentService {
       await this.createMatches(tournament, teams, totalTeams, round - 1, matchOrder, match, startDate);
       await this.createMatches(tournament, teams, totalTeams, round - 1, matchOrder + 1, match, startDate);
     }); else {
-      let canHoard = teams.length >= totalTeams / 2;
+      //basically check if the remaining rounds can have more than one team (1.013 is still valid)
+      let canHoard = teams.length / (Math.ceil(Math.log2(totalTeams)) - (totalTeams - teams.length) / 2) > 1;
       await this.matchRep.save(new Match('Round ' + round + ', Match ' + matchOrder, round.toString(), startDate, tournament, [teams.pop(), canHoard ? teams.pop() : undefined], refMatch));
     }
   }
