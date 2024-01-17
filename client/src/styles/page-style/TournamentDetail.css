@@ -43,6 +43,10 @@
   margin-bottom: 10px;
 }
 
+.team-list .team{
+  display: flex;
+  flex-direction: row;
+}
 /* Add more styles as needed */
 
 svg {

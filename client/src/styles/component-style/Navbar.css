@@ -18,3 +18,31 @@
 #dropdown-basic {   
     margin-left: 20px;
 }
+
+@media screen and (max-width: 991px){
+    .navbar{
+        z-index: 2;
+        height: 100px;
+    }
+
+    .navbar .container{
+        
+        width: 80%;
+    text-align: right;
+    display: flex;
+    justify-content: end !important;
+    flex-direction: row-reverse;
+    }
+
+    .hamburger{
+        background-color: green;
+    }
+
+    .navbar button{
+        margin: 5px;
+    }
+
+    .navlogo{
+        width: 15%;
+    }
+}

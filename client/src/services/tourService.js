@@ -123,3 +123,22 @@ export const deleteTournament = async (tournamentId) => {
         throw error;
     }
 }
+
+export const startTournament = async (tournamentId) => {
+    console.log(sessionStorage.getItem('token'));
+
+    try {
+        const token = sessionStorage.getItem('token');
+        if (!token) throw new Error('No token found');
+
+        const response = await axiosInstance.post(`/tournaments/${tournamentId}/start`, null, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        console.log("Turnaj start ", response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error starting tournament with id ${tournamentId}:`, error);
+
+        throw error;
+    }
+}

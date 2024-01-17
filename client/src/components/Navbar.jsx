@@ -101,12 +101,12 @@ function AppNavbar() {
   return (
     <>
       <Navbar bg="light" variant="dark" expand="lg">
-      <img className="navlogo" src={MatchitLogo} alt="Logo" />
+        <img className="navlogo" src={MatchitLogo} alt="Logo" />
         <Container className='container'>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Toggle aria-controls="basic-navbar-nav" style={{ backgroundColor: "green" }} />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ml-auto">
-            <button type="button" class="btn btn-success" onClick={navigateToHome}>Domů</button>
+              <button type="button" class="btn btn-success" onClick={navigateToHome}>Domů</button>
               <Dropdown>
                 <Dropdown.Toggle variant="success" id="dropdown-basic">
                   Turnaj
