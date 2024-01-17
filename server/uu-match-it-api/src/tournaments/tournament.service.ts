@@ -24,7 +24,7 @@ export class TournamentService {
   async getTournamentDetail(id: number) {
     return this.tournamentRep.findOne({
       where: { id: id },
-      relations: ['owner', 'teams', 'teams.owner', 'matches', 'matches.matchParticipants', 'matches.matchParticipants.team'],
+      relations: ['owner', 'teams', 'teams.owner', 'matches', 'matches.participants', 'matches.participants.team'],
     }).then((tournament) => {
       tournament.matches.forEach((match) => {
         match.participants = match.participants.map((mp) => ({
@@ -143,7 +143,7 @@ export class TournamentService {
       await this.createMatches(tournament, teams, Math.pow(2, roundsNeeded), roundsNeeded, 1, null, new Date());
       let tournamentResult = await this.tournamentRep.findOne({
         where: { id: tournamentId },
-        relations: ['teams', 'owner', 'matches', 'matches.matchParticipants', 'matches.matchParticipants.team'],
+        relations: ['teams', 'owner', 'matches', 'matches.participants', 'matches.participants.team'],
       });
       tournamentResult.matches.forEach((match) => {
         match.participants = match.participants.map((mp) => ({
