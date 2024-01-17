@@ -293,7 +293,7 @@ function TournamentDetail() {
                             <img src={tlogo} alt={team.name} />
                             <div className="team-info">
                               <h4>{team.name}</h4>
-                              {!loading && (actualUser.id === tournament.owner.id || actualUser.id === team.owner.id) &&
+                              {!loading && (actualUser.id === tournament.owner.id || actualUser.id === team.owner.id) && tournament.matches.length === 0 && 
                                 (
                                   <button className="leave-button"
                                     onClick={() => handeLeaveTournament(tournament.id, team.id)}>

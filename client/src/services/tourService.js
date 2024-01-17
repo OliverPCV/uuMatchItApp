@@ -142,3 +142,18 @@ export const startTournament = async (tournamentId) => {
         throw error;
     }
 }
+
+export const editMatch = async (tournamentId, matchData) => {
+    try {
+        const token = sessionStorage.getItem('token');
+        if (!token) throw new Error('Token not found');
+
+        const response = await axiosInstance.post(`/tournaments/${tournamentId}`, matchData, {
+            headers: {'Authorization': `Bearer ${token}`}
+        })
+        return response.data;
+    } catch (error) {
+        console.log('Error updating match:', error);
+        throw error;
+    }
+}
