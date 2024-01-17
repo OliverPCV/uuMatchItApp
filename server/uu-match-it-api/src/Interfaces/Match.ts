@@ -19,7 +19,7 @@ export class Match {
   tournament: Tournament;
 
   @OneToMany(() => MatchParticipant, (matchParticipant) => matchParticipant.match, {cascade: true, onDelete: 'CASCADE'})
-  matchParticipants: MatchParticipant[];
+  participants: MatchParticipant[];
 
 
   constructor(name: string, tournamentRoundText: string, startTime: Date, tournament: Tournament, teams: (Team | undefined)[], nextMatch: Match = null) {
@@ -31,8 +31,8 @@ export class Match {
     if (teams) {
       teams = teams.filter(team => team);
       if (teams.length === 1) {
-        this.matchParticipants = [new MatchParticipant(this, teams[0], MatchState.WALK_OVER)];
-      } else this.matchParticipants = teams.map(team => {
+        this.participants = [new MatchParticipant(this, teams[0], MatchState.WALK_OVER)];
+      } else this.participants = teams.map(team => {
         if (team) return new MatchParticipant(this, team);
       });
     }
@@ -42,7 +42,7 @@ export class Match {
 @Entity()
 export class MatchParticipant {
   id: number;
-  @ManyToOne(() => Match, (match) => match.matchParticipants, { onDelete: 'CASCADE'})
+  @ManyToOne(() => Match, (match) => match.participants, { onDelete: 'CASCADE'})
   match: Match;
 
   @PrimaryColumn()

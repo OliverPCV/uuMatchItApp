@@ -27,7 +27,7 @@ export class TournamentService {
       relations: ['owner', 'teams', 'teams.owner', 'matches', 'matches.matchParticipants', 'matches.matchParticipants.team'],
     }).then((tournament) => {
       tournament.matches.forEach((match) => {
-        match.matchParticipants = match.matchParticipants.map((mp) => ({
+        match.participants = match.participants.map((mp) => ({
           ...mp, name: mp.team.name,
         }));
       });
@@ -106,12 +106,12 @@ export class TournamentService {
 
       if (tournament.owner.id !== callerId && team.owner.id !== callerId) {
         throw new BadRequestException('Insufficient permissions, tournamentOwner:' + tournament.owner.id + ' teamOwner:' + team.owner.id + ' caller:' + callerId);
-
       }
 
       tournament.teams = tournament.teams.filter((team) => team.id !== teamId);
       await this.tournamentRep.save(tournament);
       return { message: 'Team removed from tournament' };
+
     });
   }
 
@@ -138,26 +138,24 @@ export class TournamentService {
         throw new BadRequestException('Not enough teams in tournament');
       }
 
-
       let teams = this.shuffle(tournament.teams);
       let roundsNeeded = Math.ceil(Math.log2(teams.length));
       await this.createMatches(tournament, teams, Math.pow(2, roundsNeeded), roundsNeeded, 1, null, new Date());
-      return this.tournamentRep.findOne({
+      let tournamentResult = await this.tournamentRep.findOne({
         where: { id: tournamentId },
         relations: ['teams', 'owner', 'matches', 'matches.matchParticipants', 'matches.matchParticipants.team'],
-      }).then((tournament) => {
-        tournament.matches.forEach((match) => {
-          match.matchParticipants = match.matchParticipants.map((mp) => ({
-            ...mp, name: mp.team.name,
-          }));
-        });
-        return tournament;
       });
+      tournamentResult.matches.forEach((match) => {
+        match.participants = match.participants.map((mp) => ({
+          ...mp, name: mp.team.name,
+        }));
+      });
+      return tournamentResult;
     });
   }
 
   async editMatch(tournamentId: number, match: Match, callerId: number) {
-    let tounament = await this.tournamentRep.findOne({where: {id: tournamentId}, relations: ['owner']});
+    let tounament = await this.tournamentRep.findOne({ where: { id: tournamentId }, relations: ['owner'] });
     if (!tounament) throw new BadRequestException('Tournament does not exist');
     if (tounament.owner.id !== callerId) throw new BadRequestException('User is not the owner of the tournament');
     let matchResult = await this.matchRep.save(match);
