@@ -143,12 +143,12 @@ export const startTournament = async (tournamentId) => {
     }
 }
 
-export const editMatch = async (tournamentId, matchData) => {
+export const editMatch = async (tournamentId,matchId, matchData) => {
     try {
         const token = sessionStorage.getItem('token');
         if (!token) throw new Error('Token not found');
 
-        const response = await axiosInstance.post(`/tournaments/${tournamentId}`, matchData, {
+        const response = await axiosInstance.post(`/tournaments/${tournamentId}/matches/${matchId}`, matchData, {
             headers: {'Authorization': `Bearer ${token}`}
         })
         return response.data;

@@ -9,43 +9,16 @@ function MatchUpdate({ matchData, onHide, tournamentId }) {
 
     console.log('Turnaj id:', tournamentId);
 
-
-
     const handleSubmit = () => {
-        const team1IsWinner = parseInt(team1Goals) > parseInt(team2Goals);
-        const team2IsWinner = parseInt(team1Goals) < parseInt(team2Goals);
-
-        const updatedMatchData = {
-            
-            ...matchData.match,
-            
-            participants: [
-                {
-                    isWinner: team1IsWinner,
-                    team: matchData.match.participants[0].team,
-                    name: matchData.match.participants[0].name,
-                    status: matchData.match.participants[0].status,
-                    teamId: matchData.match.participants[0].teamId,
-                    resultText: matchData.match.participants[0].resultText,
-                    goals: parseInt(team1Goals),
-
-                },
-                {
-                    isWinner: team2IsWinner,
-                    team: matchData.match.participants[1].team,
-                    name: matchData.match.participants[1].name,
-                    status: matchData.match.participants[1].status,
-                    teamId: matchData.match.participants[1].teamId,
-                    resultText: matchData.match.participants[1].resultText,
-                    goals: parseInt(team2Goals),
-                }
-            ]
-        };
-
-        editMatch(tournamentId, updatedMatchData)
+        let updatedData = [
+            {teamId: matchData.match.participants[0].team.id, score: parseInt(team1Goals)},
+            {teamId: matchData.match.participants[1].team.id, score: parseInt(team2Goals)}
+        ];
+console.log(updatedData);
+        editMatch(tournamentId, matchData.match.id, updatedData)
             .then(() => {
                 console.log('Zápas byl úspěšně upraven.');
-                console.log(updatedMatchData);
+                console.log(updatedData);
                 onHide();
             })
             .catch((error) => {

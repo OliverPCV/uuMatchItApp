@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Tournament } from './Tournament';
 import { Team } from './Team';
 
@@ -45,12 +45,13 @@ export class Match {
 
 @Entity()
 export class MatchParticipant {
+  @PrimaryGeneratedColumn()
   id: number;
 
   @ManyToOne(() => Match, (match) => match.participants, { onDelete: 'CASCADE'})
   match: Match;
 
-  @PrimaryColumn()
+  @Column()
   teamId: number;
 
   @ManyToOne(() => Team, (team) => team.id)
@@ -68,16 +69,11 @@ export class MatchParticipant {
   @Column({nullable: true})
   goals: number;
 
-  name: string;
-
-
   constructor(match: Match, team: Team, status: MatchState = null) {
     this.isWinner = false;
     this.match = match;
     this.team = team;
-    this.name = this.team?.name;
     if (team){
-      this.name = team.name;
       this.teamId = team.id;
     }
     this.status = status;
