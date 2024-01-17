@@ -214,7 +214,7 @@ function TournamentDetail() {
             </Modal>
           </div>
           <div className='buttons-tour'>
-            {userTeams.length > 0 && tournament.teams.length < tournament.sizeLimit && (
+            {userTeams.length > 0 && tournament.teams.length < tournament.sizeLimit && tournament?.matches?.length === 0 &&  (
               <button className="register-button text" onClick={() => setShowModal(true)}>Zapsat tým</button>
             )}
             {
