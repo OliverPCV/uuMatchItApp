@@ -23,14 +23,14 @@ const jwtSecret = 'VerySecretKey';
   imports: [
     TypeOrmModule.forFeature([User, Tournament, Team, Invite, Match, MatchParticipant]),
     TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: '127.0.0.1',
-      port: 3306,
-      username: 'root',
-      password: 'root',
+      type: 'mssql',
+      host: 'matchit.database.windows.net',
+      port: 1433,
+      username: 'matchitadmin',
+      password: 'Kokos123',
       database: 'uumatchit',
       entities: [User, Tournament, Team, Invite, Match, MatchParticipant],
-      synchronize: true,
+      //synchronize: true,
     }),
     JwtModule.register({
       global: true,
