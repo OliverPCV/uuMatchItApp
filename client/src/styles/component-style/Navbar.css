@@ -1,5 +1,6 @@
-.navbar{
+.navbar {
     height: 60px;
+    width: 100%;
 }
 
 .navlogo {
@@ -15,34 +16,74 @@
     margin-left: 2%;
 }
 
-#dropdown-basic {   
+#dropdown-basic {
     margin-left: 20px;
 }
 
-@media screen and (max-width: 991px){
-    .navbar{
+@media screen and (max-width: 991px) {
+    .navbar {
         z-index: 2;
         height: 100px;
+        position: fixed !important;
     }
 
-    .navbar .container{
-        
+    .navbar .container {
+
         width: 80%;
-    text-align: right;
-    display: flex;
-    justify-content: end !important;
-    flex-direction: row-reverse;
+        text-align: right;
+        display: flex;
+        justify-content: end !important;
+        flex-direction: row-reverse;
+
     }
 
-    .hamburger{
+    .hamburger {
         background-color: green;
     }
 
-    .navbar button{
+    .navbar button {
         margin: 5px;
     }
 
-    .navlogo{
+    .navlogo {
         width: 15%;
+    }
+
+    .navbar-collapse {
+        position: fixed;
+        top: 100px;
+        right: 0;
+        bottom: 0;
+        /* left: 0; */
+        width: 65%;
+        height: 100%;
+        background-color: white;
+        z-index: 3;
+        /* Ensure it's above other content */
+    }
+
+    .navbar-collapse.show {
+        flex-direction: column;
+        /* Stack the links vertically */
+        align-items: center;
+        /* Center items horizontally */
+        justify-content: center;
+        /* Center items vertically */
+    }
+
+    .navbar-nav {
+        width: 100%;
+        /* Full width links */
+    }
+
+    .nav-link {
+        width: 100%;
+        text-align: center;
+        /* Center text in each link */
+    }
+
+    #dropdown-basic{
+        margin-left: 0px;
+        width: 98%;
     }
 }
