@@ -17,6 +17,7 @@ import { Tournament } from '../Interfaces/Tournament';
 import { AuthGuard } from '../auth/auth.guard';
 import { AuthRequest } from '../Interfaces/AuthRequest';
 import { TournamentService } from './tournament.service';
+import { Match } from '../Interfaces/Match';
 
 
 @Controller('tournaments')
@@ -132,17 +133,15 @@ export class TournamentsController {
   }
 
   // we also need the score so it can be displayed in the tournament
-  @Post(':tournamentId/:matchId/winner')
+  @Post(':tournamentId')
   @UseGuards(AuthGuard)
-  async setMatchWinner(
+  async updateMatch(
     @Req() request: AuthRequest,
     @Param('tournamentId', ParseIntPipe) tournamentId: number,
-    @Param('matchId', ParseIntPipe) matchId: number,
-    @Query('teamId', ParseIntPipe) teamId: number,
-    @Body('score') score: number[],
+    @Body() match: Match
   ) {
-    return this.worker.setMatchWinner(tournamentId, matchId, teamId, score, request.user.id).then(() => {
-      return { message: 'Match winner set' };
+    return this.worker.editMatch(tournamentId, match, request.user.id).then(() => {
+      return { message: 'Match edit successful' };
     }, (e: BadRequestException) => {
       throw e;
     });

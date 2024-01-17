@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotImplementedException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Tournament } from '../Interfaces/Tournament';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -156,8 +156,14 @@ export class TournamentService {
     });
   }
 
-  async setMatchWinner(tournamentId: number, matchId: number, teamId: number, score: number[], id: number) {
-    throw new NotImplementedException('Method not implemented.');
+  async editMatch(tournamentId: number, match: Match, callerId: number) {
+    let tounament = await this.tournamentRep.findOne({where: {id: tournamentId}, relations: ['owner']});
+    if (!tounament) throw new BadRequestException('Tournament does not exist');
+    if (tounament.owner.id !== callerId) throw new BadRequestException('User is not the owner of the tournament');
+    let matchResult = await this.matchRep.save(match);
+    if (matchResult) {
+      return { message: 'Match updated', data: matchResult };
+    } else throw new InternalServerErrorException('Match could not be updated');
   }
 
 

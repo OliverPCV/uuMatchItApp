@@ -60,6 +60,9 @@ export class MatchParticipant {
   @Column({ nullable: true })
   status: MatchState | null;
 
+  @Column({nullable: true})
+  goals: number;
+
   name: string;
 
 
