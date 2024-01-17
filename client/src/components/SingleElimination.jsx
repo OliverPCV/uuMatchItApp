@@ -40,7 +40,7 @@ const GlootTheme = createTheme({
 });
 
 const SingleElimination = ({ tournamentData }) => {
-
+/*
   console.log(tournamentData);
   const fillTeamsInMatches = (tournamentData, bracket) => {
     const firstRoundMatches = bracket.filter(match => match.tournamentRoundText === "1");
@@ -73,16 +73,15 @@ const SingleElimination = ({ tournamentData }) => {
 
   // Pak můžete tuto funkci zavolat a předat ji vaše data týmů a bracket
   // Předpokládá se, že 'tournamentData' je objekt, který obsahuje pole 'teams' s alespoň 8 týmy.
-  const updatedBracket = fillTeamsInMatches(tournamentData, simpleSmallBracket);
-
+  const updatedBracket = fillTeamsInMatches(tournamentData, tournamentData.matches);
+*/
   // A tady můžete zkontrolovat výsledek
-  console.log(updatedBracket);
-
-
-  return (
-    <SingleEliminationBracket
-      theme={GlootTheme}
-      matches={simpleSmallBracket}
+  console.log(tournamentData);
+  if (tournamentData.matches.length > 0)
+    return (
+      <SingleEliminationBracket
+        theme={GlootTheme}
+      matches={tournamentData.matches}
       matchComponent={Match}
       options={{
         style: {
@@ -105,10 +104,15 @@ const SingleElimination = ({ tournamentData }) => {
 
       )}
       onMatchClick={(match) => console.log(match)}
-      onPartyClick={(match) => console.log(match)}
-    />
-  )
-
+        onPartyClick={(match) => console.log(match)}
+      />
+    )
+  else
+    return (
+      <div>
+        <h1>Turnaj ještě nezačal</h1>
+      </div>
+    )
 };
 
 

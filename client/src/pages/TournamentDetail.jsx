@@ -46,8 +46,6 @@ function TournamentDetail() {
       try {
         setTournament(await fetchTournamentById(id));
         setUserTeams(await fetchUserTeams());
-
-
         fetchUserData().then(userData => {
           setActualUser({ id: userData.id });
         }).catch(error => {
@@ -155,6 +153,10 @@ function TournamentDetail() {
             {actualUser.id === tournament?.owner?.id && (
               <button className='edit-btn text' onClick={handleEditClick}>Upravit</button>
             )}
+            {actualUser.id === tournament?.owner?.id && tournament?.matches?.length === 0 &&  (
+              <button className="register-button text" onClick={() => handleStartTournament(tournament.id)}>Začít turnaj</button>
+            )
+            }
             <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
               <Modal.Header closeButton>
                 <Modal.Title>Upravit turnaj</Modal.Title>
@@ -219,8 +221,6 @@ function TournamentDetail() {
               actualUser.id === tournament.owner.id && (
                 <div>
                   <button className="delete-button text" onClick={() => handleDeleteTournament(tournament.id)}>Smazat turnaj</button>
-
-                  <button className="register-button text" onClick={() => handleStartTournament(tournament.id)}>Start</button>
                 </div>
               )}
           </div>
@@ -289,20 +289,20 @@ function TournamentDetail() {
                     <div className="teams-list">
                       {tournament.teams.map((team) => {
                         return (
-                        <div key={team.id} className="team" style={{width: "100%", flexDirection: "row"}}>
-                          <img src={tlogo} alt={team.name} />
-                          <div className="team-info">
-                            <h4>{team.name}</h4>
-                            {!loading && (actualUser.id === tournament.owner.id || actualUser.id === team.owner.id) &&
-                              (
-                                <button className="leave-button"
-                                  onClick={() => handeLeaveTournament(tournament.id, team.id)}>
-                                  Odejít z turnaje
-                                </button>
-                              )
-                            }
-                          </div>
-                        </div>);
+                          <div key={team.id} className="team" style={{ width: "100%", flexDirection: "row" }}>
+                            <img src={tlogo} alt={team.name} />
+                            <div className="team-info">
+                              <h4>{team.name}</h4>
+                              {!loading && (actualUser.id === tournament.owner.id || actualUser.id === team.owner.id) &&
+                                (
+                                  <button className="leave-button"
+                                    onClick={() => handeLeaveTournament(tournament.id, team.id)}>
+                                    Odejít z turnaje
+                                  </button>
+                                )
+                              }
+                            </div>
+                          </div>);
                       })}
                     </div>
                   </div>
