@@ -4,6 +4,8 @@ import {
   SVGViewer,
   createTheme
 } from "@g-loot/react-tournament-brackets";
+import MatchUpdate from "./MatchUpdate";
+import { useState } from "react";
 
 
 const GlootTheme = createTheme({
@@ -40,80 +42,65 @@ const GlootTheme = createTheme({
 });
 
 const SingleElimination = ({ tournamentData }) => {
-/*
-  console.log(tournamentData);
-  const fillTeamsInMatches = (tournamentData, bracket) => {
-    const firstRoundMatches = bracket.filter(match => match.tournamentRoundText === "1");
-    firstRoundMatches.forEach((match, index) => {
-      // Vypočítáme indexy pro týmy (0 & 1 pro první zápas, 2 & 3 pro druhý, atd.)
-      const firstTeamIndex = index * 2;
-      const secondTeamIndex = firstTeamIndex + 1;
+  // ... zbytek vašeho kódu ...
 
-      // Přiřadíme týmy k účastníkům
-      match.participants[0] = tournamentData.teams[firstTeamIndex]
-        ? {
-          ...tournamentData.teams[firstTeamIndex], // Spread operator převezme všechny vlastnosti týmu
-          isWinner: false, // Toto by mělo být nastaveno podle výsledků, pokud jsou dostupné
-          status: null, // Toto by mělo být nastaveno podle stavu zápasu
-        }
-        : { name: "TBD" }; // Pokud tým není definován, nastavíme jako "To Be Decided"
+  const [selectedMatch, setSelectedMatch] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
-
-      match.participants[1] = tournamentData.teams[secondTeamIndex]
-        ? {
-          ...tournamentData.teams[secondTeamIndex], // Stejně jako u prvního týmu
-          isWinner: false, // Toto by mělo být nastaveno podle výsledků, pokud jsou dostupné
-          status: null, // Toto by mělo být nastaveno podle stavu zápasu
-        }
-        : { name: "TBD" }; // Pokud tým není definován, nastavíme jako "To Be Decided"
-    });
-
-    return bracket;
+  const handleMatchClick = (match) => {
+    setSelectedMatch(match);
+    setShowModal(true);
   };
 
-  // Pak můžete tuto funkci zavolat a předat ji vaše data týmů a bracket
-  // Předpokládá se, že 'tournamentData' je objekt, který obsahuje pole 'teams' s alespoň 8 týmy.
-  const updatedBracket = fillTeamsInMatches(tournamentData, tournamentData.matches);
-*/
-  // A tady můžete zkontrolovat výsledek
-  console.log(tournamentData);
-  if (tournamentData.matches.length > 0)
+  console.log(tournamentData.id);
+
+  // Vraťte komponentu SingleEliminationBracket a připojte k ní MatchUpdate
+  if (tournamentData.matches.length > 0) {
     return (
-      <SingleEliminationBracket
-        theme={GlootTheme}
-      matches={tournamentData.matches}
-      matchComponent={Match}
-      options={{
-        style: {
-          connectorColor: GlootTheme.connectorColor, // Předpokládáme, že chcete bílou barvu pro konektory
-          connectorColorHighlight: GlootTheme.connectorColorHighlight, // Jasně zelená
-          svgBackground: GlootTheme.svgBackground,
-        },
-
-      }}
-      svgWrapper={({ children, ...props }) => (
-        <SVGViewer
-          width={10000}
-          height={5000}
-          background="#ffffff"  // Tady nastavíte bílé pozadí
-          SVGBackground="#ffffff"  // Tady také nastavíte bílé pozadí
-          {...props}
-        >
-          {children}
-        </SVGViewer>
-
-      )}
-      onMatchClick={(match) => console.log(match)}
-        onPartyClick={(match) => console.log(match)}
-      />
-    )
-  else
+      <div>
+        <SingleEliminationBracket
+          theme={GlootTheme}
+          matches={tournamentData.matches}
+          matchComponent={Match}
+          options={{
+            style: {
+              connectorColor: GlootTheme.connectorColor,
+              connectorColorHighlight: GlootTheme.connectorColorHighlight,
+              svgBackground: GlootTheme.svgBackground,
+            },
+          }}
+          svgWrapper={({ children, ...props }) => (
+            <SVGViewer
+              width={10000}
+              height={5000}
+              background="#ffffff"
+              SVGBackground="#ffffff"
+              {...props}
+            >
+              {children}
+            </SVGViewer>
+          )}
+          onMatchClick={handleMatchClick}
+          onPartyClick={(match) => console.log(match)}
+        />
+        {showModal && (
+          <MatchUpdate
+            matchData={selectedMatch}
+            onHide={() => setShowModal(false)}
+            tournamentId = {tournamentData.id}
+          />
+        )}
+      </div>
+    );
+  } else {
     return (
       <div>
         <h1>Turnaj ještě nezačal</h1>
       </div>
-    )
+    );
+  }
 };
+
 
 
 export const simpleSmallBracket = [
@@ -172,7 +159,7 @@ export const simpleSmallBracket = [
     startTime: "2021-05-30",
     state: "SCHEDULED",
     participants: []
-    
+
   },
 
 
