@@ -321,6 +321,8 @@ function TournamentDetail() {
         teams={userTeams}
         onJoinTournament={handleJoinTournament}
         tournament={tournament}
+        owner={tournament.owner.id}
+        actualUser={actualUser.id}
       />
     </>
   );

@@ -21,14 +21,23 @@ function MatchUpdate({ matchData, onHide, tournamentId }) {
             
             participants: [
                 {
-                    ...matchData.match.participants[0],
+                    isWinner: team1IsWinner,
+                    team: matchData.match.participants[0].team,
+                    name: matchData.match.participants[0].name,
+                    status: matchData.match.participants[0].status,
+                    teamId: matchData.match.participants[0].teamId,
+                    resultText: matchData.match.participants[0].resultText,
                     goals: parseInt(team1Goals),
-                    isWinner: team1IsWinner
+
                 },
                 {
-                    ...matchData.match.participants[1],
+                    isWinner: team2IsWinner,
+                    team: matchData.match.participants[1].team,
+                    name: matchData.match.participants[1].name,
+                    status: matchData.match.participants[1].status,
+                    teamId: matchData.match.participants[1].teamId,
+                    resultText: matchData.match.participants[1].resultText,
                     goals: parseInt(team2Goals),
-                    isWinner: team2IsWinner
                 }
             ]
         };

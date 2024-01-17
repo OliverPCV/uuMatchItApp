@@ -6,6 +6,7 @@ import {
 } from "@g-loot/react-tournament-brackets";
 import MatchUpdate from "./MatchUpdate";
 import { useState } from "react";
+import { fetchUserData } from "../services/authService";
 
 
 const GlootTheme = createTheme({
@@ -46,13 +47,24 @@ const SingleElimination = ({ tournamentData }) => {
 
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [actualOwner, setActualOwner] = useState({ id: '' });
+
+  useState(() => {
+    fetchUserData().then(userData => {
+      setActualOwner({ id: userData.id });
+      console.log("husty", userData.id);
+    }).catch(error => {
+      console.error('Chyba při načítání uživatelských dat:', error);
+    });
+  }, []);
+
 
   const handleMatchClick = (match) => {
     setSelectedMatch(match);
     setShowModal(true);
   };
 
-  console.log(tournamentData.id);
+  console.log("taky", tournamentData);
 
   // Vraťte komponentu SingleEliminationBracket a připojte k ní MatchUpdate
   if (tournamentData.matches.length > 0) {
@@ -80,14 +92,14 @@ const SingleElimination = ({ tournamentData }) => {
               {children}
             </SVGViewer>
           )}
-          onMatchClick={handleMatchClick}
-          onPartyClick={(match) => console.log(match)}
+              onMatchClick = {handleMatchClick}
+              onPartyClick={(match) => console.log(match)}
         />
         {showModal && (
           <MatchUpdate
             matchData={selectedMatch}
             onHide={() => setShowModal(false)}
-            tournamentId = {tournamentData.id}
+            tournamentId={tournamentData.id}
           />
         )}
       </div>
